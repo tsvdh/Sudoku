@@ -1,12 +1,13 @@
 package utilities;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 class Square {
 
     private Integer value;
 
-    private ArrayList<Integer> options;
+    private List<Integer> options;
 
     Square(Integer value) {
         this.value = value;
@@ -18,8 +19,8 @@ class Square {
         }
     }
 
-    private ArrayList<Integer> makeOptions() {
-        ArrayList<Integer> options = new ArrayList<>();
+    private List<Integer> makeOptions() {
+        List<Integer> options = new LinkedList<>();
 
         for (int i = 1; i < 10; i++) {
             options.add(i);
