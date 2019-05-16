@@ -9,6 +9,9 @@ class Square {
 
     private List<Integer> options;
 
+    private List<Section> sections;
+
+
     Square(Integer value) {
         this.value = value;
 
@@ -39,5 +42,9 @@ class Square {
         if (this.options.size() == 1) {
             this.value = this.options.get(0);
         }
+    }
+
+    void addSection(Section section) {
+        this.sections.add(section);
     }
 }
