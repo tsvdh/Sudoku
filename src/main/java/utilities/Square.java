@@ -9,10 +9,21 @@ class Square {
 
     private List<Integer> options;
 
-    private List<Section> sections;
+    private int xPosition;
+    private int yPosition;
 
 
-    Square(Integer value) {
+    Square(Integer value, int xPosition, int yPosition) {
+        if (value != null) {
+            assert validRange(value);
+        }
+        assert validRange(xPosition);
+        assert validRange(yPosition);
+
+
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+
         this.value = value;
 
         if (value != null) {
@@ -44,7 +55,15 @@ class Square {
         }
     }
 
-    void addSection(Section section) {
-        this.sections.add(section);
+    int getXPosition() {
+        return xPosition;
+    }
+
+    int getYPosition() {
+        return yPosition;
+    }
+
+    private boolean validRange(int value) {
+        return (value >= 1 && value <= 9);
     }
 }
