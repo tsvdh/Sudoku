@@ -1,6 +1,8 @@
 package utilities;
 
-class Section {
+public class Section extends SquareHolder {
 
-
+    Section() {
+        super();
+    }
 }

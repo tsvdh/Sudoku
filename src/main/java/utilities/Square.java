@@ -50,10 +50,10 @@ class Square {
     }
 
     void removeOption(Integer option) {
-        this.options.remove(option);
+        options.remove(option);
 
-        if (this.options.size() == 1) {
-            this.value = this.options.get(0);
+        if (options.size() == 1) {
+            value = options.get(0);
         }
     }
 
@@ -67,5 +67,17 @@ class Square {
 
     private boolean validRange(int value) {
         return (value >= 1 && value <= 9);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other instanceof Square) {
+            Square that = (Square) other;
+            return (this.xPosition == that.xPosition && this.yPosition == that.yPosition);
+        }
+        return false;
     }
 }
