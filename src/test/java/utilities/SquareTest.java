@@ -1,5 +1,6 @@
 package utilities;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -8,8 +9,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class SquareTest {
 
     @ParameterizedTest
-    @CsvSource({"11, 4, 2",
-                "3, -2, 2"
+    @CsvSource({"0, 1, 1",
+                "10, 2, 2",
+                "3, 0, 3",
+                "4, 10, 4",
+                "5, 5, 0",
+                "6, 6, 10"
     })
     void invalidSquare(Integer value, int xPosition, int yPosition) {
         boolean error = false;
@@ -24,8 +29,12 @@ class SquareTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"1, 4, 2",
-                "3, 9, 2"
+    @CsvSource({"1, 1, 1",
+                "9, 2, 2",
+                "3, 1, 3",
+                "4, 9, 4",
+                "5, 5, 1",
+                "6, 6, 9"
     })
     void validSquare(Integer value, int xPosition, int yPosition) {
         boolean error = false;
@@ -37,5 +46,12 @@ class SquareTest {
         }
 
         assertFalse(error);
+    }
+
+    @Test
+    void noValue() {
+        Square square = new Square(null, 1, 1);
+
+        assertNull(square.getValue());
     }
 }

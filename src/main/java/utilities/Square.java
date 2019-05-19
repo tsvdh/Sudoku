@@ -1,5 +1,7 @@
 package utilities;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ class Square {
     private int yPosition;
 
 
-    Square(Integer value, int xPosition, int yPosition) {
+    Square(@Nullable Integer value, int xPosition, int yPosition) {
         if (value != null) {
             assert validRange(value);
         }
