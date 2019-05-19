@@ -54,4 +54,15 @@ class SquareTest {
 
         assertNull(square.getValue());
     }
+
+    @Test
+    void equals() {
+        Square square1 = new Square(null, 2, 5);
+        Square square2 = new Square(null, 2, 5);
+        Square square3 = new Square(null, 2, 6);
+
+        assertEquals(square1, square2);
+
+        assertNotEquals(square1, square3);
+    }
 }
