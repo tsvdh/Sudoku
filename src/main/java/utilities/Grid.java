@@ -16,6 +16,10 @@ class Grid extends SquareHolder {
         return sectionList;
     }
 
+    void addSection(Section section) {
+        this.sectionList.add(section);
+    }
+
     List<Section> getSectionsContaining(Square square) {
         List<Section> sectionList = new LinkedList<>();
 
