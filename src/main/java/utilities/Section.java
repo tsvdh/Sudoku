@@ -1,6 +1,6 @@
 package utilities;
 
-public class Section extends SquareHolder {
+class Section extends SquareHolder {
 
     Section() {
         super();

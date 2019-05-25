@@ -54,6 +54,7 @@ class Square {
 
         if (options.size() == 1) {
             value = options.get(0);
+            options = null;
         }
     }
 
@@ -79,5 +80,34 @@ class Square {
             return (this.xPosition == that.xPosition && this.yPosition == that.yPosition);
         }
         return false;
+    }
+
+    boolean isFilled() {
+        return (value != null);
+    }
+
+    @Override
+    public String toString() {
+        String string = "<Square(coordinates: (";
+
+        string += "x: " + xPosition + ", ";
+        string += "y: " + yPosition + ")";
+
+        string += ", value: ";
+        if (value == null) {
+            string += "null";
+        } else {
+            string += value;
+        }
+
+        string += ", options: ";
+        if (options == null) {
+            string += "null";
+        } else {
+            string += options.toString();
+        }
+
+        string += ")>";
+        return string;
     }
 }

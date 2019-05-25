@@ -65,4 +65,13 @@ class SquareTest {
 
         assertNotEquals(square1, square3);
     }
+
+    @Test
+    void isFilled() {
+        Square square1 = new Square(null, 1, 1);
+        Square square2 = new Square(3, 1, 1);
+
+        assertFalse(square1.isFilled());
+        assertTrue(square2.isFilled());
+    }
 }
