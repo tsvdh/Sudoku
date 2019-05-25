@@ -10,14 +10,13 @@ class Grid extends SquareHolder {
     Grid() {
         super();
         this.sectionList = new LinkedList<>();
+        for (int i = 1; i <= 27; i++) {
+            this.sectionList.add(new Section());
+        }
     }
 
     List<Section> getSectionList() {
         return sectionList;
-    }
-
-    void addSection(Section section) {
-        this.sectionList.add(section);
     }
 
     List<Section> getSectionsContaining(Square square) {
@@ -30,5 +29,37 @@ class Grid extends SquareHolder {
         }
 
         return sectionList;
+    }
+
+    @Override
+    void addSquare(Square square) {
+        super.addSquare(square);
+        this.addToSections(square);
+    }
+
+    private int getHorizontalSectionIndex(Square square) {
+        return square.getYPosition();
+    }
+
+    private int getVerticalSectionIndex(Square square) {
+        return square.getXPosition() + 9;
+    }
+
+    private int getBlockSectionIndex(Square square) {
+        int xCoordinate = ((square.getXPosition() - 1) / 3) + 1;
+        int yCoordinate = ((square.getYPosition() - 1) / 3);
+
+        return (xCoordinate + (yCoordinate * 3)) + 18;
+    }
+
+    private void addToSections(Square square) {
+        int[] indexes = new int[3];
+        indexes[0] = getHorizontalSectionIndex(square);
+        indexes[1] = getVerticalSectionIndex(square);
+        indexes[2] = getBlockSectionIndex(square);
+
+        for (int index : indexes) {
+            sectionList.get(index).addSquare(square);
+        }
     }
 }
