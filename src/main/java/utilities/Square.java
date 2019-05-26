@@ -5,7 +5,7 @@ import com.sun.istack.internal.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-class Square {
+public class Square {
 
     private Integer value;
 
@@ -15,7 +15,7 @@ class Square {
     private int yPosition;
 
 
-    Square(@Nullable Integer value, int xPosition, int yPosition) {
+    public Square(@Nullable Integer value, int xPosition, int yPosition) {
         if (value != null) {
             assert validRange(value);
         }
@@ -45,8 +45,12 @@ class Square {
         return options;
     }
 
-    Integer getValue() {
+    public Integer getValue() {
         return this.value;
+    }
+
+    public List<Integer> getOptions() {
+        return this.options;
     }
 
     void removeOption(Integer option) {

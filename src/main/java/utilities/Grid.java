@@ -3,11 +3,11 @@ package utilities;
 import java.util.LinkedList;
 import java.util.List;
 
-class Grid extends SquareHolder {
+public class Grid extends SquareHolder {
 
     private List<Section> sectionList;
 
-    Grid() {
+    public Grid() {
         super();
         this.sectionList = new LinkedList<>();
         for (int i = 1; i <= 27; i++) {
@@ -32,7 +32,7 @@ class Grid extends SquareHolder {
     }
 
     @Override
-    void addSquare(Square square) {
+    public void addSquare(Square square) {
         super.addSquare(square);
         this.addToSections(square);
     }
