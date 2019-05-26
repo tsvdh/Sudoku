@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -29,13 +30,17 @@ public class Sudoku extends Application {
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setPadding(new Insets(50));
-        gridPane.setStyle("-fx-background-color: white;");
+        gridPane.setStyle("-fx-background-color: black;");
         Platform.runLater(gridPane :: requestFocus);
 
         buildGrid(gridPane);
 
-        Scene scene = new Scene(gridPane);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(gridPane);
+        borderPane.setPadding(new Insets(50));
+        borderPane.setStyle("-fx-background-color: white");
+
+        Scene scene = new Scene(borderPane);
 
         stage.setScene(scene);
         stage.setTitle("Sudoku");
