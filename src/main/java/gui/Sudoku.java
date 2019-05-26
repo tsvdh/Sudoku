@@ -31,7 +31,6 @@ public class Sudoku extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setStyle("-fx-background-color: black;");
-        Platform.runLater(gridPane :: requestFocus);
 
         buildGrid(gridPane);
 
@@ -39,6 +38,8 @@ public class Sudoku extends Application {
         borderPane.setCenter(gridPane);
         borderPane.setPadding(new Insets(50));
         borderPane.setStyle("-fx-background-color: white");
+
+        Platform.runLater(borderPane :: requestFocus);
 
         Scene scene = new Scene(borderPane);
 
