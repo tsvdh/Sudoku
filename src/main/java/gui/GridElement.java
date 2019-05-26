@@ -1,23 +1,18 @@
 package gui;
 
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import utilities.Square;
 
-class GridElement extends Button {
+class GridElement extends GridPane {
 
     private Square square;
 
-    final static int size = 40;
-
-    private final String style = "-fx-border-radius: 0px;"
-            + "-fx-border-style: solid;"
-            + "-fx-border-color: black;"
-            + "-fx-border-width: 0.5px;"
-            + "-fx-background-color: white;";
+    final static int size = 60;
 
     GridElement() {
         this.setPrefSize(size, size);
-        this.setStyle(style);
+        this.setStyleAndColor("black");
     }
 
     void setSquare(Square square) {
@@ -28,7 +23,38 @@ class GridElement extends Button {
         return this.square;
     }
 
-    void setColor(String color) {
-        this.setStyle(style + "-fx-border-color: " + color + ";");
+    void setStyleAndColor(String color) {
+        double width = 0.5;
+        if (!color.equals("black")) {
+            width = 2.0;
+        }
+
+        this.setStyle("-fx-border-radius: 0px;"
+                + "-fx-border-style: solid;"
+                + "-fx-border-color: " + color + ";"
+                + "-fx-border-width: " + width + "px;"
+                + "-fx-background-color: white;");
+    }
+
+    void showData(boolean showOptions) {
+        this.getChildren().clear();
+
+        if (square.getValue() != null) {
+            this.add(new Label(square.getValue().toString()), 0, 0);
+        } else if (showOptions) {
+            Integer number = 1;
+
+            for (int y = 0; y < 3; y++) {
+                for (int x = 0; x < 3; x++) {
+
+                    Label label = new Label(number.toString());
+                    this.add(label, x, y);
+
+                    if (!square.getOptions().contains(number)) {
+                        label.setVisible(false);
+                    }
+                }
+            }
+        }
     }
 }
