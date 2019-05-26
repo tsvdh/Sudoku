@@ -7,8 +7,10 @@ class GridElement extends Button {
 
     private Square square;
 
+    final static int size = 40;
+
     GridElement() {
-        this.setPrefSize(40, 40);
+        this.setPrefSize(size, size);
         this.setStyle("-fx-border-radius: 0px;"
                 + "-fx-border-style: solid;"
                 + "-fx-border-color: black;"
