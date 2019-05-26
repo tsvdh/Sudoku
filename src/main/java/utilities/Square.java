@@ -53,6 +53,16 @@ public class Square {
         return this.options;
     }
 
+    public void setValue(Integer value) throws OverrideException {
+        if (value == null) {
+            options.clear();
+            this.value = value;
+        } else {
+            throw new OverrideException();
+        }
+
+    }
+
     void removeOption(Integer option) {
         options.remove(option);
 

@@ -7,8 +7,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import utilities.Grid;
+import utilities.Square;
 
 public class Sudoku extends Application {
+
+    private Grid grid;
+
+    public Grid getGrid() {
+        return this.grid;
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -20,10 +28,10 @@ public class Sudoku extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setPadding(new Insets(50));
-        buildGrid(gridPane);
         gridPane.setStyle("-fx-background-color: white;");
-
         Platform.runLater(gridPane :: requestFocus);
+
+        buildGrid(gridPane);
 
         Scene scene = new Scene(gridPane);
 
@@ -33,9 +41,17 @@ public class Sudoku extends Application {
     }
 
     private void buildGrid(GridPane gridPane) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                gridPane.add(new GridElement(), j , i);
+        this.grid = new Grid();
+
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                Square square = new Square(null, x + 1, y + 1);
+                grid.addSquare(square);
+
+                GridElement gridElement = new GridElement();
+                gridElement.setSquare(square);
+
+                gridPane.add(gridElement, x , y);
             }
         }
     }

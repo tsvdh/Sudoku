@@ -59,7 +59,7 @@ public class Grid extends SquareHolder {
         indexes[2] = getBlockSectionIndex(square);
 
         for (int index : indexes) {
-            sectionList.get(index).addSquare(square);
+            sectionList.get(index - 1).addSquare(square);
         }
     }
 }

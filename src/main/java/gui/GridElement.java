@@ -1,7 +1,6 @@
 package gui;
 
 import javafx.scene.control.Button;
-import utilities.Grid;
 import utilities.Square;
 
 class GridElement extends Button {
@@ -14,12 +13,11 @@ class GridElement extends Button {
                 + "-fx-border-style: solid;"
                 + "-fx-border-color: black;"
                 + "-fx-border-width: 0.5px;"
-                + "-fx-background-color: white");
+                + "-fx-background-color: white;");
     }
 
-    void setSquare(Grid grid, Square square) {
+    void setSquare(Square square) {
         this.square = square;
-        grid.addSquare(square);
     }
 
     Square getSquare() {
