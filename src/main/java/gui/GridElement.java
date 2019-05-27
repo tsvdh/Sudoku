@@ -1,7 +1,9 @@
 package gui;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import utilities.Square;
 
 class GridElement extends GridPane {
@@ -40,7 +42,12 @@ class GridElement extends GridPane {
         this.getChildren().clear();
 
         if (square.getValue() != null) {
-            this.add(new Label(square.getValue().toString()), 0, 0);
+            this.setAlignment(Pos.CENTER);
+
+            Label label = new Label(square.getValue().toString());
+            label.setFont(new Font(30));
+
+            this.add(label, 0, 0);
         } else if (showOptions) {
             Integer number = 1;
 

@@ -54,7 +54,9 @@ public class Square {
     }
 
     public void setValue(Integer value) throws OverrideException {
-        if (value == null) {
+        assert validRange(value);
+
+        if (this.value == null) {
             options.clear();
             this.value = value;
         } else {

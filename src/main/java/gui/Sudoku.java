@@ -145,7 +145,6 @@ public class Sudoku extends Application {
 
                 if (keyCode.isDigitKey() && !keyCode.equals(KeyCode.DIGIT0)) {
                     Integer number = new Integer(keyCode.getName());
-                    System.out.println(keyCode.getName());
                     try {
                         gridElement.getSquare().setValue(number);
                     } catch (OverrideException e) {
