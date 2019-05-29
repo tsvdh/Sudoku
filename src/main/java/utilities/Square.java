@@ -49,6 +49,10 @@ public class Square {
         return this.value;
     }
 
+    public boolean hasValue() {
+        return this.value != null;
+    }
+
     public List<Integer> getOptions() {
         return this.options;
     }

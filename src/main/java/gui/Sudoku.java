@@ -86,6 +86,10 @@ public class Sudoku extends Application {
             setKeyAction(scene);
         });
 
+        clearButton.setOnAction(event -> {
+
+        });
+
         stage.setScene(scene);
         stage.setTitle("Sudoku");
         stage.show();

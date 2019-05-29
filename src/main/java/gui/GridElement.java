@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -40,12 +41,12 @@ class GridElement extends GridPane {
 
     void showData(boolean showOptions) {
         this.getChildren().clear();
+        this.setAlignment(Pos.CENTER);
 
-        if (square.getValue() != null) {
-            this.setAlignment(Pos.CENTER);
+        if (square.hasValue()) {
 
             Label label = new Label(square.getValue().toString());
-            label.setFont(new Font(30));
+            label.setFont(new Font(38));
 
             this.add(label, 0, 0);
         } else if (showOptions) {
@@ -55,11 +56,22 @@ class GridElement extends GridPane {
                 for (int x = 0; x < 3; x++) {
 
                     Label label = new Label(number.toString());
+                    label.setFont(new Font(13));
+
+                    if (x == 0) {
+                        label.setPadding(new Insets(0, 6, 0, 0));
+                    }
+                    if (x == 2) {
+                        label.setPadding(new Insets(0, 0, 0, 6));
+                    }
+
                     this.add(label, x, y);
 
                     if (!square.getOptions().contains(number)) {
                         label.setVisible(false);
                     }
+
+                    number++;
                 }
             }
         }
