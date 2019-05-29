@@ -24,6 +24,8 @@ public class Sudoku extends Application {
 
     private Grid grid;
     private List<GridElement> gridElements;
+    private Iterator<GridElement> elementIterator;
+    private GridElement currentElement;
 
     public Grid getGrid() {
         return this.grid;
@@ -35,6 +37,9 @@ public class Sudoku extends Application {
 
     @Override
     public void start(Stage stage) {
+        this.grid = new Grid();
+        this.gridElements = new LinkedList<>();
+
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
@@ -78,7 +83,7 @@ public class Sudoku extends Application {
         Scene scene = new Scene(borderPane);
 
         fillInButton.setOnAction(event -> {
-            putInValue(scene, gridElements.iterator());
+            setKeyAction(scene);
         });
 
         stage.setScene(scene);
@@ -87,9 +92,6 @@ public class Sudoku extends Application {
     }
 
     private void buildGrid(GridPane gridPane) {
-        this.grid = new Grid();
-        this.gridElements = new LinkedList<>();
-
         for (int y = 1; y <= 17; y += 2) {
             for (int x = 1; x <= 17; x += 2) {
                 Square square = new Square(null, x / 2 + 1, y / 2 + 1);
@@ -134,29 +136,36 @@ public class Sudoku extends Application {
         }
     }
 
-    private void putInValue(Scene scene, Iterator<GridElement> iterator) {
-        if (iterator.hasNext()) {
+    private void goToNextElement() {
+        currentElement = elementIterator.next();
+        currentElement.setStyleAndColor("lightgreen");
+    }
 
-            GridElement gridElement = iterator.next();
-            gridElement.setStyleAndColor("lightgreen");
+    private void setKeyAction(Scene scene) {
+        elementIterator = gridElements.iterator();
+        goToNextElement();
 
-            scene.setOnKeyPressed(event -> {
-                KeyCode keyCode = event.getCode();
+        scene.setOnKeyPressed(event -> {
 
-                if (keyCode.isDigitKey() && !keyCode.equals(KeyCode.DIGIT0)) {
-                    Integer number = new Integer(keyCode.getName());
-                    try {
-                        gridElement.getSquare().setValue(number);
-                    } catch (OverrideException e) {
-                        System.out.println(e.getMessage());
-                    }
+            KeyCode keyCode = event.getCode();
+
+            if (keyCode.isDigitKey() && !keyCode.equals(KeyCode.DIGIT0)) {
+                Integer number = new Integer(keyCode.getName());
+                try {
+                    currentElement.getSquare().setValue(number);
+                } catch (OverrideException e) {
+                    System.out.println(e.getMessage());
                 }
+            }
 
-                gridElement.setStyleAndColor("black");
-                gridElement.showData(false);
+            currentElement.setStyleAndColor("black");
+            currentElement.showData(false);
 
-                putInValue(scene, iterator);
-            });
-        }
+            if (elementIterator.hasNext()) {
+                goToNextElement();
+            } else {
+                scene.setOnKeyPressed(null);
+            }
+        });
     }
 }
