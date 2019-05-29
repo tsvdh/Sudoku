@@ -61,7 +61,7 @@ public class Square {
         assert validRange(value);
 
         if (this.value == null) {
-            options.clear();
+            options = null;
             this.value = value;
         } else {
             throw new OverrideException();
