@@ -16,15 +16,15 @@ import utilities.Grid;
 import utilities.OverrideException;
 import utilities.Square;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class Sudoku extends Application {
 
     private Grid grid;
     private List<GridElement> gridElements;
-    private Iterator<GridElement> elementIterator;
+    private ListIterator<GridElement> elementIterator;
     private GridElement currentElement;
 
     public Grid getGrid() {
@@ -145,29 +145,49 @@ public class Sudoku extends Application {
         currentElement.setStyleAndColor("lightgreen");
     }
 
+    private void goToPreviousElement() {
+        currentElement = elementIterator.previous();
+        currentElement.setStyleAndColor("lightgreen");
+    }
+
     private void setKeyAction(Scene scene) {
-        elementIterator = gridElements.iterator();
+        elementIterator = gridElements.listIterator();
         goToNextElement();
 
         scene.setOnKeyPressed(event -> {
+            currentElement.setStyleAndColor("black");
 
             KeyCode keyCode = event.getCode();
 
-            if (keyCode.isDigitKey() && !keyCode.equals(KeyCode.DIGIT0)) {
+            if (keyCode.isDigitKey()) {
                 Integer number = new Integer(keyCode.getName());
-                try {
-                    currentElement.getSquare().setValue(number);
-                } catch (OverrideException e) {
-                    System.out.println(e.getMessage());
+
+                if (number != 0) {
+                    try {
+                        currentElement.getSquare().setValue(number);
+                    } catch (OverrideException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+
+                if (elementIterator.hasNext()) {
+                    goToNextElement();
+                } else {
+                    scene.setOnKeyPressed(null);
                 }
             }
 
-            currentElement.setStyleAndColor("black");
-
-            if (elementIterator.hasNext()) {
-                goToNextElement();
-            } else {
-                scene.setOnKeyPressed(null);
+            if (keyCode.equals(KeyCode.BACK_SPACE)) {
+                if (elementIterator.hasPrevious()) {
+                    goToPreviousElement();
+                    try {
+                        currentElement.getSquare().setValue(null);
+                    } catch (OverrideException e) {
+                        System.out.println(e.getMessage());
+                    }
+                } else {
+                    currentElement.setStyleAndColor("lightgreen");
+                }
             }
         });
     }

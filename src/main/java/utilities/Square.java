@@ -59,13 +59,19 @@ public class Square extends Observable {
     }
 
     public void setValue(Integer value) throws OverrideException {
-        assert validRange(value);
+        if (value == null) {
+            this.value = null;
+            options = this.makeOptions();
 
-        if (this.value == null) {
-            options = null;
-            this.value = value;
         } else {
-            throw new OverrideException();
+            assert validRange(value);
+
+            if (this.value == null) {
+                options = null;
+                this.value = value;
+            } else {
+                throw new OverrideException();
+            }
         }
 
         setChanged();
