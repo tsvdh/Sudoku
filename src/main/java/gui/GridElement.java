@@ -7,7 +7,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import utilities.Square;
 
-class GridElement extends GridPane {
+import java.util.Observable;
+import java.util.Observer;
+
+class GridElement extends GridPane implements Observer {
 
     private Square square;
 
@@ -20,6 +23,7 @@ class GridElement extends GridPane {
 
     void setSquare(Square square) {
         this.square = square;
+        this.square.addObserver(this);
     }
 
     Square getSquare() {
@@ -39,7 +43,7 @@ class GridElement extends GridPane {
                 + "-fx-background-color: white;");
     }
 
-    void showData(boolean showOptions) {
+    private void showData(boolean showOptions) {
         this.getChildren().clear();
         this.setAlignment(Pos.CENTER);
 
@@ -75,5 +79,10 @@ class GridElement extends GridPane {
                 }
             }
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        showData( (Boolean) arg);
     }
 }

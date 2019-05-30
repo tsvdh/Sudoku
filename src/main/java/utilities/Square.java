@@ -4,8 +4,9 @@ import com.sun.istack.internal.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 
-public class Square {
+public class Square extends Observable {
 
     private Integer value;
 
@@ -67,6 +68,8 @@ public class Square {
             throw new OverrideException();
         }
 
+        setChanged();
+        notifyObservers(false);
     }
 
     void removeOption(Integer option) {
@@ -76,6 +79,9 @@ public class Square {
             value = options.get(0);
             options = null;
         }
+
+        setChanged();
+        notifyObservers(true);
     }
 
     int getXPosition() {

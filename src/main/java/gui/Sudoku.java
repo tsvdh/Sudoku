@@ -163,7 +163,6 @@ public class Sudoku extends Application {
             }
 
             currentElement.setStyleAndColor("black");
-            currentElement.showData(false);
 
             if (elementIterator.hasNext()) {
                 goToNextElement();
