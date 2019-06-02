@@ -27,6 +27,9 @@ public class Sudoku extends Application {
     private ListIterator<GridElement> elementIterator;
     private GridElement currentElement;
     private String lastMove;
+    private Button clearButton;
+    private Button fillInButton;
+    private Button solveButton;
 
     public Grid getGrid() {
         return this.grid;
@@ -50,17 +53,17 @@ public class Sudoku extends Application {
         buildGrid(gridPane);
 
 
-        Button clearButton = new Button();
+        clearButton = new Button();
         clearButton.setFont(new Font(20));
         clearButton.setPrefSize(100, 30);
         clearButton.setText("Clear");
 
-        Button fillInButton = new Button();
+        fillInButton = new Button();
         fillInButton.setFont(new Font(20));
         fillInButton.setPrefSize(100, 30);
         fillInButton.setText("Fill in");
 
-        Button solveButton = new Button();
+        solveButton = new Button();
         solveButton.setFont(new Font(20));
         solveButton.setPrefSize(100, 30);
         solveButton.setText("Solve");
@@ -85,11 +88,21 @@ public class Sudoku extends Application {
         Scene scene = new Scene(borderPane);
 
         fillInButton.setOnAction(event -> {
+            clearButton.setDisable(true);
+            fillInButton.setDisable(true);
+            solveButton.setDisable(true);
+
+            clearSquares();
+
             setKeyAction(scene);
         });
 
         clearButton.setOnAction(event -> {
+            clearSquares();
+        });
 
+        solveButton.setOnAction(event -> {
+            
         });
 
         stage.setScene(scene);
@@ -157,7 +170,6 @@ public class Sudoku extends Application {
         goToNextElement();
 
         scene.setOnKeyPressed(event -> {
-            //System.out.println(currentElement.getSquare().toString());
             currentElement.setStyleAndColor("black");
 
             KeyCode keyCode = event.getCode();
@@ -180,6 +192,10 @@ public class Sudoku extends Application {
                     goToNextElement();
                 } else {
                     scene.setOnKeyPressed(null);
+
+                    clearButton.setDisable(false);
+                    fillInButton.setDisable(false);
+                    solveButton.setDisable(false);
                 }
 
                 lastMove = "next";
@@ -205,8 +221,16 @@ public class Sudoku extends Application {
                     currentElement.setStyleAndColor("lightgreen");
                 }
             }
-            //System.out.println(currentElement.getSquare().toString());
-            //System.out.println("---------");
         });
+    }
+
+    private void clearSquares() {
+        for (GridElement gridElement : gridElements) {
+            try {
+                gridElement.getSquare().setValue(null);
+            } catch (OverrideException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 }
