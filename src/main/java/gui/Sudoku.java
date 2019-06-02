@@ -26,6 +26,7 @@ public class Sudoku extends Application {
     private List<GridElement> gridElements;
     private ListIterator<GridElement> elementIterator;
     private GridElement currentElement;
+    private String lastMove;
 
     public Grid getGrid() {
         return this.grid;
@@ -39,6 +40,7 @@ public class Sudoku extends Application {
     public void start(Stage stage) {
         this.grid = new Grid();
         this.gridElements = new LinkedList<>();
+        this.lastMove = "none";
 
 
         GridPane gridPane = new GridPane();
@@ -155,6 +157,7 @@ public class Sudoku extends Application {
         goToNextElement();
 
         scene.setOnKeyPressed(event -> {
+            //System.out.println(currentElement.getSquare().toString());
             currentElement.setStyleAndColor("black");
 
             KeyCode keyCode = event.getCode();
@@ -175,20 +178,32 @@ public class Sudoku extends Application {
                 } else {
                     scene.setOnKeyPressed(null);
                 }
+
+                lastMove = "next";
             }
 
             if (keyCode.equals(KeyCode.BACK_SPACE)) {
                 if (elementIterator.hasPrevious()) {
+
+                    if (lastMove.equals("next")) {
+                        currentElement = elementIterator.previous();
+                    }
                     goToPreviousElement();
+
                     try {
                         currentElement.getSquare().setValue(null);
                     } catch (OverrideException e) {
                         System.out.println(e.getMessage());
                     }
+
+                    lastMove = "previous";
+
                 } else {
                     currentElement.setStyleAndColor("lightgreen");
                 }
             }
+            //System.out.println(currentElement.getSquare().toString());
+            //System.out.println("---------");
         });
     }
 }
