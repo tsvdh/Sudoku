@@ -67,6 +67,7 @@ public class Sudoku extends Application {
         solveButton.setFont(new Font(20));
         solveButton.setPrefSize(100, 30);
         solveButton.setText("Solve");
+        solveButton.setDisable(true);
 
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(10, 10, 50 ,10));
@@ -99,6 +100,7 @@ public class Sudoku extends Application {
 
         clearButton.setOnAction(event -> {
             clearSquares();
+            solveButton.setDisable(true);
         });
 
         solveButton.setOnAction(event -> {
