@@ -174,6 +174,9 @@ public class Sudoku extends Application {
                 }
 
                 if (elementIterator.hasNext()) {
+                    if (lastMove.equals("previous")) {
+                        currentElement = elementIterator.next();
+                    }
                     goToNextElement();
                 } else {
                     scene.setOnKeyPressed(null);
