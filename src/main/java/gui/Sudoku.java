@@ -16,6 +16,7 @@ import utilities.Grid;
 import utilities.OverrideException;
 import utilities.Square;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -104,12 +105,34 @@ public class Sudoku extends Application {
         });
 
         solveButton.setOnAction(event -> {
-            
+
         });
 
         stage.setScene(scene);
         stage.setTitle("Sudoku");
         stage.show();
+
+        Integer[][] array = {{null, 2, 1, null, 3, 9, 7, 5, 4},
+                            {null, null, null, null, null, 4, 6, null, 1},
+                            {null, 5, 4, 6, null, 1, 8, null, 9},
+                            {2, 6, 8, 1, 9, null, null, 4, null},
+                            {1, 9, null, 5, 4, null, null, null, null},
+                            {5, null, 7, null, null, null, 1, 9, 3},
+                            {3, 1, 6, 9, null, 2, 4, 7, 5},
+                            {null, null, 2, 4, 7, 5, 3, 1, 6},
+                            {4, 7, 5, 3, 1, null, null, null, null}};
+
+        Iterator<GridElement> iterator = gridElements.iterator();
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                try {
+                    iterator.next().getSquare().setValue(array[y][x]);
+                } catch (OverrideException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        solveButton.setDisable(false);
     }
 
     private void buildGrid(GridPane gridPane) {
