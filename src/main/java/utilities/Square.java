@@ -83,15 +83,19 @@ public class Square extends Observable {
     }
 
     void removeOption(Integer option) {
-        options.remove(option);
 
-        if (options.size() == 1) {
-            value = options.get(0);
-            options = null;
+        if (options.contains(option)) {
+
+            options.remove(option);
+
+            if (options.size() == 1) {
+                value = options.get(0);
+                options = null;
+            }
+
+            setChanged();
+            notifyObservers(true);
         }
-
-        setChanged();
-        notifyObservers(true);
     }
 
     int getXPosition() {

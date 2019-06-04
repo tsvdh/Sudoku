@@ -1,6 +1,9 @@
 package utilities;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GridSolver {
 
@@ -18,13 +21,25 @@ public class GridSolver {
         }
     }
 
-    private void removeDeprecatedOptions(Square square) {
-        List<Section> sections = grid.getSectionsContaining(square);
+    private void removeDeprecatedOptions(Square thisSquare) {
+        List<Section> sections = grid.getSectionsContaining(thisSquare);
 
         for (Section section : sections) {
             for (Square otherSquare : section.getSquareList()) {
-                if (otherSquare.hasValue()) {
-                    square.removeOption(square.getValue());
+                if (otherSquare.hasValue() && thisSquare.hasNoValue()) {
+
+                    /*ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+
+                    scheduledExecutorService.schedule(() -> {
+                        square.removeOption(otherSquare.getValue());
+                    }, 333, TimeUnit.MILLISECONDS);*/
+                    //System.out.println("test");
+                    thisSquare.removeOption(otherSquare.getValue());
+                    /*try {
+                        Thread.sleep(250);
+                    } catch (InterruptedException e) {
+                        System.out.println(e.getMessage());
+                    }*/
                 }
             }
         }
