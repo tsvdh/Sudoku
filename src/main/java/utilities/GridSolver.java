@@ -1,21 +1,47 @@
 package utilities;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GridSolver {
 
     private Grid grid;
+    private ScheduledExecutorService executor;
+    private Iterator<Square> iterator;
 
     public GridSolver(Grid grid) {
         this.grid = grid;
+        this.executor = Executors.newSingleThreadScheduledExecutor();
+        resetIterator();
     }
 
     public void solve() {
-        while (!isSolved()) {
-            for (Square square : grid.getSquareList()) {
-                removeDeprecatedOptions(square);
+        executor.scheduleWithFixedDelay(this ::updateNextSquare, 0, 250, TimeUnit.MILLISECONDS);
+    }
+
+    private void updateNextSquare() {
+        if (isSolved()) {
+            executor.shutdown();
+        } else {
+            if (iterator.hasNext()) {
+                Square square = iterator.next();
+                
+                if (square.hasNoValue()) {
+                    removeDeprecatedOptions(square);
+                } else {
+                    updateNextSquare();
+                }
+            } else {
+                resetIterator();
             }
         }
+    }
+
+    private void resetIterator() {
+        this.iterator = grid.getSquareList().iterator();
     }
 
     private void removeDeprecatedOptions(Square thisSquare) {

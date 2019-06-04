@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -88,6 +89,8 @@ class GridElement extends GridPane implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        showData( (Boolean) arg);
+        Platform.runLater(() -> {
+            showData( (Boolean) arg);
+        });
     }
 }
