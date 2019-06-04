@@ -67,11 +67,11 @@ class SquareTest {
     }
 
     @Test
-    void isFilled() {
+    void hasValue() {
         Square square1 = new Square(null, 1, 1);
         Square square2 = new Square(3, 1, 1);
 
-        assertFalse(square1.isFilled());
-        assertTrue(square2.isFilled());
+        assertFalse(square1.hasValue());
+        assertTrue(square2.hasValue());
     }
 }

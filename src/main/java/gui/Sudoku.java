@@ -185,12 +185,12 @@ public class Sudoku extends Application {
 
     private void goToNextElement() {
         currentElement = elementIterator.next();
-        currentElement.setStyleAndColor("lightgreen", "black");
+        currentElement.setStyleAndColor("lightgreen");
     }
 
     private void goToPreviousElement() {
         currentElement = elementIterator.previous();
-        currentElement.setStyleAndColor("lightgreen", "black");
+        currentElement.setStyleAndColor("lightgreen");
     }
 
     private void setKeyAction(Scene scene) {
@@ -198,7 +198,7 @@ public class Sudoku extends Application {
         goToNextElement();
 
         scene.setOnKeyPressed(event -> {
-            currentElement.setStyleAndColor("black", "black");
+            currentElement.setStyleAndColor("black");
 
             KeyCode keyCode = event.getCode();
 
@@ -246,7 +246,7 @@ public class Sudoku extends Application {
                     lastMove = "previous";
 
                 } else {
-                    currentElement.setStyleAndColor("lightgreen", "black");
+                    currentElement.setStyleAndColor("lightgreen");
                 }
             }
         });

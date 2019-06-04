@@ -18,7 +18,7 @@ class GridElement extends GridPane implements Observer {
 
     GridElement() {
         this.setPrefSize(size, size);
-        this.setStyleAndColor("black", "black");
+        this.setStyleAndColor("black");
     }
 
     void setSquare(Square square) {
@@ -30,7 +30,7 @@ class GridElement extends GridPane implements Observer {
         return this.square;
     }
 
-    void setStyleAndColor(String borderColor, String textColor) {
+    void setStyleAndColor(String borderColor) {
         double width = 0.5;
         if (!borderColor.equals("black")) {
             width = 2.0;
@@ -40,22 +40,21 @@ class GridElement extends GridPane implements Observer {
                 + "-fx-border-style: solid;"
                 + "-fx-border-color: " + borderColor + ";"
                 + "-fx-border-width: " + width + "px;"
-                + "-fx-background-color: white;"
-                + "-fx-text-fill: " + textColor + ";");
+                + "-fx-background-color: white;");
     }
 
     private void showData(boolean showOptions) {
         this.getChildren().clear();
         this.setAlignment(Pos.CENTER);
 
-        if (showOptions) {
-            this.setStyleAndColor("black", "darkblue");
-        }
-
         if (square.hasValue()) {
 
             Label label = new Label(square.getValue().toString());
             label.setFont(new Font(38));
+
+            if (showOptions) {
+                label.setStyle("-fx-text-fill: darkblue");
+            }
 
             this.add(label, 0, 0);
         } else if (showOptions) {
@@ -66,12 +65,13 @@ class GridElement extends GridPane implements Observer {
 
                     Label label = new Label(number.toString());
                     label.setFont(new Font(13));
+                    label.setStyle("-fx-text-fill: darkblue");
 
                     if (x == 0) {
-                        label.setPadding(new Insets(0, 6, 0, 0));
+                        label.setPadding(new Insets(0, 10, 0, 0));
                     }
                     if (x == 2) {
-                        label.setPadding(new Insets(0, 0, 0, 6));
+                        label.setPadding(new Insets(0, 0, 0, 10));
                     }
 
                     this.add(label, x, y);
