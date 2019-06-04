@@ -54,6 +54,10 @@ public class Square extends Observable {
         return this.value != null;
     }
 
+    public boolean hasNoValue() {
+        return this.value == null;
+    }
+
     public List<Integer> getOptions() {
         return this.options;
     }
@@ -112,10 +116,6 @@ public class Square extends Observable {
             return (this.xPosition == that.xPosition && this.yPosition == that.yPosition);
         }
         return false;
-    }
-
-    boolean isFilled() {
-        return (value != null);
     }
 
     @Override
