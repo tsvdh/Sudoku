@@ -1,9 +1,6 @@
 package utilities;
 
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class GridSolver {
 
@@ -28,18 +25,7 @@ public class GridSolver {
             for (Square otherSquare : section.getSquareList()) {
                 if (otherSquare.hasValue() && thisSquare.hasNoValue()) {
 
-                    /*ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-
-                    scheduledExecutorService.schedule(() -> {
-                        square.removeOption(otherSquare.getValue());
-                    }, 333, TimeUnit.MILLISECONDS);*/
-                    //System.out.println("test");
                     thisSquare.removeOption(otherSquare.getValue());
-                    /*try {
-                        Thread.sleep(250);
-                    } catch (InterruptedException e) {
-                        System.out.println(e.getMessage());
-                    }*/
                 }
             }
         }
