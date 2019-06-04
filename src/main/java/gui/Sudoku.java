@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import utilities.Grid;
+import utilities.GridSolver;
 import utilities.OverrideException;
 import utilities.Square;
 
@@ -105,7 +106,9 @@ public class Sudoku extends Application {
         });
 
         solveButton.setOnAction(event -> {
+            GridSolver gridSolver = new GridSolver(this.grid);
 
+            gridSolver.solve();
         });
 
         stage.setScene(scene);
@@ -182,12 +185,12 @@ public class Sudoku extends Application {
 
     private void goToNextElement() {
         currentElement = elementIterator.next();
-        currentElement.setStyleAndColor("lightgreen");
+        currentElement.setStyleAndColor("lightgreen", "black");
     }
 
     private void goToPreviousElement() {
         currentElement = elementIterator.previous();
-        currentElement.setStyleAndColor("lightgreen");
+        currentElement.setStyleAndColor("lightgreen", "black");
     }
 
     private void setKeyAction(Scene scene) {
@@ -195,7 +198,7 @@ public class Sudoku extends Application {
         goToNextElement();
 
         scene.setOnKeyPressed(event -> {
-            currentElement.setStyleAndColor("black");
+            currentElement.setStyleAndColor("black", "black");
 
             KeyCode keyCode = event.getCode();
 
@@ -243,7 +246,7 @@ public class Sudoku extends Application {
                     lastMove = "previous";
 
                 } else {
-                    currentElement.setStyleAndColor("lightgreen");
+                    currentElement.setStyleAndColor("lightgreen", "black");
                 }
             }
         });

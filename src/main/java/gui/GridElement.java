@@ -18,7 +18,7 @@ class GridElement extends GridPane implements Observer {
 
     GridElement() {
         this.setPrefSize(size, size);
-        this.setStyleAndColor("black");
+        this.setStyleAndColor("black", "black");
     }
 
     void setSquare(Square square) {
@@ -30,22 +30,27 @@ class GridElement extends GridPane implements Observer {
         return this.square;
     }
 
-    void setStyleAndColor(String color) {
+    void setStyleAndColor(String borderColor, String textColor) {
         double width = 0.5;
-        if (!color.equals("black")) {
+        if (!borderColor.equals("black")) {
             width = 2.0;
         }
 
         this.setStyle("-fx-border-radius: 0px;"
                 + "-fx-border-style: solid;"
-                + "-fx-border-color: " + color + ";"
+                + "-fx-border-color: " + borderColor + ";"
                 + "-fx-border-width: " + width + "px;"
-                + "-fx-background-color: white;");
+                + "-fx-background-color: white;"
+                + "-fx-text-fill: " + textColor + ";");
     }
 
     private void showData(boolean showOptions) {
         this.getChildren().clear();
         this.setAlignment(Pos.CENTER);
+
+        if (showOptions) {
+            this.setStyleAndColor("black", "darkblue");
+        }
 
         if (square.hasValue()) {
 
