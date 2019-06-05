@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -120,17 +121,18 @@ public class Sudoku extends Application implements Observer {
 
         stage.setScene(scene);
         stage.setTitle("Sudoku");
+        stage.getIcons().add(new Image("/images/icon.png"));
         stage.show();
 
-        Integer[][] array = {{null, 2, 1, null, 3, 9, 7, 5, 4},
-                            {null, null, null, null, null, 4, 6, null, 1},
-                            {null, 5, 4, 6, null, 1, 8, null, 9},
-                            {2, 6, 8, 1, 9, null, null, 4, null},
-                            {1, 9, null, 5, 4, null, null, null, null},
-                            {5, null, 7, null, null, null, 1, 9, 3},
-                            {3, 1, 6, 9, null, 2, 4, 7, 5},
-                            {null, null, 2, 4, 7, 5, 3, 1, 6},
-                            {4, 7, 5, 3, 1, null, null, null, null}};
+        Integer[][] array = {{null, null, 3, null, null, null, null, null, null},
+                            {null, 6, null, 1, 3, null, 2, null, null},
+                            {7, null, null, 9, null, 5, null, 1, null},
+                            {null, 7, null, null, null, null, 1, 9, 5},
+                            {8, 2, null, null, null, null, 7, null, null},
+                            {null, 4, null, null, null, 1, null, 3, 2},
+                            {null, 9, 6, null, null, 4, null, 7, 8},
+                            {null, null, null, null, null, null, null, null, null},
+                            {5, null, 8, null, 6, null, 4, null, 9}};
 
         Iterator<GridElement> iterator = gridElements.iterator();
         for (int y = 0; y < 9; y++) {
