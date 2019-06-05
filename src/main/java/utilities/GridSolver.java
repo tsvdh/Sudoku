@@ -1,6 +1,7 @@
 package utilities;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.concurrent.Executors;
@@ -20,7 +21,7 @@ public class GridSolver extends Observable {
     }
 
     public void solve() {
-        executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, 200, TimeUnit.MILLISECONDS);
+        executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, 100, TimeUnit.MILLISECONDS);
     }
 
     private void updateNextSquare() {
@@ -35,7 +36,10 @@ public class GridSolver extends Observable {
                 Square square = iterator.next();
                 
                 if (square.hasNoValue()) {
+
                     removeDeprecatedOptions(square);
+                    checkOptionOccursOnce(square);
+
                 } else {
                     updateNextSquare();
                 }
@@ -69,5 +73,41 @@ public class GridSolver extends Observable {
             }
         }
         return true;
+    }
+
+    private void checkOptionOccursOnce(Square thisSquare) {
+
+        if (thisSquare.hasValue()) {
+            return;
+        }
+
+        List<Section> sections = grid.getSectionsContaining(thisSquare);
+        List<Integer> allOptions = new LinkedList<>();
+
+        for (Section section : sections) {
+
+            for (Square otherSquare : section.getSquareList()) {
+                if (!otherSquare.equals(thisSquare) && otherSquare.hasNoValue()) {
+
+                    allOptions.addAll(otherSquare.getOptions());
+                }
+            }
+
+            for (Integer integer : thisSquare.getOptions()) {
+                if (!allOptions.contains(integer)) {
+
+                    List<Integer> optionsToRemove = new LinkedList<>(thisSquare.getOptions());
+                    optionsToRemove.remove(integer);
+
+                    for (Integer integerToRemove : optionsToRemove) {
+                        thisSquare.removeOption(integerToRemove);
+                    }
+
+                    return;
+                }
+            }
+
+            allOptions.clear();
+        }
     }
 }

@@ -124,15 +124,15 @@ public class Sudoku extends Application implements Observer {
         stage.getIcons().add(new Image("/images/icon.png"));
         stage.show();
 
-        Integer[][] array = {{null, null, 3, null, null, null, null, null, null},
-                            {null, 6, null, 1, 3, null, 2, null, null},
-                            {7, null, null, 9, null, 5, null, 1, null},
-                            {null, 7, null, null, null, null, 1, 9, 5},
-                            {8, 2, null, null, null, null, 7, null, null},
-                            {null, 4, null, null, null, 1, null, 3, 2},
-                            {null, 9, 6, null, null, 4, null, 7, 8},
+        Integer[][] array = {{null, null, 5, 1, 7, null, null, 6, null},
+                            {null, null, null, 4, null, null, null, 7, 9},
+                            {6, 7, null, null, null, 9, null, 4, null},
+                            {2, null, null, null, null, null, 6, 8, 1},
                             {null, null, null, null, null, null, null, null, null},
-                            {5, null, 8, null, 6, null, 4, null, 9}};
+                            {1, 5, 7, null, null, null, null, null, 2},
+                            {null, 8, null, 7, null, null, null, 3, 4},
+                            {4, 9, null, null, null, 8, null, null, null},
+                            {null, 1, null, null, 4, 3, 5, null, null}};
 
         Iterator<GridElement> iterator = gridElements.iterator();
         for (int y = 0; y < 9; y++) {
