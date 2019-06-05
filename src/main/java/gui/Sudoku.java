@@ -21,8 +21,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Sudoku extends Application {
+public class Sudoku extends Application implements Observer {
 
     private Grid grid;
     private List<GridElement> gridElements;
@@ -106,7 +108,12 @@ public class Sudoku extends Application {
         });
 
         solveButton.setOnAction(event -> {
+            solveButton.setDisable(true);
+            fillInButton.setDisable(true);
+            clearButton.setDisable(true);
+
             GridSolver gridSolver = new GridSolver(this.grid);
+            gridSolver.addObserver(this);
 
             gridSolver.solve();
         });
@@ -260,5 +267,11 @@ public class Sudoku extends Application {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        clearButton.setDisable(false);
+        fillInButton.setDisable(false);
     }
 }

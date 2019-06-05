@@ -54,7 +54,7 @@ class GridElement extends GridPane implements Observer {
             label.setFont(new Font(38));
 
             if (showOptions) {
-                label.setStyle("-fx-text-fill: darkblue");
+                label.setStyle("-fx-text-fill: blue");
             }
 
             this.add(label, 0, 0);
@@ -66,7 +66,7 @@ class GridElement extends GridPane implements Observer {
 
                     Label label = new Label(number.toString());
                     label.setFont(new Font(13));
-                    label.setStyle("-fx-text-fill: darkblue");
+                    label.setStyle("-fx-text-fill: blue");
 
                     if (x == 0) {
                         label.setPadding(new Insets(0, 10, 0, 0));
@@ -77,7 +77,7 @@ class GridElement extends GridPane implements Observer {
 
                     this.add(label, x, y);
 
-                    if (!square.getOptions().contains(number)) {
+                    if (square.getOptions() != null && !square.getOptions().contains(number)) {
                         label.setVisible(false);
                     }
 
