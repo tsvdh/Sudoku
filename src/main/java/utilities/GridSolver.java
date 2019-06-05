@@ -20,7 +20,7 @@ public class GridSolver extends Observable {
     }
 
     public void solve() {
-        executor.scheduleWithFixedDelay(this ::updateNextSquare, 0, 250, TimeUnit.MILLISECONDS);
+        executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, 200, TimeUnit.MILLISECONDS);
     }
 
     private void updateNextSquare() {
