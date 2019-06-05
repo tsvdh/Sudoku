@@ -20,11 +20,11 @@ public class GridSolver extends Observable {
     }
 
     public void solve() {
-        executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, 200, TimeUnit.MILLISECONDS);
+        executor.scheduleWithFixedDelay(this ::updateNextSquare, 0, 250, TimeUnit.MILLISECONDS);
     }
 
     private void updateNextSquare() {
-        if (done()) {
+        if (isSolved()) {
             executor.shutdown();
 
             setChanged();
@@ -62,7 +62,7 @@ public class GridSolver extends Observable {
         }
     }
 
-    private boolean done() {
+    private boolean isSolved() {
         for (Square square : grid.getSquareList()) {
             if (square.hasNoValue()) {
                 return false;
