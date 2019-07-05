@@ -13,11 +13,13 @@ public class GridSolver extends Observable {
     private Grid grid;
     private ScheduledExecutorService executor;
     private Iterator<Square> iterator;
+    private boolean gridChanged;
 
     public GridSolver(Grid grid) {
         this.grid = grid;
         this.executor = Executors.newSingleThreadScheduledExecutor();
         resetIterator();
+        this.gridChanged = false;
     }
 
     public void solve() {
@@ -26,10 +28,7 @@ public class GridSolver extends Observable {
 
     private void updateNextSquare() {
         if (isSolved()) {
-            executor.shutdown();
-
-            setChanged();
-            notifyObservers();
+            stop();
 
         } else {
             if (iterator.hasNext()) {
@@ -44,13 +43,25 @@ public class GridSolver extends Observable {
                     updateNextSquare();
                 }
             } else {
-                resetIterator();
+                if (stuck()) {
+                    stop();
+                } else {
+                    resetIterator();
+                }
             }
         }
     }
 
+    private void stop() {
+        executor.shutdown();
+
+        setChanged();
+        notifyObservers();
+    }
+
     private void resetIterator() {
         this.iterator = grid.getSquareList().iterator();
+        gridChanged = false;
     }
 
     private void removeDeprecatedOptions(Square thisSquare) {
@@ -60,7 +71,7 @@ public class GridSolver extends Observable {
             for (Square otherSquare : section.getSquareList()) {
                 if (otherSquare.hasValue() && thisSquare.hasNoValue()) {
 
-                    thisSquare.removeOption(otherSquare.getValue());
+                    removeOption(thisSquare, otherSquare.getValue());
                 }
             }
         }
@@ -73,6 +84,17 @@ public class GridSolver extends Observable {
             }
         }
         return true;
+    }
+
+    private boolean stuck() {
+        return !gridChanged;
+    }
+
+    private void removeOption(Square square, Integer value) {
+        boolean changed = square.removeOption(value);
+        if (changed) {
+            gridChanged = true;
+        }
     }
 
     private void checkOptionOccursOnce(Square thisSquare) {
@@ -100,7 +122,8 @@ public class GridSolver extends Observable {
                     optionsToRemove.remove(integer);
 
                     for (Integer integerToRemove : optionsToRemove) {
-                        thisSquare.removeOption(integerToRemove);
+                        
+                        removeOption(thisSquare, integerToRemove);
                     }
 
                     return;

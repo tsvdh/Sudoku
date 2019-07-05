@@ -82,7 +82,7 @@ public class Square extends Observable {
         notifyObservers(false);
     }
 
-    void removeOption(Integer option) {
+    boolean removeOption(Integer option) {
 
         if (options.contains(option)) {
 
@@ -95,6 +95,9 @@ public class Square extends Observable {
 
             setChanged();
             notifyObservers(true);
+            return true;
+        } else {
+            return false;
         }
     }
 
