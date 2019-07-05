@@ -18,6 +18,7 @@ import utilities.GridSolver;
 import utilities.OverrideException;
 import utilities.Square;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -123,27 +124,32 @@ public class Sudoku extends Application implements Observer {
         stage.getIcons().add(new Image("/images/icon.png"));
         stage.show();
 
-        /*Integer[][] array = {{},
-                            {},
-                            {},
-                            {},
-                            {},
-                            {},
-                            {},
-                            {},
-                            {}};
+        Integer[][] array = {   {0, 0, 0, 0, 6, 1, 2, 0, 0},
+                                {9, 0, 0, 0, 0, 0, 1, 0, 0},
+                                {0, 7, 0, 0, 0, 0, 0, 4, 6},
+                                {0, 0, 0, 0, 4, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 3, 0, 0, 0, 0},
+                                {6, 0, 0, 0, 0, 9, 3, 0, 0},
+                                {8, 0, 0, 0, 9, 0, 0, 0, 3},
+                                {0, 6, 4, 0, 0, 8, 0, 0, 2},
+                                {0, 1, 0, 4, 0, 6, 0, 7, 0}
+        };
 
         Iterator<GridElement> iterator = gridElements.iterator();
         for (int y = 0; y < 9; y++) {
             for (int x = 0; x < 9; x++) {
+                Integer number = array[y][x];
+                if (number == 0) {
+                    number = null;
+                }
                 try {
-                    iterator.next().getSquare().setValue(array[y][x]);
+                    iterator.next().getSquare().setValue(number);
                 } catch (OverrideException e) {
                     System.out.println(e.getMessage());
                 }
             }
         }
-        solveButton.setDisable(false);*/
+        solveButton.setDisable(false);
     }
 
     private void buildGrid(GridPane gridPane) {

@@ -23,7 +23,7 @@ public class GridSolver extends Observable {
     }
 
     public void solve() {
-        executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, 100, TimeUnit.MILLISECONDS);
+        executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, 20, TimeUnit.MILLISECONDS);
     }
 
     private void updateNextSquare() {
@@ -122,7 +122,7 @@ public class GridSolver extends Observable {
                     optionsToRemove.remove(integer);
 
                     for (Integer integerToRemove : optionsToRemove) {
-                        
+
                         removeOption(thisSquare, integerToRemove);
                     }
 
