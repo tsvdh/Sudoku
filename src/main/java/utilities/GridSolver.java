@@ -8,13 +8,21 @@ import java.util.Observable;
 abstract class GridSolver extends Observable {
 
     private Grid grid;
-    Iterator<Square> iterator;
+    private Iterator<Square> iterator;
     private boolean gridChanged;
 
     GridSolver(Grid grid) {
         this.grid = grid;
         this.gridChanged = false;
         resetIterator();
+    }
+
+    Grid getGrid() {
+        return grid;
+    }
+
+    Iterator<Square> getIterator() {
+        return iterator;
     }
 
     public abstract void solve();

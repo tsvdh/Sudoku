@@ -19,8 +19,8 @@ public class LinkedGridSolver extends GridSolver {
             stop();
 
         } else {
-            if (iterator.hasNext()) {
-                Square square = iterator.next();
+            if (getIterator().hasNext()) {
+                Square square = getIterator().next();
 
                 if (square.hasNoValue()) {
 
