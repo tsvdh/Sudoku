@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
-public class Square extends Observable {
+public class Square extends Observable implements Cloneable {
 
     private Integer value;
 
@@ -148,5 +148,12 @@ public class Square extends Observable {
 
         string += ")>";
         return string;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        super.clone();
+
+        return new Square(this.value, this.xPosition, this.yPosition);
     }
 }

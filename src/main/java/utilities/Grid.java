@@ -3,7 +3,7 @@ package utilities;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Grid extends SquareHolder {
+public class Grid extends SquareHolder implements Cloneable{
 
     private List<Section> sectionList;
 
@@ -61,5 +61,18 @@ public class Grid extends SquareHolder {
         for (int index : indexes) {
             sectionList.get(index - 1).addSquare(square);
         }
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        super.clone();
+
+        Grid grid = new Grid();
+        for (Square square : this.getSquareList()) {
+            Square clone = (Square) square.clone();
+            grid.addSquare(clone);
+        }
+
+        return grid;
     }
 }
