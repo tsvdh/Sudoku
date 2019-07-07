@@ -14,7 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import utilities.Grid;
-import utilities.GridSolver;
+import utilities.LinkedGridSolver;
 import utilities.OverrideException;
 import utilities.Square;
 
@@ -113,7 +113,7 @@ public class Sudoku extends Application implements Observer {
             fillInButton.setDisable(true);
             clearButton.setDisable(true);
 
-            GridSolver gridSolver = new GridSolver(this.grid);
+            LinkedGridSolver gridSolver = new LinkedGridSolver(this.grid);
             gridSolver.addObserver(this);
 
             gridSolver.solve();

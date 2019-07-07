@@ -4,67 +4,30 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-public class GridSolver extends Observable {
+abstract class GridSolver extends Observable {
 
     private Grid grid;
-    private ScheduledExecutorService executor;
-    private Iterator<Square> iterator;
+    Iterator<Square> iterator;
     private boolean gridChanged;
 
-    public GridSolver(Grid grid) {
+    GridSolver(Grid grid) {
         this.grid = grid;
-        this.executor = Executors.newSingleThreadScheduledExecutor();
-        resetIterator();
         this.gridChanged = false;
+        resetIterator();
     }
 
-    public void solve() {
-        executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, 20, TimeUnit.MILLISECONDS);
-    }
+    public abstract void solve();
 
-    private void updateNextSquare() {
-        if (isSolved()) {
-            stop();
+    abstract void updateNextSquare();
 
-        } else {
-            if (iterator.hasNext()) {
-                Square square = iterator.next();
-                
-                if (square.hasNoValue()) {
 
-                    removeDeprecatedOptions(square);
-                    checkOptionOccursOnce(square);
-
-                } else {
-                    updateNextSquare();
-                }
-            } else {
-                if (stuck()) {
-                    stop();
-                } else {
-                    resetIterator();
-                }
-            }
-        }
-    }
-
-    private void stop() {
-        executor.shutdown();
-
-        setChanged();
-        notifyObservers();
-    }
-
-    private void resetIterator() {
+    void resetIterator() {
         this.iterator = grid.getSquareList().iterator();
         gridChanged = false;
     }
 
-    private void removeDeprecatedOptions(Square thisSquare) {
+    void removeDeprecatedOptions(Square thisSquare) {
         List<Section> sections = grid.getSectionsContaining(thisSquare);
 
         for (Section section : sections) {
@@ -77,7 +40,7 @@ public class GridSolver extends Observable {
         }
     }
 
-    private boolean isSolved() {
+    boolean isSolved() {
         for (Square square : grid.getSquareList()) {
             if (square.hasNoValue()) {
                 return false;
@@ -86,7 +49,7 @@ public class GridSolver extends Observable {
         return true;
     }
 
-    private boolean stuck() {
+    boolean stuck() {
         return !gridChanged;
     }
 
@@ -97,7 +60,7 @@ public class GridSolver extends Observable {
         }
     }
 
-    private void checkOptionOccursOnce(Square thisSquare) {
+    void checkOptionOccursOnce(Square thisSquare) {
 
         if (thisSquare.hasValue()) {
             return;
