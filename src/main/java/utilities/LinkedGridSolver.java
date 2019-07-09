@@ -23,11 +23,10 @@ public class LinkedGridSolver extends GridSolver {
                 Square square = getIterator().next();
 
                 if (square.hasNoValue()) {
+                    optimizeSquare(square);
+                }
 
-                    removeDeprecatedOptions(square);
-                    checkOptionOccursOnce(square);
-
-                } else {
+                else {
                     updateNextSquare();
                 }
             } else {

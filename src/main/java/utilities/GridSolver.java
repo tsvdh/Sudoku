@@ -35,7 +35,7 @@ abstract class GridSolver extends Observable {
         gridChanged = false;
     }
 
-    void removeDeprecatedOptions(Square thisSquare) {
+    private void removeDeprecatedOptions(Square thisSquare) {
         List<Section> sections = grid.getSectionsContaining(thisSquare);
 
         for (Section section : sections) {
@@ -68,7 +68,7 @@ abstract class GridSolver extends Observable {
         }
     }
 
-    void checkOptionOccursOnce(Square thisSquare) {
+    private void checkOptionOccursOnce(Square thisSquare) {
 
         if (thisSquare.hasValue()) {
             return;
@@ -103,5 +103,10 @@ abstract class GridSolver extends Observable {
 
             allOptions.clear();
         }
+    }
+
+    void optimizeSquare(Square thisSquare) {
+        removeDeprecatedOptions(thisSquare);
+        checkOptionOccursOnce(thisSquare);
     }
 }

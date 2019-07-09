@@ -14,8 +14,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import utilities.Grid;
+import utilities.IndependentGridSolver;
 import utilities.LinkedGridSolver;
 import utilities.OverrideException;
+import utilities.SettingsHandler;
 import utilities.Square;
 
 import java.util.Iterator;
@@ -108,16 +110,31 @@ public class Sudoku extends Application implements Observer {
             solveButton.setDisable(true);
         });
 
-        solveButton.setOnAction(event -> {
-            solveButton.setDisable(true);
-            fillInButton.setDisable(true);
-            clearButton.setDisable(true);
 
-            LinkedGridSolver gridSolver = new LinkedGridSolver(this.grid);
-            gridSolver.addObserver(this);
+        String mode = new SettingsHandler().getMode();
 
-            gridSolver.solve();
-        });
+        if (mode.equals("quick")) {
+            solveButton.setOnAction(event -> {
+
+                solveButton.setDisable(true);
+                IndependentGridSolver gridSolver = new IndependentGridSolver(this.grid);
+                gridSolver.solve();
+            });
+        }
+
+        if (mode.equals("slow")) {
+            solveButton.setOnAction(event -> {
+
+                solveButton.setDisable(true);
+                fillInButton.setDisable(true);
+                clearButton.setDisable(true);
+
+                LinkedGridSolver gridSolver = new LinkedGridSolver(this.grid);
+                gridSolver.addObserver(this);
+
+                gridSolver.solve();
+            });
+        }
 
         stage.setScene(scene);
         stage.setTitle("Sudoku solver");
