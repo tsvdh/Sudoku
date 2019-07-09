@@ -3,9 +3,9 @@ package utilities;
 import java.io.IOException;
 import java.util.Properties;
 
-public class DynamicLoader {
+class SettingsHandler {
 
-    public Integer getInterval() {
+    Integer getDelay() {
         Properties properties = new Properties();
 
         try {
@@ -14,12 +14,7 @@ public class DynamicLoader {
             System.out.println(e.getMessage());
         }
 
-        String string = properties.getProperty("interval");
+        String string = properties.getProperty("delay");
         return new Integer(string);
-    }
-
-    public static void main(String[] args) {
-        DynamicLoader loader = new DynamicLoader();
-        System.out.println(loader.getInterval());
     }
 }
