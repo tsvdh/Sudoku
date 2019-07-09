@@ -70,10 +70,6 @@ abstract class GridSolver extends Observable {
 
     private void checkOptionOccursOnce(Square thisSquare) {
 
-        if (thisSquare.hasValue()) {
-            return;
-        }
-
         List<Section> sections = grid.getSectionsContaining(thisSquare);
         List<Integer> allOptions = new LinkedList<>();
 

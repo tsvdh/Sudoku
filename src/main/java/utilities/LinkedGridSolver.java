@@ -51,4 +51,8 @@ public class LinkedGridSolver extends GridSolver {
         setChanged();
         notifyObservers();
     }
+
+    private boolean isPair(Square thisSquare) {
+        return thisSquare.getOptions().size() == 2;
+    }
 }

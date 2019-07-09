@@ -141,6 +141,7 @@ public class Sudoku extends Application implements Observer {
         stage.getIcons().add(new Image("/images/icon.png"));
         stage.show();
 
+        //begin temporary code
         Integer[][] array = {   {0, 0, 0, 0, 6, 1, 2, 0, 0},
                                 {9, 0, 0, 0, 0, 0, 1, 0, 0},
                                 {0, 7, 0, 0, 0, 0, 0, 4, 6},
@@ -167,6 +168,7 @@ public class Sudoku extends Application implements Observer {
             }
         }
         solveButton.setDisable(false);
+        //end temporary code
     }
 
     private void buildGrid(GridPane gridPane) {
