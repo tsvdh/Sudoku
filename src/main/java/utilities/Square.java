@@ -158,6 +158,10 @@ public class Square extends Observable implements Cloneable {
     }
 
     public boolean isPair() {
-        return this.options.size() == 2;
+        if (value != null) {
+            return false;
+        } else {
+            return options.size() == 2;
+        }
     }
 }

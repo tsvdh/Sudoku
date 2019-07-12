@@ -85,8 +85,12 @@ class SquareTest {
 
         Square square2 = new Square(null, 1, 2);
 
+        Square square3 = new Square(1, 2, 2);
+
         assertThat(square2.isPair()).isFalse();
 
         assertThat(square1.isPair()).isTrue();
+
+        assertThat(square3.isPair()).isFalse();
     }
 }

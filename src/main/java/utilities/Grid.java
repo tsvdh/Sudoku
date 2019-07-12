@@ -75,4 +75,13 @@ public class Grid extends SquareHolder implements Cloneable {
 
         return grid;
     }
+
+    Square getEquivalent(Square square) {
+        for (Square tempSquare : getSquareList()) {
+            if (tempSquare.equals(square)) {
+                return tempSquare;
+            }
+        }
+        return null;
+    }
 }

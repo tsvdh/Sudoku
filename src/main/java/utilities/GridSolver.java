@@ -105,4 +105,68 @@ abstract class GridSolver extends Observable {
         removeDeprecatedOptions(thisSquare);
         checkOptionOccursOnce(thisSquare);
     }
+
+    void determinePair() {
+        Square pairSquare = null;
+        for (Square square : grid.getSquareList()) {
+            if (square.isPair()) {
+                pairSquare = square;
+                break;
+            }
+        }
+
+        Grid grid1 = null;
+        Grid grid2 = null;
+        try {
+            grid1 = (Grid) grid.clone();
+            grid2 = (Grid) grid.clone();
+
+        } catch (CloneNotSupportedException e) {
+            System.out.println(e.getMessage());
+        }
+
+        int option1 = pairSquare.getOptions().get(0);
+        int option2 = pairSquare.getOptions().get(1);
+
+        try {
+            grid1.getEquivalent(pairSquare).setValue(option1);
+            grid2.getEquivalent(pairSquare).setValue(option2);
+
+        } catch (OverrideException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // TODO
+    }
+
+    boolean isValid() {
+        if (!isSolved()) {
+            return false;
+        }
+
+        for (Section section : grid.getSectionList()) {
+            List<Integer> list = new LinkedList<>();
+            List<Square> squares = section.getSquareList();
+
+            for (Square square : squares) {
+                list.add(square.getValue());
+            }
+
+            if (!isCompleteList(list)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isCompleteList(List<Integer> list) {
+        for (int i = 1; i < 10; i++) {
+            if (!list.contains(i)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

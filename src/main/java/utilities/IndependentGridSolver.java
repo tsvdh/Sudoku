@@ -25,7 +25,10 @@ public class IndependentGridSolver extends GridSolver {
                 updateNextSquare();
             }
 
-            else if (!stuck()) {
+            else {
+                if (stuck()) {
+                    determinePair();
+                }
                 resetIterator();
                 updateNextSquare();
             }

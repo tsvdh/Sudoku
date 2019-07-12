@@ -31,17 +31,10 @@ public class LinkedGridSolver extends GridSolver {
                 }
             } else {
                 if (stuck()) {
-                    Grid grid = getGrid();
-                    for (Square square : grid.getSquareList()) {
-                        if (square.isPair()) {
-                            System.out.println(square);
-                            break;
-                        }
-                    }
+                    determinePair();
                     stop();
-                } else {
-                    resetIterator();
                 }
+                resetIterator();
             }
         }
     }
