@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SquareTest {
@@ -73,5 +74,19 @@ class SquareTest {
 
         assertFalse(square1.hasValue());
         assertTrue(square2.hasValue());
+    }
+
+    @Test
+    void isPair() {
+        Square square1 = new Square(null, 1, 1);
+        for (int i = 1; i < 8; i++) {
+            square1.removeOption(i);
+        }
+
+        Square square2 = new Square(null, 1, 2);
+
+        assertThat(square2.isPair()).isFalse();
+
+        assertThat(square1.isPair()).isTrue();
     }
 }

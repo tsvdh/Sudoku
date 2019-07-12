@@ -3,7 +3,7 @@ package utilities;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Grid extends SquareHolder implements Cloneable{
+public class Grid extends SquareHolder implements Cloneable {
 
     private List<Section> sectionList;
 

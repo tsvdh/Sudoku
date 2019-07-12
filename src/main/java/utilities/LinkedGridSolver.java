@@ -31,6 +31,13 @@ public class LinkedGridSolver extends GridSolver {
                 }
             } else {
                 if (stuck()) {
+                    Grid grid = getGrid();
+                    for (Square square : grid.getSquareList()) {
+                        if (square.isPair()) {
+                            System.out.println(square);
+                            break;
+                        }
+                    }
                     stop();
                 } else {
                     resetIterator();
@@ -50,9 +57,5 @@ public class LinkedGridSolver extends GridSolver {
 
         setChanged();
         notifyObservers();
-    }
-
-    private boolean isPair(Square thisSquare) {
-        return thisSquare.getOptions().size() == 2;
     }
 }
