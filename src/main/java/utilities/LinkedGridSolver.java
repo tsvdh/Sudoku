@@ -1,10 +1,10 @@
 package utilities;
 
-import gui.Sudoku;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static gui.Sudoku.getSettingsHandler;
 
 public class LinkedGridSolver extends GridSolver {
 
@@ -40,7 +40,7 @@ public class LinkedGridSolver extends GridSolver {
                     determinePair();
 
                     try {
-                        Thread.sleep(Sudoku.getSettingsHandler().getPause());
+                        Thread.sleep(getSettingsHandler().getPause());
                     } catch (InterruptedException e) {
                         System.out.println(e.getMessage());
                     }
@@ -53,7 +53,7 @@ public class LinkedGridSolver extends GridSolver {
 
     @Override
     public void solve() {
-        int delay = Sudoku.getSettingsHandler().getDelay();
+        int delay = getSettingsHandler().getDelay();
         executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, delay, TimeUnit.MILLISECONDS);
     }
 

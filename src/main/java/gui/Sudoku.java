@@ -119,7 +119,7 @@ public class Sudoku extends Application implements Observer {
         });
 
 
-        String mode = Sudoku.getSettingsHandler().getMode();
+        String mode = getSettingsHandler().getMode();
 
         if (mode.equals("quick")) {
             solveButton.setOnAction(event -> {
