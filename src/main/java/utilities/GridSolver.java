@@ -103,7 +103,10 @@ abstract class GridSolver extends Observable {
 
     void optimizeSquare(Square thisSquare) {
         removeDeprecatedOptions(thisSquare);
-        checkOptionOccursOnce(thisSquare);
+
+        if (thisSquare.hasNoValue()) {
+            checkOptionOccursOnce(thisSquare);
+        }
     }
 
     void determinePair() {
@@ -114,6 +117,7 @@ abstract class GridSolver extends Observable {
                 break;
             }
         }
+        System.out.println(pairSquare);
 
         Grid grid1 = null;
         Grid grid2 = null;
@@ -136,7 +140,19 @@ abstract class GridSolver extends Observable {
             System.out.println(e.getMessage());
         }
 
-        // TODO
+        IndependentGridSolver solver1 = new IndependentGridSolver(grid1);
+        IndependentGridSolver solver2 = new IndependentGridSolver(grid2);
+
+        solver1.solve();
+
+        solver2.solve();
+
+        if (solver1.isValid()) {
+            pairSquare.removeOption(option2);
+
+        } else {
+            pairSquare.removeOption(option1);
+        }
     }
 
     boolean isValid() {
