@@ -117,13 +117,10 @@ abstract class GridSolver extends Observable {
                 break;
             }
         }
-        System.out.println(pairSquare);
 
-        Grid grid1 = null;
-        Grid grid2 = null;
+        Grid clone = null;
         try {
-            grid1 = (Grid) grid.clone();
-            grid2 = (Grid) grid.clone();
+            clone = (Grid) grid.clone();
 
         } catch (CloneNotSupportedException e) {
             System.out.println(e.getMessage());
@@ -133,21 +130,16 @@ abstract class GridSolver extends Observable {
         int option2 = pairSquare.getOptions().get(1);
 
         try {
-            grid1.getEquivalent(pairSquare).setValue(option1);
-            grid2.getEquivalent(pairSquare).setValue(option2);
+            clone.getEquivalent(pairSquare).setValue(option1);
 
         } catch (OverrideException e) {
             System.out.println(e.getMessage());
         }
 
-        IndependentGridSolver solver1 = new IndependentGridSolver(grid1);
-        IndependentGridSolver solver2 = new IndependentGridSolver(grid2);
+        IndependentGridSolver solver = new IndependentGridSolver(clone);
+        solver.solve();
 
-        solver1.solve();
-
-        solver2.solve();
-
-        if (solver1.isValid()) {
+        if (solver.isValid()) {
             pairSquare.removeOption(option2);
 
         } else {

@@ -30,4 +30,11 @@ public class SettingsHandler {
 
         return properties.getProperty("mode");
     }
+
+    public Integer getPause() {
+        getFromFile();
+
+        String string = properties.getProperty("pause");
+        return new Integer(string);
+    }
 }

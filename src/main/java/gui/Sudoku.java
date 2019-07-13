@@ -38,8 +38,14 @@ public class Sudoku extends Application implements Observer {
     private Button fillInButton;
     private Button solveButton;
 
+    private static SettingsHandler settingsHandler;
+
     public Grid getGrid() {
         return this.grid;
+    }
+
+    public static SettingsHandler getSettingsHandler() {
+        return settingsHandler;
     }
 
     public static void main(String[] args) {
@@ -48,6 +54,8 @@ public class Sudoku extends Application implements Observer {
 
     @Override
     public void start(Stage stage) {
+        settingsHandler = new SettingsHandler();
+
         this.grid = new Grid();
         this.gridElements = new LinkedList<>();
         this.lastMove = "none";
@@ -111,7 +119,7 @@ public class Sudoku extends Application implements Observer {
         });
 
 
-        String mode = new SettingsHandler().getMode();
+        String mode = Sudoku.getSettingsHandler().getMode();
 
         if (mode.equals("quick")) {
             solveButton.setOnAction(event -> {
@@ -292,12 +300,30 @@ public class Sudoku extends Application implements Observer {
             } catch (OverrideException e) {
                 System.out.println(e.getMessage());
             }
+            gridElement.setStyleAndColor("black");
         }
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        clearButton.setDisable(false);
-        fillInButton.setDisable(false);
+        String status = (String) arg;
+
+        if (status.equals("done")) {
+            clearButton.setDisable(false);
+            fillInButton.setDisable(false);
+        }
+        if (status.equals("working")) {
+            highLightFirstPair();
+        }
+    }
+
+    private void highLightFirstPair() {
+        for (GridElement gridElement : gridElements) {
+            Square square = gridElement.getSquare();
+            if (square.isPair()) {
+                gridElement.setStyleAndColor("red");
+                break;
+            }
+        }
     }
 }
