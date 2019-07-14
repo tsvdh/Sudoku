@@ -19,7 +19,7 @@ public class SettingsHandler {
         }
     }
 
-    private void updateFile() {
+    public void updateFile() {
 
         try {
             FileOutputStream stream = new FileOutputStream("src/main/resources/settings.properties");
@@ -28,12 +28,10 @@ public class SettingsHandler {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
-
     }
 
-    public Integer getDelay() {
-        String string = properties.getProperty("delay");
+    public Integer getInterval() {
+        String string = properties.getProperty("interval");
         return new Integer(string);
     }
 
@@ -48,7 +46,13 @@ public class SettingsHandler {
 
     public void setMode(String mode) {
         properties.setProperty("mode", mode);
+    }
 
-        updateFile();
+    public void setInterval(String interval) {
+        properties.setProperty("interval", interval);
+    }
+
+    public void setPause(String pause) {
+        properties.setProperty("pause", pause);
     }
 }
