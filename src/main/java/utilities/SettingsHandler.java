@@ -1,5 +1,6 @@
 package utilities;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -7,7 +8,7 @@ public class SettingsHandler {
 
     private Properties properties;
 
-    private void getFromFile() {
+    public SettingsHandler() {
         properties = new Properties();
 
         try {
@@ -18,23 +19,36 @@ public class SettingsHandler {
         }
     }
 
-    public Integer getDelay() {
-        getFromFile();
+    private void updateFile() {
 
+        try {
+            FileOutputStream stream = new FileOutputStream("src/main/resources/settings.properties");
+            properties.store(stream, null);
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+
+    }
+
+    public Integer getDelay() {
         String string = properties.getProperty("delay");
         return new Integer(string);
     }
 
     public String getMode() {
-        getFromFile();
-
         return properties.getProperty("mode");
     }
 
     public Integer getPause() {
-        getFromFile();
-
         String string = properties.getProperty("pause");
         return new Integer(string);
+    }
+
+    public void setMode(String mode) {
+        properties.setProperty("mode", mode);
+
+        updateFile();
     }
 }
