@@ -37,6 +37,7 @@ public class Sudoku extends Application implements Observer {
     private Button clearButton;
     private Button fillInButton;
     private Button solveButton;
+    private Button settingsButton;
 
     private static SettingsHandler settingsHandler;
 
@@ -84,11 +85,17 @@ public class Sudoku extends Application implements Observer {
         solveButton.setText("Solve");
         solveButton.setDisable(true);
 
+        settingsButton = new Button();
+        settingsButton.setFont(new Font(20));
+        settingsButton.setPrefSize(100, 30);
+        settingsButton.setText("Settings");
+
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(10, 10, 50 ,10));
         hBox.getChildren().addAll(clearButton,
                                 fillInButton,
-                                solveButton);
+                                solveButton,
+                                settingsButton);
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(40);
 
@@ -107,6 +114,7 @@ public class Sudoku extends Application implements Observer {
             clearButton.setDisable(true);
             fillInButton.setDisable(true);
             solveButton.setDisable(true);
+            settingsButton.setDisable(true);
 
             clearSquares();
 
@@ -116,6 +124,10 @@ public class Sudoku extends Application implements Observer {
         clearButton.setOnAction(event -> {
             clearSquares();
             solveButton.setDisable(true);
+        });
+
+        settingsButton.setOnAction(event -> {
+            new Settings();
         });
 
 
@@ -136,6 +148,7 @@ public class Sudoku extends Application implements Observer {
                 solveButton.setDisable(true);
                 fillInButton.setDisable(true);
                 clearButton.setDisable(true);
+                settingsButton.setDisable(true);
 
                 LinkedGridSolver gridSolver = new LinkedGridSolver(this.grid);
                 gridSolver.addObserver(this);
@@ -265,6 +278,7 @@ public class Sudoku extends Application implements Observer {
                     clearButton.setDisable(false);
                     fillInButton.setDisable(false);
                     solveButton.setDisable(false);
+                    settingsButton.setDisable(false);
                 }
 
                 lastMove = "next";
@@ -311,6 +325,7 @@ public class Sudoku extends Application implements Observer {
         if (status.equals("done")) {
             clearButton.setDisable(false);
             fillInButton.setDisable(false);
+            settingsButton.setDisable(false);
         }
         if (status.equals("working")) {
             highLightFirstPair();

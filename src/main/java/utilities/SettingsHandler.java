@@ -48,11 +48,11 @@ public class SettingsHandler {
         properties.setProperty("mode", mode);
     }
 
-    public void setInterval(String interval) {
-        properties.setProperty("interval", interval);
+    public void setInterval(Integer interval) {
+        properties.setProperty("interval", interval.toString());
     }
 
-    public void setPause(String pause) {
-        properties.setProperty("pause", pause);
+    public void setPause(Integer pause) {
+        properties.setProperty("pause", pause.toString());
     }
 }
