@@ -5,19 +5,21 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import utilities.SettingsHandler;
 
+import java.util.Observable;
+
 import static gui.Sudoku.getSettingsHandler;
 
-class Settings {
+class Settings extends Observable {
 
-    Settings() {
+    void build() {
         SettingsHandler handler = getSettingsHandler();
 
         Button okButton = new Button();
@@ -54,13 +56,17 @@ class Settings {
         pauseSlider.setSnapToTicks(true);
         pauseSlider.setValue(handler.getPause() / 1000);
 
-        ToggleButton toggleButton = new ToggleButton();
-
+        CheckBox checkBox = new CheckBox();
+        checkBox.setText("Slow mode");
+        checkBox.setPrefSize(80, 40);
+        if (handler.getMode().equals("slow")) {
+            checkBox.setSelected(true);
+        }
 
         GridPane gridPane = new GridPane();
         gridPane.add(intervalSlider, 0, 0);
         gridPane.add(pauseSlider, 0, 1);
-        gridPane.add(toggleButton, 0, 2);
+        gridPane.add(checkBox, 0, 2);
         gridPane.add(okButton, 1, 3);
         gridPane.setPadding(new Insets(20));
         gridPane.setAlignment(Pos.CENTER);
@@ -77,8 +83,16 @@ class Settings {
         okButton.setOnAction(event -> {
             handler.setInterval((int) intervalSlider.getValue());
             handler.setPause((int) (pauseSlider.getValue() * 1000));
+            if (checkBox.isSelected()) {
+                handler.setMode("slow");
+            } else {
+                handler.setMode("quick");
+            }
 
             handler.updateFile();
+            setChanged();
+            notifyObservers();
+
             stage.close();
         });
 

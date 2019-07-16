@@ -127,35 +127,12 @@ public class Sudoku extends Application implements Observer {
         });
 
         settingsButton.setOnAction(event -> {
-            new Settings();
+            Settings settings = new Settings();
+            settings.addObserver(this);
+            settings.build();
         });
 
-
-        String mode = getSettingsHandler().getMode();
-
-        if (mode.equals("quick")) {
-            solveButton.setOnAction(event -> {
-
-                solveButton.setDisable(true);
-                IndependentGridSolver gridSolver = new IndependentGridSolver(this.grid);
-                gridSolver.solve();
-            });
-        }
-
-        if (mode.equals("slow")) {
-            solveButton.setOnAction(event -> {
-
-                solveButton.setDisable(true);
-                fillInButton.setDisable(true);
-                clearButton.setDisable(true);
-                settingsButton.setDisable(true);
-
-                LinkedGridSolver gridSolver = new LinkedGridSolver(this.grid);
-                gridSolver.addObserver(this);
-
-                gridSolver.solve();
-            });
-        }
+        setSolveButtonAction();
 
         stage.setScene(scene);
         stage.setTitle("Sudoku solver");
@@ -322,13 +299,19 @@ public class Sudoku extends Application implements Observer {
     public void update(Observable o, Object arg) {
         String status = (String) arg;
 
-        if (status.equals("done")) {
-            clearButton.setDisable(false);
-            fillInButton.setDisable(false);
-            settingsButton.setDisable(false);
+        if (o instanceof LinkedGridSolver) {
+            if (status.equals("done")) {
+                clearButton.setDisable(false);
+                fillInButton.setDisable(false);
+                settingsButton.setDisable(false);
+            }
+            if (status.equals("working")) {
+                highLightFirstPair();
+            }
         }
-        if (status.equals("working")) {
-            highLightFirstPair();
+
+        if (o instanceof Settings) {
+            setSolveButtonAction();
         }
     }
 
@@ -339,6 +322,34 @@ public class Sudoku extends Application implements Observer {
                 gridElement.setStyleAndColor("red");
                 break;
             }
+        }
+    }
+
+    private void setSolveButtonAction() {
+        String mode = getSettingsHandler().getMode();
+
+        if (mode.equals("quick")) {
+            solveButton.setOnAction(event -> {
+
+                solveButton.setDisable(true);
+                IndependentGridSolver gridSolver = new IndependentGridSolver(this.grid);
+                gridSolver.solve();
+            });
+        }
+
+        if (mode.equals("slow")) {
+            solveButton.setOnAction(event -> {
+
+                solveButton.setDisable(true);
+                fillInButton.setDisable(true);
+                clearButton.setDisable(true);
+                settingsButton.setDisable(true);
+
+                LinkedGridSolver gridSolver = new LinkedGridSolver(this.grid);
+                gridSolver.addObserver(this);
+
+                gridSolver.solve();
+            });
         }
     }
 }
