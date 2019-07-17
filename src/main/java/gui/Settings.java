@@ -27,9 +27,6 @@ class Settings extends Observable {
         Button okButton = new Button();
         okButton.setFont(new Font(15));
         okButton.setText("OK");
-        okButton.setOnAction(event -> {
-
-        });
         okButton.setPrefSize(100, 40);
 
         Slider intervalSlider = new Slider();

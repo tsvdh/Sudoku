@@ -177,4 +177,16 @@ abstract class GridSolver extends Observable {
 
         return true;
     }
+
+    private boolean isValidList(List<Integer> list) {
+        for (int i = 1; i < 10; i++) {
+
+            list.remove(new Integer(i));
+            if (list.contains(i)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
