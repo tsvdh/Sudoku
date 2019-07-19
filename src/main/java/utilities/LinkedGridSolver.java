@@ -33,20 +33,28 @@ public class LinkedGridSolver extends GridSolver {
                 }
             } else {
                 if (stuck()) {
-
-                    setChanged();
-                    notifyObservers("working");
-
                     determinePair();
 
-                    try {
-                        Thread.sleep(getSettingsHandler().getPause());
-                    } catch (InterruptedException e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
+                    boolean success = getSuccess();
 
-                resetIterator();
+                    if (success) {
+                        setChanged();
+                        notifyObservers("working");
+
+                        resetIterator();
+
+                        try {
+                            Thread.sleep(getSettingsHandler().getPause());
+                        } catch (InterruptedException e) {
+                            System.out.println(e.getMessage());
+                        }
+
+                    } if (!success) {
+                        stop();
+                    }
+                } else {
+                    resetIterator();
+                }
             }
         }
     }

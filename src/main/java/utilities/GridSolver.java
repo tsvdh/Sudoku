@@ -10,11 +10,13 @@ public abstract class GridSolver extends Observable {
     private Grid grid;
     private Iterator<Square> iterator;
     private boolean gridChanged;
+    private boolean success;
 
     GridSolver(Grid grid) {
         this.grid = grid;
         this.gridChanged = false;
         resetIterator();
+        success = true;
     }
 
     Grid getGrid() {
@@ -23,6 +25,10 @@ public abstract class GridSolver extends Observable {
 
     Iterator<Square> getIterator() {
         return iterator;
+    }
+
+    boolean getSuccess() {
+        return success;
     }
 
     public abstract void solve();
@@ -118,6 +124,11 @@ public abstract class GridSolver extends Observable {
             }
         }
 
+        if (pairSquare == null) {
+            success = false;
+            return;
+        }
+
         Grid clone = null;
         try {
             clone = (Grid) grid.clone();
@@ -139,11 +150,13 @@ public abstract class GridSolver extends Observable {
         IndependentGridSolver solver = new IndependentGridSolver(clone);
         solver.solve();
 
-        if (solver.isComplete()) {
-            pairSquare.removeOption(option2);
+        if (solver.getSuccess()) {
+            if (solver.isComplete()) {
+                pairSquare.removeOption(option2);
 
-        } else {
-            pairSquare.removeOption(option1);
+            } else {
+                pairSquare.removeOption(option1);
+            }
         }
     }
 

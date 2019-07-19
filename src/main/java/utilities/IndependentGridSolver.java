@@ -28,9 +28,18 @@ public class IndependentGridSolver extends GridSolver {
             else {
                 if (stuck()) {
                     determinePair();
+
+                    boolean success = getSuccess();
+
+                    if (success) {
+                        resetIterator();
+                        updateNextSquare();
+                    }
+
+                } else {
+                    resetIterator();
+                    updateNextSquare();
                 }
-                resetIterator();
-                updateNextSquare();
             }
         }
     }
