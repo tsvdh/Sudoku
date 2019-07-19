@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -105,6 +106,7 @@ class Settings extends Observable {
         stage.setScene(scene);
         stage.setTitle("Settings");
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.getIcons().add(new Image("images/icon.png"));
 
         Platform.runLater(gridPane :: requestFocus);
 

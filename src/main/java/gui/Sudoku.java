@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import utilities.Grid;
+import utilities.GridSolver;
 import utilities.IndependentGridSolver;
 import utilities.LinkedGridSolver;
 import utilities.OverrideException;
@@ -252,10 +253,7 @@ public class Sudoku extends Application implements Observer {
                 } else {
                     scene.setOnKeyPressed(null);
 
-                    clearButton.setDisable(false);
-                    fillInButton.setDisable(false);
-                    solveButton.setDisable(false);
-                    settingsButton.setDisable(false);
+                    finishFillingIn();
                 }
 
                 lastMove = "next";
@@ -350,6 +348,19 @@ public class Sudoku extends Application implements Observer {
 
                 gridSolver.solve();
             });
+        }
+    }
+
+    private void finishFillingIn() {
+        clearButton.setDisable(false);
+        fillInButton.setDisable(false);
+        settingsButton.setDisable(false);
+
+        GridSolver solver = new IndependentGridSolver(grid);
+        if (solver.isValid()) {
+            solveButton.setDisable(false);
+        } else {
+            new Message("The sudoku you entered is invalid!");
         }
     }
 }

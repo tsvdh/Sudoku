@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
-abstract class GridSolver extends Observable {
+public abstract class GridSolver extends Observable {
 
     private Grid grid;
     private Iterator<Square> iterator;
@@ -139,7 +139,7 @@ abstract class GridSolver extends Observable {
         IndependentGridSolver solver = new IndependentGridSolver(clone);
         solver.solve();
 
-        if (solver.isValid()) {
+        if (solver.isComplete()) {
             pairSquare.removeOption(option2);
 
         } else {
@@ -147,7 +147,7 @@ abstract class GridSolver extends Observable {
         }
     }
 
-    boolean isValid() {
+    boolean isComplete() {
         if (!isSolved()) {
             return false;
         }
@@ -171,6 +171,24 @@ abstract class GridSolver extends Observable {
     private boolean isCompleteList(List<Integer> list) {
         for (int i = 1; i < 10; i++) {
             if (!list.contains(i)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isValid() {
+        for (Section section : grid.getSectionList()) {
+
+            List<Integer> list = new LinkedList<>();
+            for (Square square : section.getSquareList()) {
+                if (square.hasValue()) {
+                    list.add(square.getValue());
+                }
+            }
+
+            if (!isValidList(list)) {
                 return false;
             }
         }
