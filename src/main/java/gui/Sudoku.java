@@ -141,7 +141,7 @@ public class Sudoku extends Application implements Observer {
         stage.show();
 
         //begin temporary code
-        Integer[][] array = {   {0, 0, 0, 0, 6, 1, 2, 0, 0},
+        /*Integer[][] array = {   {0, 0, 0, 0, 6, 1, 2, 0, 0},
                                 {9, 0, 0, 0, 0, 0, 1, 0, 0},
                                 {0, 7, 0, 0, 0, 0, 0, 4, 6},
                                 {0, 0, 0, 0, 4, 0, 0, 0, 0},
@@ -150,6 +150,17 @@ public class Sudoku extends Application implements Observer {
                                 {8, 0, 0, 0, 9, 0, 0, 0, 3},
                                 {0, 6, 4, 0, 0, 8, 0, 0, 2},
                                 {0, 1, 0, 4, 0, 6, 0, 7, 0}
+        };*/
+
+        Integer[][] array = {   {1, 2, 3, 4, 5, 6, 7, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0}
         };
 
         Iterator<GridElement> iterator = gridElements.iterator();
