@@ -56,6 +56,11 @@ class Settings extends Observable {
         pauseSlider.setSnapToTicks(true);
         pauseSlider.setValue(handler.getPause() / 1000);
 
+        if (handler.getMode().equals("quick")) {
+            intervalSlider.setDisable(true);
+            pauseSlider.setDisable(true);
+        }
+
         CheckBox checkBox = new CheckBox();
         checkBox.setText("Slow mode");
         checkBox.setPrefHeight(40);
@@ -66,11 +71,11 @@ class Settings extends Observable {
 
         Text description1 = new Text();
         description1.setText("The amount of milliseconds between each step");
-        description1.setFont(new Font(15));
+        description1.setFont(new Font(18));
 
         Label description2 = new Label();
         description2.setText("The amount of seconds to pause after solving a red square");
-        description2.setFont(new Font(15));
+        description2.setFont(new Font(18));
         description2.setPadding(new Insets(50, 0, 0, 0));
 
         Button line1 = new Button();
@@ -124,6 +129,11 @@ class Settings extends Observable {
             notifyObservers();
 
             stage.close();
+        });
+
+        checkBox.setOnAction(event -> {
+            intervalSlider.setDisable(!checkBox.isSelected());
+            pauseSlider.setDisable(!checkBox.isSelected());
         });
 
         stage.showAndWait();
