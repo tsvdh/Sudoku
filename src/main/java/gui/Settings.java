@@ -11,7 +11,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import utilities.SettingsHandler;
@@ -56,11 +55,6 @@ class Settings extends Observable {
         pauseSlider.setSnapToTicks(true);
         pauseSlider.setValue(handler.getPause() / 1000);
 
-        if (handler.getMode().equals("quick")) {
-            intervalSlider.setDisable(true);
-            pauseSlider.setDisable(true);
-        }
-
         CheckBox checkBox = new CheckBox();
         checkBox.setText("Slow mode");
         checkBox.setPrefHeight(40);
@@ -69,14 +63,15 @@ class Settings extends Observable {
             checkBox.setSelected(true);
         }
 
-        Text description1 = new Text();
+        Label description1 = new Label();
         description1.setText("The amount of milliseconds between each step");
         description1.setFont(new Font(18));
+        description1.setPadding(new Insets(20, 0, 0, 0));
 
         Label description2 = new Label();
         description2.setText("The amount of seconds to pause after solving a red square");
         description2.setFont(new Font(18));
-        description2.setPadding(new Insets(50, 0, 0, 0));
+        description2.setPadding(new Insets(20, 0, 0, 0));
 
         Button line1 = new Button();
         line1.setPrefSize(300, 1);
@@ -90,17 +85,20 @@ class Settings extends Observable {
         filler.setVisible(false);
         filler.setPrefSize(0, 0);
         filler.setFont(new Font(0));
-        filler.setPadding(new Insets(50, 0, 0, 0));
+        filler.setPadding(new Insets(20, 0, 0, 0));
 
         GridPane gridPane = new GridPane();
-        gridPane.add(description1, 0, 0);
-        gridPane.add(intervalSlider, 0, 1);
+        gridPane.add(checkBox, 0, 0);
+        gridPane.add(filler, 0, 1);
         gridPane.add(line1, 0, 2);
-        gridPane.add(description2, 0, 3);
-        gridPane.add(pauseSlider, 0, 4);
+        gridPane.add(description1, 0, 3);
+        gridPane.add(intervalSlider, 0, 4);
         gridPane.add(line2, 0, 5);
-        gridPane.add(filler, 0, 6);
-        gridPane.add(checkBox, 0, 7);
+        gridPane.add(description2, 0, 6);
+        gridPane.add(pauseSlider, 0, 7);
+
+        // TODO
+
         gridPane.add(okButton, 1, 8);
         gridPane.setPadding(new Insets(20));
         gridPane.setAlignment(Pos.CENTER);
@@ -132,8 +130,7 @@ class Settings extends Observable {
         });
 
         checkBox.setOnAction(event -> {
-            intervalSlider.setDisable(!checkBox.isSelected());
-            pauseSlider.setDisable(!checkBox.isSelected());
+            // TODO
         });
 
         stage.showAndWait();
