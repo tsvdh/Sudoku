@@ -157,6 +157,8 @@ public abstract class GridSolver extends Observable {
             } else {
                 pairSquare.removeOption(option1);
             }
+        } else {
+            success = false;
         }
     }
 
