@@ -342,6 +342,7 @@ public class Sudoku extends Application implements Observer {
 
                 solveButton.setDisable(true);
                 IndependentGridSolver gridSolver = new IndependentGridSolver(this.grid);
+                showOptionsOfAllSquares();
                 gridSolver.solve();
             });
         }
@@ -357,6 +358,7 @@ public class Sudoku extends Application implements Observer {
                 LinkedGridSolver gridSolver = new LinkedGridSolver(this.grid);
                 gridSolver.addObserver(this);
 
+                showOptionsOfAllSquares();
                 gridSolver.solve();
             });
         }
@@ -372,6 +374,14 @@ public class Sudoku extends Application implements Observer {
             solveButton.setDisable(false);
         } else {
             new Message("The sudoku you entered is invalid!");
+        }
+    }
+
+    private void showOptionsOfAllSquares() {
+        for (GridElement gridElement : gridElements) {
+            if (gridElement.getSquare().hasNoValue()) {
+                gridElement.update(null, true);
+            }
         }
     }
 }

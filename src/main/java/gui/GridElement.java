@@ -1,5 +1,6 @@
 package gui;
 
+import com.sun.istack.internal.Nullable;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -88,9 +89,7 @@ class GridElement extends GridPane implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        Platform.runLater(() -> {
-            showData( (Boolean) arg);
-        });
+    public void update(@Nullable Observable o, Object arg) {
+        Platform.runLater(() -> showData( (Boolean) arg));
     }
 }
