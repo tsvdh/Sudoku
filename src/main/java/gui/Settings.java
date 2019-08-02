@@ -3,6 +3,7 @@ package gui;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -97,7 +98,7 @@ class Settings extends Observable {
         gridPane.add(description2, 0, 6);
         gridPane.add(pauseSlider, 0, 7);
 
-        // TODO
+        setCheckboxVisibility(gridPane, checkBox);
 
         gridPane.add(okButton, 1, 8);
         gridPane.setPadding(new Insets(20));
@@ -130,9 +131,25 @@ class Settings extends Observable {
         });
 
         checkBox.setOnAction(event -> {
-            // TODO
+            setCheckboxVisibility(gridPane, checkBox);
         });
 
         stage.showAndWait();
+    }
+
+    private void setCheckboxVisibility(GridPane gridPane, CheckBox checkBox) {
+        boolean checked = checkBox.isSelected();
+        int start = 1;
+        int end = 7;
+        int counter = 0;
+
+        for (Node node : gridPane.getChildren()) {
+
+            if (counter >= start && counter <= end) {
+                node.setVisible(checked);
+            }
+
+            counter++;
+        }
     }
 }

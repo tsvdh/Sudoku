@@ -62,7 +62,7 @@ public class LinkedGridSolver extends GridSolver {
     @Override
     public void solve() {
         int interval = getSettingsHandler().getInterval();
-        executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, interval, TimeUnit.MILLISECONDS);
+        executor.scheduleWithFixedDelay(this :: updateNextSquare, 1000, interval, TimeUnit.MILLISECONDS);
     }
 
     private void stop() {
