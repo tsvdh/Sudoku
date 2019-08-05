@@ -13,8 +13,8 @@ public class SettingsHandler {
         properties = new Properties();
 
         try {
-            FileInputStream fileInputStream = new FileInputStream("src/main/resources/settings.properties");
-            properties.load(fileInputStream);
+            FileInputStream stream = new FileInputStream("src/main/resources/settings.properties");
+            properties.load(stream);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
