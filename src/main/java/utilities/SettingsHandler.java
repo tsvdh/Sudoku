@@ -1,5 +1,6 @@
 package utilities;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -12,8 +13,8 @@ public class SettingsHandler {
         properties = new Properties();
 
         try {
-            properties.load(getClass().getClassLoader().
-                    getResourceAsStream("settings.properties"));
+            FileInputStream fileInputStream = new FileInputStream("src/main/resources/settings.properties");
+            properties.load(fileInputStream);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
