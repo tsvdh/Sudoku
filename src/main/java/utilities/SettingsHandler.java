@@ -1,20 +1,33 @@
 package utilities;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class SettingsHandler {
 
     private Properties properties;
+    private final String jarFilePath = "config/settings.properties";
+    private final String filePath = "/" + jarFilePath;
 
     public SettingsHandler() {
         properties = new Properties();
 
         try {
-            FileInputStream stream = new FileInputStream("src/main/resources/settings.properties");
-            properties.load(stream);
+            String relativePath = getClass().getResource(filePath).getPath();
+            File file = new File(relativePath);
+
+            if (file.exists()) {
+                FileInputStream stream = new FileInputStream(file);
+                properties.load(stream);
+            } else {
+                InputStream stream = getClass().getClassLoader().getResourceAsStream(jarFilePath);
+                properties.load(stream);
+            }
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -23,7 +36,8 @@ public class SettingsHandler {
     public void updateFile() {
 
         try {
-            FileOutputStream stream = new FileOutputStream("src/main/resources/settings.properties");
+            File file = new File(getClass().getResource(filePath).getPath());
+            FileOutputStream stream = new FileOutputStream(file);
             properties.store(stream, null);
 
         } catch (IOException e) {

@@ -10,7 +10,7 @@ buildNumber.properties
 .mvn/timing.properties
 .idea/
 data/
-src/main/resources/settings.properties
+src/main/resources/config/settings.properties
 
 # Exclude maven wrapper
 !/.mvn/wrapper/maven-wrapper.jar
