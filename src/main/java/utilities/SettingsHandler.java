@@ -30,6 +30,11 @@ public class SettingsHandler {
 
             if (!file.exists()) {
                 file = new File(jarFilePath);
+
+                if (!file.exists()) {
+                    System.out.println("Settings file not found, please make sure it is in the same folder as the JAR.");
+                    System.exit(0);
+                }
             }
 
             if (mode.equals("read")) {
@@ -43,9 +48,6 @@ public class SettingsHandler {
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        } catch (NullPointerException e) {
-            System.out.println("Settings file not found, please make sure it is in the same folder as the JAR.");
-            System.exit(0);
         }
     }
 
