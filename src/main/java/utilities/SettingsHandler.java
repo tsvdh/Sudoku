@@ -5,43 +5,47 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
 public class SettingsHandler {
 
     private Properties properties;
-    private final String jarFilePath = "config/settings.properties";
-    private final String filePath = "/" + jarFilePath;
+    private final String filePath = "/config/settings.properties";
+    private final String jarFilePath = "./settings.properties";
 
     public SettingsHandler() {
         properties = new Properties();
+        fileIO("read");
+    }
 
+    public void updateFile() {
+        fileIO("write");
+    }
+
+    private void fileIO(String mode) {
         try {
             String relativePath = getClass().getResource(filePath).getPath();
             File file = new File(relativePath);
 
-            if (file.exists()) {
-                FileInputStream stream = new FileInputStream(file);
+            if (!file.exists()) {
+                file = new File(jarFilePath);
+            }
+
+            if (mode.equals("read")) {
+                InputStream stream = new FileInputStream(file);
                 properties.load(stream);
-            } else {
-                InputStream stream = getClass().getClassLoader().getResourceAsStream(jarFilePath);
-                properties.load(stream);
+            }
+            if (mode.equals("write")) {
+                OutputStream stream = new FileOutputStream(file);
+                properties.store(stream, null);
             }
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        }
-    }
-
-    public void updateFile() {
-
-        try {
-            File file = new File(getClass().getResource(filePath).getPath());
-            FileOutputStream stream = new FileOutputStream(file);
-            properties.store(stream, null);
-
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        } catch (NullPointerException e) {
+            System.out.println("Settings file not found, please make sure it is in the same folder as the JAR.");
+            System.exit(0);
         }
     }
 

@@ -11,6 +11,7 @@ buildNumber.properties
 .idea/
 data/
 src/main/resources/config/settings.properties
+deploy/
 
 # Exclude maven wrapper
 !/.mvn/wrapper/maven-wrapper.jar
