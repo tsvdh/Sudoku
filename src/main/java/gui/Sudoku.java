@@ -2,12 +2,14 @@ package gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -38,6 +40,7 @@ public class Sudoku extends Application implements Observer {
     private Button fillInButton;
     private Button solveButton;
     private Button settingsButton;
+    private EventHandler<KeyEvent> eventHandler;
 
     private static SettingsHandler settingsHandler;
 
@@ -199,19 +202,23 @@ public class Sudoku extends Application implements Observer {
         elementIterator = gridElements.listIterator();
         goToNextElement();
 
-        scene.setOnKeyPressed(event -> {
+        eventHandler = event -> {
+
             currentElement.setStyleAndColor("black");
 
             KeyCode keyCode = event.getCode();
 
-            if (keyCode.isDigitKey()) {
-                Integer number = new Integer(keyCode.getName());
+            if (keyCode.isDigitKey() || keyCode.isWhitespaceKey()) {
 
-                if (number != 0) {
-                    try {
-                        currentElement.getSquare().setValue(number);
-                    } catch (OverrideException e) {
-                        System.out.println(e.getMessage());
+                if (!keyCode.isWhitespaceKey()) {
+                    Integer number = new Integer(keyCode.getName());
+
+                    if (number != 0) {
+                        try {
+                            currentElement.getSquare().setValue(number);
+                        } catch (OverrideException e) {
+                            System.out.println(e.getMessage());
+                        }
                     }
                 }
 
@@ -221,15 +228,14 @@ public class Sudoku extends Application implements Observer {
                     }
                     goToNextElement();
                 } else {
-                    scene.setOnKeyPressed(null);
 
-                    finishFillingIn();
+                    finishFillingIn(scene);
                 }
 
                 lastMove = "next";
             }
 
-            if (keyCode.equals(KeyCode.BACK_SPACE)) {
+            else if (keyCode.equals(KeyCode.BACK_SPACE) || keyCode.equals(KeyCode.DELETE)) {
                 if (elementIterator.hasPrevious()) {
 
                     if (lastMove.equals("next")) {
@@ -249,7 +255,13 @@ public class Sudoku extends Application implements Observer {
                     currentElement.setStyleAndColor("lightgreen");
                 }
             }
-        });
+
+            else {
+                currentElement.setStyleAndColor("lightgreen");
+            }
+        };
+
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
     }
 
     private void clearSquares() {
@@ -323,7 +335,9 @@ public class Sudoku extends Application implements Observer {
         }
     }
 
-    private void finishFillingIn() {
+    private void finishFillingIn(Scene scene) {
+        scene.removeEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
+
         clearButton.setDisable(false);
         fillInButton.setDisable(false);
         settingsButton.setDisable(false);
