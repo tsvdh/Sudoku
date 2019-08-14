@@ -1,8 +1,8 @@
 package gui;
 
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -42,7 +42,10 @@ class Message {
 
         button.setOnAction(event -> stage.close());
 
-        Platform.runLater(vBox :: requestFocus);
+        vBox.requestFocus();
+        for (Node node : vBox.getChildren()) {
+            node.setOnMousePressed(event -> vBox.requestFocus());
+        }
         stage.showAndWait();
     }
 }

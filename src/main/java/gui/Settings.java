@@ -1,6 +1,5 @@
 package gui;
 
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -112,8 +111,6 @@ class Settings extends Observable {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.getIcons().add(new Image("images/icon.png"));
 
-        Platform.runLater(gridPane :: requestFocus);
-
         okButton.setOnAction(event -> {
             handler.setInterval((int) intervalSlider.getValue());
             handler.setPause((int) (pauseSlider.getValue() * 1000));
@@ -130,9 +127,12 @@ class Settings extends Observable {
             stage.close();
         });
 
-        checkBox.setOnAction(event -> {
-            setCheckboxVisibility(gridPane, checkBox);
-        });
+        checkBox.setOnAction(event -> setCheckboxVisibility(gridPane, checkBox));
+
+        gridPane.requestFocus();
+        for (Node node : gridPane.getChildren()) {
+            node.setOnMousePressed(event -> gridPane.requestFocus());
+        }
 
         stage.showAndWait();
     }

@@ -1,11 +1,11 @@
 package gui;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -42,15 +42,10 @@ public class Sudoku extends Application implements Observer {
     private Button solveButton;
     private Button settingsButton;
     private EventHandler<KeyEvent> keyEventHandler;
-    private GridPane gridPane;
     private EventHandler<ActionEvent> fillInActionEventHandler;
     private EventHandler<ActionEvent> cancelActionEventHandler;
 
     private static SettingsHandler settingsHandler;
-
-    public Grid getGrid() {
-        return this.grid;
-    }
 
     public static SettingsHandler getSettingsHandler() {
         return settingsHandler;
@@ -69,7 +64,7 @@ public class Sudoku extends Application implements Observer {
         this.lastMove = "none";
 
 
-        gridPane = new GridPane();
+        GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setStyle("-fx-background-color: black;");
 
@@ -138,7 +133,11 @@ public class Sudoku extends Application implements Observer {
         stage.setTitle("Sudoku solver");
         stage.getIcons().add(new Image("/images/icon.png"));
 
-        divertFocus();
+        hBox.requestFocus();
+        for (Node node : hBox.getChildren()) {
+            node.setOnMousePressed(event -> hBox.requestFocus());
+        }
+
         stage.show();
     }
 
@@ -371,8 +370,6 @@ public class Sudoku extends Application implements Observer {
 
             setKeyAction(scene);
 
-            divertFocus();
-
             fillInButton.setText("Cancel");
 
             flipButtonAction();
@@ -385,10 +382,6 @@ public class Sudoku extends Application implements Observer {
             fillInButton.setText("Fill in");
             flipButtonAction();
         };
-    }
-
-    private void divertFocus() {
-        Platform.runLater(gridPane :: requestFocus);
     }
 
     private void flipButtonAction() {
