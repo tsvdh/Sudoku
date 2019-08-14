@@ -80,6 +80,7 @@ public class Sudoku extends Application implements Observer {
         clearButton.setFont(new Font(20));
         clearButton.setPrefSize(100, 30);
         clearButton.setText("Clear");
+        clearButton.setDisable(true);
 
         fillInButton = new Button();
         fillInButton.setFont(new Font(20));
@@ -122,6 +123,7 @@ public class Sudoku extends Application implements Observer {
         clearButton.setOnAction(event -> {
             clearSquares();
             solveButton.setDisable(true);
+            clearButton.setDisable(true);
         });
 
         settingsButton.setOnAction(event -> {
@@ -339,14 +341,16 @@ public class Sudoku extends Application implements Observer {
         fillInButton.setDisable(false);
         settingsButton.setDisable(false);
 
+        fillInButton.setText("Fill in");
+
+        flipButtonAction();
+
         GridSolver solver = new IndependentGridSolver(grid);
         if (solver.isValid()) {
             solveButton.setDisable(false);
         } else {
             new Message("The sudoku you entered is invalid!");
         }
-
-        fillInButton.setText("Fill in");
     }
 
     private void showOptionsOfAllSquares() {
@@ -376,9 +380,9 @@ public class Sudoku extends Application implements Observer {
 
         cancelActionEventHandler = event -> {
             clearSquares();
-
-            finishFillingIn(scene);
-
+            scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
+            settingsButton.setDisable(false);
+            fillInButton.setText("Fill in");
             flipButtonAction();
         };
     }
