@@ -2,6 +2,7 @@ package gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -40,7 +41,10 @@ public class Sudoku extends Application implements Observer {
     private Button fillInButton;
     private Button solveButton;
     private Button settingsButton;
-    private EventHandler<KeyEvent> eventHandler;
+    private EventHandler<KeyEvent> keyEventHandler;
+    private GridPane gridPane;
+    private EventHandler<ActionEvent> fillInActionEventHandler;
+    private EventHandler<ActionEvent> cancelActionEventHandler;
 
     private static SettingsHandler settingsHandler;
 
@@ -65,7 +69,7 @@ public class Sudoku extends Application implements Observer {
         this.lastMove = "none";
 
 
-        GridPane gridPane = new GridPane();
+        gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setStyle("-fx-background-color: black;");
 
@@ -109,20 +113,11 @@ public class Sudoku extends Application implements Observer {
         borderPane.setPadding(new Insets(10, 50, 50 ,50));
         borderPane.setStyle("-fx-background-color: white");
 
-        Platform.runLater(borderPane :: requestFocus);
-
         Scene scene = new Scene(borderPane);
 
-        fillInButton.setOnAction(event -> {
-            clearButton.setDisable(true);
-            fillInButton.setDisable(true);
-            solveButton.setDisable(true);
-            settingsButton.setDisable(true);
+        constructActionEventHandler(scene);
 
-            clearSquares();
-
-            setKeyAction(scene);
-        });
+        fillInButton.setOnAction(fillInActionEventHandler);
 
         clearButton.setOnAction(event -> {
             clearSquares();
@@ -140,6 +135,8 @@ public class Sudoku extends Application implements Observer {
         stage.setScene(scene);
         stage.setTitle("Sudoku solver");
         stage.getIcons().add(new Image("/images/icon.png"));
+
+        divertFocus();
         stage.show();
     }
 
@@ -202,7 +199,7 @@ public class Sudoku extends Application implements Observer {
         elementIterator = gridElements.listIterator();
         goToNextElement();
 
-        eventHandler = event -> {
+        keyEventHandler = event -> {
 
             currentElement.setStyleAndColor("black");
 
@@ -261,7 +258,7 @@ public class Sudoku extends Application implements Observer {
             }
         };
 
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
     }
 
     private void clearSquares() {
@@ -336,7 +333,7 @@ public class Sudoku extends Application implements Observer {
     }
 
     private void finishFillingIn(Scene scene) {
-        scene.removeEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
+        scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
 
         clearButton.setDisable(false);
         fillInButton.setDisable(false);
@@ -348,6 +345,8 @@ public class Sudoku extends Application implements Observer {
         } else {
             new Message("The sudoku you entered is invalid!");
         }
+
+        fillInButton.setText("Fill in");
     }
 
     private void showOptionsOfAllSquares() {
@@ -355,6 +354,45 @@ public class Sudoku extends Application implements Observer {
             if (gridElement.getSquare().hasNoValue()) {
                 gridElement.update(null, true);
             }
+        }
+    }
+
+    private void constructActionEventHandler(Scene scene) {
+        fillInActionEventHandler = event -> {
+            clearButton.setDisable(true);
+            solveButton.setDisable(true);
+            settingsButton.setDisable(true);
+
+            clearSquares();
+
+            setKeyAction(scene);
+
+            divertFocus();
+
+            fillInButton.setText("Cancel");
+
+            flipButtonAction();
+        };
+
+        cancelActionEventHandler = event -> {
+            clearSquares();
+
+            finishFillingIn(scene);
+
+            flipButtonAction();
+        };
+    }
+
+    private void divertFocus() {
+        Platform.runLater(gridPane :: requestFocus);
+    }
+
+    private void flipButtonAction() {
+        EventHandler<ActionEvent> eventHandler = fillInButton.getOnAction();
+        if (eventHandler.equals(fillInActionEventHandler)) {
+            fillInButton.setOnAction(cancelActionEventHandler);
+        } else {
+            fillInButton.setOnAction(fillInActionEventHandler);
         }
     }
 }
