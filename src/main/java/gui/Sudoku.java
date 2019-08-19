@@ -116,9 +116,13 @@ public class Sudoku extends Application implements Observer {
         fillInButton.setOnAction(fillInActionEventHandler);
 
         clearButton.setOnAction(event -> {
-            clearSquares();
-            solveButton.setDisable(true);
-            clearButton.setDisable(true);
+            String result = new Confirmation().getResult();
+
+            if (result.equals("yes")) {
+                clearSquares();
+                solveButton.setDisable(true);
+                clearButton.setDisable(true);
+            }
         });
 
         settingsButton.setOnAction(event -> {
@@ -376,11 +380,15 @@ public class Sudoku extends Application implements Observer {
         };
 
         cancelActionEventHandler = event -> {
-            clearSquares();
-            scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
-            settingsButton.setDisable(false);
-            fillInButton.setText("Fill in");
-            flipButtonAction();
+            String result = new Confirmation().getResult();
+
+            if (result.equals("yes")) {
+                clearSquares();
+                scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
+                settingsButton.setDisable(false);
+                fillInButton.setText("Fill in");
+                flipButtonAction();
+            }
         };
     }
 
