@@ -371,11 +371,8 @@ public class Sudoku extends Application implements Observer {
             settingsButton.setDisable(true);
 
             clearSquares();
-
             setKeyAction(scene);
-
             fillInButton.setText("Cancel");
-
             flipButtonAction();
         };
 

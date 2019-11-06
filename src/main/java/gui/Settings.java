@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
@@ -23,6 +24,13 @@ class Settings extends Observable {
 
     void build() {
         SettingsHandler handler = getSettingsHandler();
+
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.setValue(handler.getType());
+        choiceBox.setPrefHeight(40);
+        choiceBox.setPrefWidth(100);
+        choiceBox.getItems().addAll("normal", "diagonal");
+        choiceBox.setStyle("-fx-font-size: 15");
 
         Button okButton = new Button();
         okButton.setFont(new Font(15));
@@ -81,25 +89,25 @@ class Settings extends Observable {
         line2.setPrefSize(300, 1);
         line2.setFont(new Font(0));
 
-        Button filler = new Button();
-        filler.setVisible(false);
-        filler.setPrefSize(0, 0);
-        filler.setFont(new Font(0));
-        filler.setPadding(new Insets(20, 0, 0, 0));
+        Button filler1 = createFiller();
+        Button filler2 = createFiller();
+
 
         GridPane gridPane = new GridPane();
-        gridPane.add(checkBox, 0, 0);
-        gridPane.add(filler, 0, 1);
-        gridPane.add(line1, 0, 2);
-        gridPane.add(description1, 0, 3);
-        gridPane.add(intervalSlider, 0, 4);
-        gridPane.add(line2, 0, 5);
-        gridPane.add(description2, 0, 6);
-        gridPane.add(pauseSlider, 0, 7);
+        gridPane.add(choiceBox, 0, 0);
+        gridPane.add(filler1, 0, 1);
+        gridPane.add(checkBox, 0, 2);
+        gridPane.add(filler2, 0, 3);
+        gridPane.add(line1, 0, 4);
+        gridPane.add(description1, 0, 5);
+        gridPane.add(intervalSlider, 0, 6);
+        gridPane.add(line2, 0, 7);
+        gridPane.add(description2, 0, 8);
+        gridPane.add(pauseSlider, 0, 9);
 
         setCheckboxVisibility(gridPane, checkBox);
 
-        gridPane.add(okButton, 1, 8);
+        gridPane.add(okButton, 1, 10);
         gridPane.setPadding(new Insets(20));
         gridPane.setAlignment(Pos.CENTER);
 
@@ -139,8 +147,8 @@ class Settings extends Observable {
 
     private void setCheckboxVisibility(GridPane gridPane, CheckBox checkBox) {
         boolean checked = checkBox.isSelected();
-        int start = 1;
-        int end = 7;
+        int start = 3;
+        int end = 9;
         int counter = 0;
 
         for (Node node : gridPane.getChildren()) {
@@ -151,5 +159,15 @@ class Settings extends Observable {
 
             counter++;
         }
+    }
+
+    private Button createFiller() {
+        Button filler = new Button();
+        filler.setVisible(false);
+        filler.setPrefSize(0, 0);
+        filler.setFont(new Font(0));
+        filler.setPadding(new Insets(20, 0, 0, 0));
+
+        return filler;
     }
 }

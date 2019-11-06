@@ -65,6 +65,10 @@ public class SettingsHandler {
         return new Integer(string);
     }
 
+    public String getType() {
+        return properties.getProperty("type");
+    }
+
     public void setMode(String mode) {
         properties.setProperty("mode", mode);
     }
@@ -75,5 +79,9 @@ public class SettingsHandler {
 
     public void setPause(Integer pause) {
         properties.setProperty("pause", pause.toString());
+    }
+
+    public void setType(String type) {
+        properties.setProperty("type", type);
     }
 }

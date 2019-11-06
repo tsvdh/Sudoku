@@ -17,9 +17,7 @@ public class Square extends Observable implements Cloneable {
 
 
     public Square(@Nullable Integer value, int xPosition, int yPosition) {
-        if (value != null) {
-            assert validRange(value);
-        }
+        assert value == null || validRange(value);
         assert validRange(xPosition);
         assert validRange(yPosition);
 
