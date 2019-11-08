@@ -15,12 +15,15 @@ import java.util.Observer;
 class GridElement extends GridPane implements Observer {
 
     private Square square;
+    private String borderColor;
+    private String backgroundColor;
 
     final static int size = 60;
 
     GridElement() {
         this.setPrefSize(size, size);
-        this.setStyleAndColor("black");
+        this.setBorderColor("black");
+        this.setBackgroundColor("white");
     }
 
     void setSquare(Square square) {
@@ -32,7 +35,17 @@ class GridElement extends GridPane implements Observer {
         return this.square;
     }
 
-    void setStyleAndColor(String borderColor) {
+    void setBorderColor(String color) {
+        this.borderColor = color;
+        applyStyle();
+    }
+
+    void setBackgroundColor(String color) {
+        this.backgroundColor = color;
+        applyStyle();
+    }
+
+    private void applyStyle() {
         double width = 0.5;
         if (!borderColor.equals("black")) {
             width = 2.0;
@@ -42,7 +55,7 @@ class GridElement extends GridPane implements Observer {
                 + "-fx-border-style: solid;"
                 + "-fx-border-color: " + borderColor + ";"
                 + "-fx-border-width: " + width + "px;"
-                + "-fx-background-color: white;");
+                + "-fx-background-color:" + backgroundColor + ";");
     }
 
     private void showData(boolean showOptions) {

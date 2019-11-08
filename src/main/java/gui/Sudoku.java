@@ -161,6 +161,8 @@ public class Sudoku extends Application implements Observer {
         }
 
         addLines(gridPane);
+
+        colorDiagonals();
     }
 
     private void addLines(GridPane gridPane) {
@@ -193,12 +195,12 @@ public class Sudoku extends Application implements Observer {
 
     private void goToNextElement() {
         currentElement = elementIterator.next();
-        currentElement.setStyleAndColor("lightgreen");
+        currentElement.setBorderColor("lightgreen");
     }
 
     private void goToPreviousElement() {
         currentElement = elementIterator.previous();
-        currentElement.setStyleAndColor("lightgreen");
+        currentElement.setBorderColor("lightgreen");
     }
 
     private void setKeyAction(Scene scene) {
@@ -207,7 +209,7 @@ public class Sudoku extends Application implements Observer {
 
         keyEventHandler = event -> {
 
-            currentElement.setStyleAndColor("black");
+            currentElement.setBorderColor("black");
 
             KeyCode keyCode = event.getCode();
 
@@ -255,12 +257,12 @@ public class Sudoku extends Application implements Observer {
                     lastMove = "previous";
 
                 } else {
-                    currentElement.setStyleAndColor("lightgreen");
+                    currentElement.setBorderColor("lightgreen");
                 }
             }
 
             else {
-                currentElement.setStyleAndColor("lightgreen");
+                currentElement.setBorderColor("lightgreen");
             }
         };
 
@@ -274,7 +276,7 @@ public class Sudoku extends Application implements Observer {
             } catch (OverrideException e) {
                 System.out.println(e.getMessage());
             }
-            gridElement.setStyleAndColor("black");
+            gridElement.setBorderColor("black");
         }
     }
 
@@ -294,6 +296,8 @@ public class Sudoku extends Application implements Observer {
 
         if (o instanceof Settings) {
             setSolveButtonAction();
+
+            colorDiagonals();
         }
     }
 
@@ -301,16 +305,16 @@ public class Sudoku extends Application implements Observer {
         for (GridElement gridElement : gridElements) {
             Square square = gridElement.getSquare();
             if (square.isPair()) {
-                gridElement.setStyleAndColor("red");
+                gridElement.setBorderColor("red");
                 break;
             }
         }
     }
 
     private void setSolveButtonAction() {
-        String mode = getSettingsHandler().getSpeed();
+        String speed = getSettingsHandler().getSpeed();
 
-        if (mode.equals("quick")) {
+        if (speed.equals("quick")) {
             solveButton.setOnAction(event -> {
 
                 solveButton.setDisable(true);
@@ -320,7 +324,7 @@ public class Sudoku extends Application implements Observer {
             });
         }
 
-        if (mode.equals("slow")) {
+        if (speed.equals("slow")) {
             solveButton.setOnAction(event -> {
 
                 solveButton.setDisable(true);
@@ -395,5 +399,17 @@ public class Sudoku extends Application implements Observer {
         } else {
             fillInButton.setOnAction(fillInActionEventHandler);
         }
+    }
+
+    private void colorDiagonals() {
+        String mode = getSettingsHandler().getMode();
+
+        String color = "white";
+        if (mode.equals("diagonal")) {
+            color = "lightgrey";
+        }
+
+        gridElements.get(0).setBackgroundColor(color);
+        gridElements.get(10).setBackgroundColor(color);
     }
 }
