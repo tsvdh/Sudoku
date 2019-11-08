@@ -122,6 +122,7 @@ public class Sudoku extends Application implements Observer {
                 clearSquares();
                 solveButton.setDisable(true);
                 clearButton.setDisable(true);
+                fillInButton.setDisable(false);
             }
         });
 
@@ -284,7 +285,6 @@ public class Sudoku extends Application implements Observer {
         if (o instanceof LinkedGridSolver) {
             if (status.equals("done")) {
                 clearButton.setDisable(false);
-                fillInButton.setDisable(false);
                 settingsButton.setDisable(false);
             }
             if (status.equals("working")) {
@@ -308,7 +308,7 @@ public class Sudoku extends Application implements Observer {
     }
 
     private void setSolveButtonAction() {
-        String mode = getSettingsHandler().getMode();
+        String mode = getSettingsHandler().getSpeed();
 
         if (mode.equals("quick")) {
             solveButton.setOnAction(event -> {
@@ -341,7 +341,7 @@ public class Sudoku extends Application implements Observer {
         scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
 
         clearButton.setDisable(false);
-        fillInButton.setDisable(false);
+        fillInButton.setDisable(true);
         settingsButton.setDisable(false);
 
         fillInButton.setText("Fill in");
@@ -370,7 +370,6 @@ public class Sudoku extends Application implements Observer {
             solveButton.setDisable(true);
             settingsButton.setDisable(true);
 
-            clearSquares();
             setKeyAction(scene);
             fillInButton.setText("Cancel");
             flipButtonAction();
