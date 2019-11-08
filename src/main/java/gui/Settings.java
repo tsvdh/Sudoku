@@ -26,7 +26,7 @@ class Settings extends Observable {
         SettingsHandler handler = getSettingsHandler();
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.setValue(handler.getType());
+        choiceBox.setValue(handler.getMode());
         choiceBox.setPrefHeight(40);
         choiceBox.setPrefWidth(100);
         choiceBox.getItems().addAll("normal", "diagonal");
@@ -61,13 +61,13 @@ class Settings extends Observable {
         pauseSlider.setMajorTickUnit(1);
         pauseSlider.setMinorTickCount(1);
         pauseSlider.setSnapToTicks(true);
-        pauseSlider.setValue(handler.getPause() / 1000);
+        pauseSlider.setValue(handler.getPause() / 1000.0);
 
         CheckBox checkBox = new CheckBox();
         checkBox.setText("Slow mode");
         checkBox.setPrefHeight(40);
         checkBox.setFont(new Font(18));
-        if (handler.getMode().equals("slow")) {
+        if (handler.getSpeed().equals("slow")) {
             checkBox.setSelected(true);
         }
 
@@ -123,10 +123,11 @@ class Settings extends Observable {
             handler.setInterval((int) intervalSlider.getValue());
             handler.setPause((int) (pauseSlider.getValue() * 1000));
             if (checkBox.isSelected()) {
-                handler.setMode("slow");
+                handler.setSpeed("slow");
             } else {
-                handler.setMode("quick");
+                handler.setSpeed("quick");
             }
+            handler.setMode(choiceBox.getValue());
 
             handler.updateFile();
             setChanged();

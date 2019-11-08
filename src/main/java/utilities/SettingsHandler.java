@@ -65,8 +65,8 @@ public class SettingsHandler {
         return new Integer(string);
     }
 
-    public String getType() {
-        return properties.getProperty("type");
+    public String getSpeed() {
+        return properties.getProperty("speed");
     }
 
     public void setMode(String mode) {
@@ -81,7 +81,7 @@ public class SettingsHandler {
         properties.setProperty("pause", pause.toString());
     }
 
-    public void setType(String type) {
-        properties.setProperty("type", type);
+    public void setSpeed(String speed) {
+        properties.setProperty("speed", speed);
     }
 }
