@@ -3,6 +3,7 @@ package utilities;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,11 +32,21 @@ public class SettingsHandler {
 
             if (!file.exists()) {
                 String path = getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-                String joinedPath = path.substring(0, path.lastIndexOf("/")) + jarFilePath;
+                String root = path.substring(0, path.lastIndexOf("/"));
+                String joinedPath = root + jarFilePath;
                 file = new File(joinedPath);
 
+                if (file.createNewFile()) {
+                    FileWriter writer = new FileWriter(file);
+                    writer.write("interval=40\n");
+                    writer.write("pause=2000\n");
+                    writer.write("speed=quick\n");
+                    writer.write("mode=normal");
+                    writer.flush();
+                    writer.close();
+                }
                 if (!file.exists()) {
-                    System.out.println("Settings file not found, please make sure it is in the same folder as the JAR.");
+                    System.out.println("Could not create settings file.");
                     System.exit(0);
                 }
             }
