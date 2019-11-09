@@ -6,13 +6,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 public class SettingsHandler {
 
     private Properties properties;
     private final String filePath = "/config/settings.properties";
-    private final String jarFilePath = "./settings.properties";
+    private final String jarFilePath = "/settings.properties";
 
     public SettingsHandler() {
         properties = new Properties();
@@ -29,7 +30,9 @@ public class SettingsHandler {
             File file = new File(relativePath);
 
             if (!file.exists()) {
-                file = new File(jarFilePath);
+                String path = getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+                String joinedPath = path.substring(0, path.lastIndexOf("/")) + jarFilePath;
+                file = new File(joinedPath);
 
                 if (!file.exists()) {
                     System.out.println("Settings file not found, please make sure it is in the same folder as the JAR.");
@@ -46,7 +49,7 @@ public class SettingsHandler {
                 properties.store(stream, null);
             }
 
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             System.out.println(e.getMessage());
         }
     }
