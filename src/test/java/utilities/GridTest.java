@@ -1,8 +1,7 @@
 package utilities;
 
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 class GridTest {
 
@@ -10,7 +9,7 @@ class GridTest {
 
     @BeforeEach
     void setUp() {
-        grid = new Grid();
+        grid = new Grid("normal");
     }
 
     @AfterEach

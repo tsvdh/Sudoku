@@ -20,13 +20,15 @@ class GridElement extends GridPane implements Observer {
 
     final static int size = 60;
 
-    GridElement() {
+    GridElement(Square square) {
         this.setPrefSize(size, size);
         this.setBorderColor("black");
         this.setBackgroundColor("white");
+
+        setSquare(square);
     }
 
-    void setSquare(Square square) {
+    private void setSquare(Square square) {
         this.square = square;
         this.square.addObserver(this);
     }

@@ -44,6 +44,7 @@ public class Sudoku extends Application implements Observer {
     private EventHandler<KeyEvent> keyEventHandler;
     private EventHandler<ActionEvent> fillInActionEventHandler;
     private EventHandler<ActionEvent> cancelActionEventHandler;
+    private String oldMode;
 
     private static SettingsHandler settingsHandler;
 
@@ -59,7 +60,9 @@ public class Sudoku extends Application implements Observer {
     public void start(Stage stage) {
         settingsHandler = new SettingsHandler();
 
-        this.grid = new Grid();
+        String mode = getSettingsHandler().getMode();
+        this.grid = new Grid(mode);
+        this.oldMode = mode;
         this.gridElements = new LinkedList<>();
         this.lastMove = "none";
 
@@ -123,6 +126,7 @@ public class Sudoku extends Application implements Observer {
                 solveButton.setDisable(true);
                 clearButton.setDisable(true);
                 fillInButton.setDisable(false);
+                settingsButton.setDisable(false);
             }
         });
 
@@ -152,8 +156,7 @@ public class Sudoku extends Application implements Observer {
                 Square square = new Square(null, x / 2 + 1, y / 2 + 1);
                 grid.addSquare(square);
 
-                GridElement gridElement = new GridElement();
-                gridElement.setSquare(square);
+                GridElement gridElement = new GridElement(square);
 
                 gridPane.add(gridElement, x , y);
                 gridElements.add(gridElement);
@@ -162,7 +165,21 @@ public class Sudoku extends Application implements Observer {
 
         addLines(gridPane);
 
-        colorDiagonals();
+        colorGrid();
+    }
+
+    private void rebuildGrid() {
+        String newMode = getSettingsHandler().getMode();
+        if (!newMode.equals(oldMode)) {
+
+            this.grid = new Grid(newMode);
+            for (GridElement gridElement : gridElements) {
+                Square square = gridElement.getSquare();
+                grid.addSquare(square);
+            }
+
+            colorGrid();
+        }
     }
 
     private void addLines(GridPane gridPane) {
@@ -287,7 +304,6 @@ public class Sudoku extends Application implements Observer {
         if (o instanceof LinkedGridSolver) {
             if (status.equals("done")) {
                 clearButton.setDisable(false);
-                settingsButton.setDisable(false);
             }
             if (status.equals("working")) {
                 highLightFirstPair();
@@ -297,7 +313,8 @@ public class Sudoku extends Application implements Observer {
         if (o instanceof Settings) {
             setSolveButtonAction();
 
-            colorDiagonals();
+            rebuildGrid();
+            oldMode = getSettingsHandler().getMode();
         }
     }
 
@@ -318,6 +335,7 @@ public class Sudoku extends Application implements Observer {
             solveButton.setOnAction(event -> {
 
                 solveButton.setDisable(true);
+                settingsButton.setDisable(true);
                 IndependentGridSolver gridSolver = new IndependentGridSolver(this.grid);
                 showOptionsOfAllSquares();
                 gridSolver.solve();
@@ -401,15 +419,17 @@ public class Sudoku extends Application implements Observer {
         }
     }
 
-    private void colorDiagonals() {
-        String mode = getSettingsHandler().getMode();
+    private void colorGrid() {
 
-        String color = "white";
-        if (mode.equals("diagonal")) {
-            color = "lightgrey";
+        for (GridElement gridElement : gridElements) {
+            Square square = gridElement.getSquare();
+
+            if (grid.diagonalModeEnabledAndOnDiagonal(square)) {
+                gridElement.setBackgroundColor("lightgrey");
+            }
+            else {
+                gridElement.setBackgroundColor("white");
+            }
         }
-
-        gridElements.get(0).setBackgroundColor(color);
-        gridElements.get(10).setBackgroundColor(color);
     }
 }

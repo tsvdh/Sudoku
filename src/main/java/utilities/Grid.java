@@ -6,11 +6,18 @@ import java.util.List;
 public class Grid extends SquareHolder implements Cloneable {
 
     private List<Section> sectionList;
+    private String mode;
 
-    public Grid() {
+    public Grid(String mode) {
         super();
         this.sectionList = new LinkedList<>();
-        for (int i = 1; i <= 27; i++) {
+        this.mode = mode;
+
+        int upper = 27;
+        if (mode.equals("diagonal")) {
+            upper = 29;
+        }
+        for (int i = 1; i <= upper; i++) {
             this.sectionList.add(new Section());
         }
     }
@@ -52,14 +59,38 @@ public class Grid extends SquareHolder implements Cloneable {
         return (xCoordinate + (yCoordinate * 3)) + 18;
     }
 
+    private void addDiagonalIndexes(Square square, int[] indexes) {
+        indexes[3] = -1;
+        indexes[4] = -1;
+
+        int x = square.getXPosition();
+        int y = square.getYPosition();
+
+        if (x == y) {
+            indexes[3] = 28;
+        }
+        if (10 - x == y) {
+            indexes[4] = 29;
+        }
+    }
+
     private void addToSections(Square square) {
         int[] indexes = new int[3];
+        if (mode.equals("diagonal")) {
+            indexes = new int[5];
+        }
+
         indexes[0] = getHorizontalSectionIndex(square);
         indexes[1] = getVerticalSectionIndex(square);
         indexes[2] = getBlockSectionIndex(square);
+        if (mode.equals("diagonal")) {
+            addDiagonalIndexes(square, indexes);
+        }
 
         for (int index : indexes) {
-            sectionList.get(index - 1).addSquare(square);
+            if (index != -1) {
+                sectionList.get(index - 1).addSquare(square);
+            }
         }
     }
 
@@ -67,7 +98,7 @@ public class Grid extends SquareHolder implements Cloneable {
     protected Object clone() throws CloneNotSupportedException {
         super.clone();
 
-        Grid grid = new Grid();
+        Grid grid = new Grid(mode);
         for (Square square : this.getSquareList()) {
             Square clone = (Square) square.clone();
             grid.addSquare(clone);
@@ -83,5 +114,16 @@ public class Grid extends SquareHolder implements Cloneable {
             }
         }
         return null;
+    }
+
+    public boolean diagonalModeEnabledAndOnDiagonal(Square square) {
+        if (getSectionList().size() == 27) {
+            return false;
+        }
+
+        Section diagonal1 = getSectionList().get(27);
+        Section diagonal2 = getSectionList().get(28);
+
+        return diagonal1.contains(square) || diagonal2.contains(square);
     }
 }
