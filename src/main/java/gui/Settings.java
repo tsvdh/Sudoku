@@ -38,14 +38,14 @@ class Settings extends Observable {
         okButton.setPrefSize(100, 40);
 
         Slider intervalSlider = new Slider();
-        intervalSlider.setBlockIncrement(5);
+        intervalSlider.setBlockIncrement(10);
         intervalSlider.setMin(10);
-        intervalSlider.setMax(100);
+        intervalSlider.setMax(210);
         intervalSlider.setPadding(new Insets(20));
         intervalSlider.setShowTickLabels(true);
         intervalSlider.setShowTickMarks(true);
         intervalSlider.setPrefSize(500, 40);
-        intervalSlider.setMajorTickUnit(10);
+        intervalSlider.setMajorTickUnit(20);
         intervalSlider.setMinorTickCount(1);
         intervalSlider.setSnapToTicks(true);
         intervalSlider.setValue(handler.getInterval());

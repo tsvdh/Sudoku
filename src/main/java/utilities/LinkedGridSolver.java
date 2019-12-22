@@ -71,4 +71,15 @@ public class LinkedGridSolver extends GridSolver {
         setChanged();
         notifyObservers("done");
     }
+
+    public void togglePause() {
+        if (executor.isShutdown()) {
+            executor = Executors.newSingleThreadScheduledExecutor();
+
+            int interval = getSettingsHandler().getInterval();
+            executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, interval, TimeUnit.MILLISECONDS);
+        } else {
+            executor.shutdown();
+        }
+    }
 }

@@ -41,10 +41,13 @@ public class Sudoku extends Application implements Observer {
     private Button fillInButton;
     private Button solveButton;
     private Button settingsButton;
+    private Button pauseButton;
+    private BorderPane borderPane;
     private EventHandler<KeyEvent> keyEventHandler;
     private EventHandler<ActionEvent> fillInActionEventHandler;
     private EventHandler<ActionEvent> cancelActionEventHandler;
     private String oldMode;
+    private Integer[][] given;
 
     private static SettingsHandler settingsHandler;
 
@@ -71,46 +74,48 @@ public class Sudoku extends Application implements Observer {
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setStyle("-fx-background-color: black;");
 
+        given = new Integer[9][9];
+        given[0] = new Integer[]{0, 4, 6, 0, 0, 5, 0, 0, 0};
+        given[1] = new Integer[]{0, 2, 0, 3, 0, 0, 0, 0, 0};
+        given[2] = new Integer[]{9, 0, 0, 0, 4, 0, 0, 0, 7};
+        given[3] = new Integer[]{0, 0, 0, 0, 0, 7, 0, 0, 9};
+        given[4] = new Integer[]{8, 0, 1, 0, 0, 0, 4, 0, 3};
+        given[5] = new Integer[]{3, 0, 0, 6, 0, 0, 0, 0, 0};
+        given[6] = new Integer[]{7, 0, 0, 0, 2, 0, 0, 0, 6};
+        given[7] = new Integer[]{0, 0, 0, 0, 0, 6, 0, 5, 0};
+        given[8] = new Integer[]{0, 0, 0, 9, 0, 0, 7, 3, 0};
+
         buildGrid(gridPane);
 
 
-        clearButton = new Button();
-        clearButton.setFont(new Font(20));
-        clearButton.setPrefSize(100, 30);
-        clearButton.setText("Clear");
+        clearButton = makeButton("Clear");
+        fillInButton = makeButton("Fill in");
+        solveButton = makeButton("Solve");
+        settingsButton = makeButton("Settings");
+        pauseButton = makeButton("Pause");
+
         clearButton.setDisable(true);
+        //solveButton.setDisable(true);
+        pauseButton.setDisable(true);
 
-        fillInButton = new Button();
-        fillInButton.setFont(new Font(20));
-        fillInButton.setPrefSize(100, 30);
-        fillInButton.setText("Fill in");
 
-        solveButton = new Button();
-        solveButton.setFont(new Font(20));
-        solveButton.setPrefSize(100, 30);
-        solveButton.setText("Solve");
-        solveButton.setDisable(true);
-
-        settingsButton = new Button();
-        settingsButton.setFont(new Font(20));
-        settingsButton.setPrefSize(100, 30);
-        settingsButton.setText("Settings");
-
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(10, 10, 50 ,10));
-        hBox.getChildren().addAll(clearButton,
+        HBox hBoxTop = new HBox();
+        hBoxTop.setPadding(new Insets(10, 10, 50 ,10));
+        hBoxTop.getChildren().addAll(clearButton,
                                 fillInButton,
                                 solveButton,
                                 settingsButton);
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setSpacing(40);
+        hBoxTop.setAlignment(Pos.CENTER);
+        hBoxTop.setSpacing(40);
 
 
-        BorderPane borderPane = new BorderPane();
+        borderPane = new BorderPane();
         borderPane.setCenter(gridPane);
-        borderPane.setTop(hBox);
-        borderPane.setPadding(new Insets(10, 50, 50 ,50));
+        borderPane.setTop(hBoxTop);
+        borderPane.setPadding(new Insets(10, 50, 10 ,50));
         borderPane.setStyle("-fx-background-color: white");
+
+        setSpecificButtons();
 
         Scene scene = new Scene(borderPane);
 
@@ -142,12 +147,45 @@ public class Sudoku extends Application implements Observer {
         stage.setTitle("Sudoku solver");
         stage.getIcons().add(new Image("/images/icon.png"));
 
-        hBox.requestFocus();
-        for (Node node : hBox.getChildren()) {
-            node.setOnMousePressed(event -> hBox.requestFocus());
+        hBoxTop.requestFocus();
+
+        for (Node node : hBoxTop.getChildren()) {
+            node.setOnMousePressed(event -> hBoxTop.requestFocus());
         }
 
         stage.show();
+    }
+
+    private void setSpecificButtons() {
+        HBox hBoxBottom = new HBox();
+        hBoxBottom.setPadding(new Insets(50, 10, 40, 10));
+        hBoxBottom.setAlignment(Pos.CENTER);
+        hBoxBottom.setSpacing(40);
+
+        borderPane.setBottom(hBoxBottom);
+
+        String speed = getSettingsHandler().getSpeed();
+        if (speed.equals("slow")) {
+            hBoxBottom.getChildren().addAll(pauseButton);
+
+            for (Node node : hBoxBottom.getChildren()) {
+                node.setOnMousePressed(event -> hBoxBottom.requestFocus());
+            }
+        }
+        else {
+            Button filler = makeButton("Invisible");
+            filler.setVisible(false);
+
+            hBoxBottom.getChildren().add(filler);
+        }
+    }
+
+    private Button makeButton(String text) {
+        Button button = new Button();
+        button.setFont(new Font(20));
+        button.setPrefSize(100, 30);
+        button.setText(text);
+        return button;
     }
 
     private void buildGrid(GridPane gridPane) {
@@ -160,6 +198,16 @@ public class Sudoku extends Application implements Observer {
 
                 gridPane.add(gridElement, x , y);
                 gridElements.add(gridElement);
+
+                Integer value = given[y/ 2][x / 2];
+                if (value == 0) {
+                    value = null;
+                }
+                try {
+                    square.setValue(value);
+                } catch (OverrideException e) {
+                    System.out.println(e.getMessage());
+                }
             }
         }
 
@@ -304,6 +352,7 @@ public class Sudoku extends Application implements Observer {
         if (o instanceof LinkedGridSolver) {
             if (status.equals("done")) {
                 clearButton.setDisable(false);
+                pauseButton.setDisable(true);
             }
             if (status.equals("working")) {
                 highLightFirstPair();
@@ -314,6 +363,8 @@ public class Sudoku extends Application implements Observer {
             setSolveButtonAction();
 
             rebuildGrid();
+            setSpecificButtons();
+
             oldMode = getSettingsHandler().getMode();
         }
     }
@@ -349,14 +400,28 @@ public class Sudoku extends Application implements Observer {
                 fillInButton.setDisable(true);
                 clearButton.setDisable(true);
                 settingsButton.setDisable(true);
+                pauseButton.setDisable(false);
 
                 LinkedGridSolver gridSolver = new LinkedGridSolver(this.grid);
                 gridSolver.addObserver(this);
+
+                setPauseButtonAction(gridSolver);
 
                 showOptionsOfAllSquares();
                 gridSolver.solve();
             });
         }
+    }
+
+    private void setPauseButtonAction(LinkedGridSolver gridSolver) {
+        pauseButton.setOnAction(event -> {
+            if (pauseButton.getText().equals("Pause")) {
+                pauseButton.setText("Play");
+            } else {
+                pauseButton.setText("Pause");
+            }
+            gridSolver.togglePause();
+        });
     }
 
     private void finishFillingIn(Scene scene) {
