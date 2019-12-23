@@ -39,7 +39,7 @@ class Settings extends Observable {
 
         Slider intervalSlider = new Slider();
         intervalSlider.setBlockIncrement(10);
-        intervalSlider.setMin(20);
+        intervalSlider.setMin(40);
         intervalSlider.setMax(200);
         intervalSlider.setPadding(new Insets(20));
         intervalSlider.setShowTickLabels(true);

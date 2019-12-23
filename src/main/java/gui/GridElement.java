@@ -58,11 +58,10 @@ class GridElement extends GridPane implements Observer {
     }
 
     private void applyStyle() {
-        double width = 0.5;
-        if (!borderColor.equals("black")) {
-            width = 2.0;
+        float width = 1.0f;
+        if (borderColor.equals("red") || borderColor.equals("lightgreen")) {
+            width = 2.0f;
         }
-
         this.setStyle("-fx-border-radius: 0px;"
                 + "-fx-border-style: solid;"
                 + "-fx-border-color: " + borderColor + ";"

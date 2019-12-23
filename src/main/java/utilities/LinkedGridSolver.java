@@ -1,5 +1,7 @@
 package utilities;
 
+import javafx.scene.control.Button;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -11,10 +13,12 @@ public class LinkedGridSolver extends GridSolver {
     private ScheduledExecutorService executor;
     private Square currentSquare;
     private Square previousSquare;
+    private Button pauseButton;
 
-    public LinkedGridSolver(Grid grid) {
+    public LinkedGridSolver(Grid grid, Button pauseButton) {
         super(grid);
         this.executor = Executors.newSingleThreadScheduledExecutor();
+        this.pauseButton = pauseButton;
     }
 
     public Square getCurrentSquare() {
@@ -51,11 +55,13 @@ public class LinkedGridSolver extends GridSolver {
                     setChanged();
                     notifyObservers("magic");
 
+                    pauseButton.setDisable(true);
                     try {
                         Thread.sleep(getSettingsHandler().getPause());
                     } catch (InterruptedException e) {
                         System.out.println(e.getMessage());
                     }
+                    pauseButton.setDisable(false);
 
                     determinePair();
 
@@ -93,6 +99,7 @@ public class LinkedGridSolver extends GridSolver {
             int interval = getSettingsHandler().getInterval();
             executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, interval, TimeUnit.MILLISECONDS);
         } else {
+            updateNextSquare();
             executor.shutdown();
         }
     }

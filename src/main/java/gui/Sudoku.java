@@ -231,10 +231,11 @@ public class Sudoku extends Application implements Observer {
     }
 
     private void addLines(GridPane gridPane) {
+        float width = 0.5f;
         String style = "-fx-border-radius: 0px;"
                 + "-fx-border-style: solid;"
                 + "-fx-border-color: black;"
-                + "-fx-border-width: 0.5px;";
+                + "-fx-border-width: " + width + "px;";
 
         for (int y = 1; y <= 17; y += 2) {
             for (int x = 0; x <= 18; x += 6) {
@@ -432,7 +433,7 @@ public class Sudoku extends Application implements Observer {
                 settingsButton.setDisable(true);
                 pauseButton.setDisable(false);
 
-                LinkedGridSolver gridSolver = new LinkedGridSolver(this.grid);
+                LinkedGridSolver gridSolver = new LinkedGridSolver(grid, pauseButton);
                 gridSolver.addObserver(this);
 
                 setPauseButtonAction(gridSolver);
