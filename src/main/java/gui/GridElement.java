@@ -17,11 +17,13 @@ class GridElement extends GridPane implements Observer {
     private Square square;
     private String borderColor;
     private String backgroundColor;
+    private String previousBorderColor;
 
     final static int size = 60;
 
     GridElement(Square square) {
         this.setPrefSize(size, size);
+        this.borderColor = "black";
         this.setBorderColor("black");
         this.setBackgroundColor("white");
 
@@ -38,8 +40,16 @@ class GridElement extends GridPane implements Observer {
     }
 
     void setBorderColor(String color) {
+        previousBorderColor = this.borderColor;
         this.borderColor = color;
         applyStyle();
+    }
+
+    void revertBorderColor() {
+        if (!borderColor.equals(previousBorderColor)) {
+            borderColor = previousBorderColor;
+            applyStyle();
+        }
     }
 
     void setBackgroundColor(String color) {

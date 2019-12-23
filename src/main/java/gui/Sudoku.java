@@ -350,12 +350,42 @@ public class Sudoku extends Application implements Observer {
         String status = (String) arg;
 
         if (o instanceof LinkedGridSolver) {
+            if (status.equals("magic")) {
+                highLightFirstPair();
+                return;
+            }
+
+            LinkedGridSolver gridSolver = (LinkedGridSolver) o;
+            Square previousSquare = gridSolver.getPreviousSquare();
+            Square currentSquare = gridSolver.getCurrentSquare();
+
+            GridElement previousElement = null;
+            GridElement currentElement = null;
+
+            for (GridElement gridElement : gridElements) {
+                if (previousElement == null && gridElement.getSquare().equals(previousSquare)) {
+                    previousElement = gridElement;
+                }
+                else if (currentElement == null && gridElement.getSquare().equals(currentSquare)) {
+                    currentElement = gridElement;
+                }
+            }
+
             if (status.equals("done")) {
                 clearButton.setDisable(false);
                 pauseButton.setDisable(true);
+
+                if (currentElement != null) {
+                    currentElement.revertBorderColor();
+                }
             }
-            if (status.equals("magic")) {
-                highLightFirstPair();
+            if (status.equals("working")) {
+                if (previousElement != null) {
+                    previousElement.revertBorderColor();
+                }
+                if (currentElement != null) {
+                    currentElement.setBorderColor("yellow");
+                }
             }
         }
 

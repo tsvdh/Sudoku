@@ -9,10 +9,20 @@ import static gui.Sudoku.getSettingsHandler;
 public class LinkedGridSolver extends GridSolver {
 
     private ScheduledExecutorService executor;
+    private Square currentSquare;
+    private Square previousSquare;
 
     public LinkedGridSolver(Grid grid) {
         super(grid);
         this.executor = Executors.newSingleThreadScheduledExecutor();
+    }
+
+    public Square getCurrentSquare() {
+        return currentSquare;
+    }
+
+    public Square getPreviousSquare() {
+        return previousSquare;
     }
 
     @Override
@@ -25,6 +35,11 @@ public class LinkedGridSolver extends GridSolver {
                 Square square = getIterator().next();
 
                 if (square.hasNoValue()) {
+                    previousSquare = currentSquare;
+                    currentSquare = square;
+                    setChanged();
+                    notifyObservers("working");
+
                     optimizeSquare(square);
                 }
 
