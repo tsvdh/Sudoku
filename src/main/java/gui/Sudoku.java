@@ -354,7 +354,7 @@ public class Sudoku extends Application implements Observer {
                 clearButton.setDisable(false);
                 pauseButton.setDisable(true);
             }
-            if (status.equals("working")) {
+            if (status.equals("magic")) {
                 highLightFirstPair();
             }
         }
