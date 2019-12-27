@@ -356,37 +356,24 @@ public class Sudoku extends Application implements Observer {
                 return;
             }
 
-            LinkedGridSolver gridSolver = (LinkedGridSolver) o;
-            Square previousSquare = gridSolver.getPreviousSquare();
-            Square currentSquare = gridSolver.getCurrentSquare();
+            List<GridElement> list = getGridElements((LinkedGridSolver) o);
 
+            GridElement currentElement = list.get(0);
             GridElement previousElement = null;
-            GridElement currentElement = null;
-
-            for (GridElement gridElement : gridElements) {
-                if (previousElement == null && gridElement.getSquare().equals(previousSquare)) {
-                    previousElement = gridElement;
-                }
-                else if (currentElement == null && gridElement.getSquare().equals(currentSquare)) {
-                    currentElement = gridElement;
-                }
+            if (list.size() > 1) {
+                previousElement = list.get(1);
             }
 
             if (status.equals("done")) {
                 clearButton.setDisable(false);
                 pauseButton.setDisable(true);
-
-                if (currentElement != null) {
-                    currentElement.revertBorderColor();
-                }
+                currentElement.revertBorderColor();
             }
             if (status.equals("working")) {
                 if (previousElement != null) {
                     previousElement.revertBorderColor();
                 }
-                if (currentElement != null) {
-                    currentElement.setBorderColor("yellow");
-                }
+                currentElement.setBorderColor("yellow");
             }
         }
 
@@ -398,6 +385,28 @@ public class Sudoku extends Application implements Observer {
 
             oldMode = getSettingsHandler().getMode();
         }
+    }
+
+    private List<GridElement> getGridElements(LinkedGridSolver gridSolver) {
+        List<GridElement> list = new LinkedList<>();
+
+        Square previousSquare = gridSolver.getPreviousSquare();
+        Square currentSquare = gridSolver.getCurrentSquare();
+
+        for (GridElement gridElement : gridElements) {
+            if (gridElement.getSquare().equals(currentSquare)) {
+                list.add(gridElement);
+                break;
+            }
+        }
+        for (GridElement gridElement : gridElements) {
+            if (gridElement.getSquare().equals(previousSquare)) {
+                list.add(gridElement);
+                break;
+            }
+        }
+
+        return list;
     }
 
     private void highLightFirstPair() {
