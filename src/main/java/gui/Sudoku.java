@@ -30,6 +30,8 @@ import java.util.ListIterator;
 import java.util.Observable;
 import java.util.Observer;
 
+import static gui.ButtonFactory.makeButton;
+
 public class Sudoku extends Application implements Observer {
 
     private Grid grid;
@@ -47,7 +49,7 @@ public class Sudoku extends Application implements Observer {
     private EventHandler<ActionEvent> fillInActionEventHandler;
     private EventHandler<ActionEvent> cancelActionEventHandler;
     private String oldMode;
-    private Integer[][] given;
+    //private Integer[][] given;
 
     private static SettingsHandler settingsHandler;
 
@@ -70,11 +72,16 @@ public class Sudoku extends Application implements Observer {
         this.lastMove = "none";
 
 
+        borderPane = new BorderPane();
+        borderPane.setPadding(new Insets(10, 50, 10 ,50));
+        borderPane.setStyle("-fx-background-color: white");
+
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setStyle("-fx-background-color: black;");
+        borderPane.setCenter(gridPane);
 
-        given = new Integer[9][9];
+        /*given = new Integer[9][9];
         given[0] = new Integer[]{0, 4, 6, 0, 0, 5, 0, 0, 0};
         given[1] = new Integer[]{0, 2, 0, 3, 0, 0, 0, 0, 0};
         given[2] = new Integer[]{9, 0, 0, 0, 4, 0, 0, 0, 7};
@@ -83,10 +90,9 @@ public class Sudoku extends Application implements Observer {
         given[5] = new Integer[]{3, 0, 0, 6, 0, 0, 0, 0, 0};
         given[6] = new Integer[]{7, 0, 0, 0, 2, 0, 0, 0, 6};
         given[7] = new Integer[]{0, 0, 0, 0, 0, 6, 0, 5, 0};
-        given[8] = new Integer[]{0, 0, 0, 9, 0, 0, 7, 3, 0};
+        given[8] = new Integer[]{0, 0, 0, 9, 0, 0, 7, 3, 0};*/
 
-        buildGrid(gridPane);
-
+        buildGrid();
 
         clearButton = makeButton("Clear");
         fillInButton = makeButton("Fill in");
@@ -95,7 +101,7 @@ public class Sudoku extends Application implements Observer {
         pauseButton = makeButton("Pause");
 
         clearButton.setDisable(true);
-        //solveButton.setDisable(true);
+        solveButton.setDisable(true);
         pauseButton.setDisable(true);
 
 
@@ -108,12 +114,7 @@ public class Sudoku extends Application implements Observer {
         hBoxTop.setAlignment(Pos.CENTER);
         hBoxTop.setSpacing(40);
 
-
-        borderPane = new BorderPane();
-        borderPane.setCenter(gridPane);
         borderPane.setTop(hBoxTop);
-        borderPane.setPadding(new Insets(10, 50, 10 ,50));
-        borderPane.setStyle("-fx-background-color: white");
 
         setSpecificButtons();
 
@@ -154,6 +155,12 @@ public class Sudoku extends Application implements Observer {
         }
 
         stage.show();
+
+        gridElements.get(0).setBackgroundColor("lightcoral");
+        gridElements.get(1).setBackgroundColor("mediumaquamarine");
+        gridElements.get(2).setBackgroundColor("lightskyblue");
+        gridElements.get(3).setBackgroundColor("khaki");
+        gridElements.get(4).setBackgroundColor("violet");
     }
 
     private void setSpecificButtons() {
@@ -165,12 +172,12 @@ public class Sudoku extends Application implements Observer {
         borderPane.setBottom(hBoxBottom);
 
         String speed = getSettingsHandler().getSpeed();
+        String mode = getSettingsHandler().getMode();
         if (speed.equals("slow")) {
             hBoxBottom.getChildren().addAll(pauseButton);
-
-            for (Node node : hBoxBottom.getChildren()) {
-                node.setOnMousePressed(event -> hBoxBottom.requestFocus());
-            }
+        }
+        if (mode.equals("jigsaw")) {
+            //hBoxBottom.getChildren().addAll(makeColorButtons());
         }
         else {
             Button filler = makeButton("Invisible");
@@ -178,17 +185,14 @@ public class Sudoku extends Application implements Observer {
 
             hBoxBottom.getChildren().add(filler);
         }
+
+        for (Node node : hBoxBottom.getChildren()) {
+            node.setOnMousePressed(event -> hBoxBottom.requestFocus());
+        }
     }
 
-    private Button makeButton(String text) {
-        Button button = new Button();
-        button.setFont(new Font(20));
-        button.setPrefSize(100, 30);
-        button.setText(text);
-        return button;
-    }
-
-    private void buildGrid(GridPane gridPane) {
+    private void buildGrid() {
+        GridPane gridPane = (GridPane) borderPane.getCenter();
         for (int y = 1; y <= 17; y += 2) {
             for (int x = 1; x <= 17; x += 2) {
                 Square square = new Square(null, x / 2 + 1, y / 2 + 1);
@@ -199,7 +203,7 @@ public class Sudoku extends Application implements Observer {
                 gridPane.add(gridElement, x , y);
                 gridElements.add(gridElement);
 
-                Integer value = given[y/ 2][x / 2];
+                /*Integer value = given[y/ 2][x / 2];
                 if (value == 0) {
                     value = null;
                 }
@@ -207,11 +211,11 @@ public class Sudoku extends Application implements Observer {
                     square.setValue(value);
                 } catch (OverrideException e) {
                     System.out.println(e.getMessage());
-                }
+                }*/
             }
         }
 
-        addLines(gridPane);
+        addLines();
 
         colorGrid();
     }
@@ -228,10 +232,16 @@ public class Sudoku extends Application implements Observer {
 
             colorGrid();
         }
+
+        addLines();
     }
 
-    private void addLines(GridPane gridPane) {
+    private void addLines() {
+        GridPane gridPane = (GridPane) borderPane.getCenter();
         float width = 0.5f;
+        if (getSettingsHandler().getMode().equals("jigsaw")) {
+            width = 0;
+        }
         String style = "-fx-border-radius: 0px;"
                 + "-fx-border-style: solid;"
                 + "-fx-border-color: black;"
@@ -239,24 +249,47 @@ public class Sudoku extends Application implements Observer {
 
         for (int y = 1; y <= 17; y += 2) {
             for (int x = 0; x <= 18; x += 6) {
-                Button verticalLine = new Button();
-                verticalLine.setPrefSize(0, GridElement.size);
-                verticalLine.setStyle(style);
-                verticalLine.setFont(new Font(0));
+                Button verticalLine = (Button) getFromGridPane(x, y);
 
-                gridPane.add(verticalLine, x, y);
+                if (verticalLine == null) {
+                    System.out.println("test");
+                    verticalLine = new Button();
+                    verticalLine.setPrefSize(0, GridElement.size);
+                    verticalLine.setFont(new Font(0));
+
+                    gridPane.add(verticalLine, x, y);
+                }
+
+                verticalLine.setStyle(style);
             }
         }
         for (int x = 1; x <= 17; x += 2) {
             for (int y = 0; y <= 18; y += 6) {
-                Button horizontalLine = new Button();
-                horizontalLine.setPrefSize(GridElement.size, 1);
-                horizontalLine.setStyle(style);
-                horizontalLine.setFont(new Font(0));
+                Button horizontalLine = (Button) getFromGridPane(x, y);
 
-                gridPane.add(horizontalLine, x, y);
+                if (horizontalLine == null) {
+                    horizontalLine = new Button();
+                    horizontalLine.setPrefSize(GridElement.size, 0);
+                    horizontalLine.setFont(new Font(0));
+
+                    gridPane.add(horizontalLine, x, y);
+                }
+
+                horizontalLine.setStyle(style);
             }
         }
+    }
+
+    private Node getFromGridPane(int column, int row) {
+        GridPane gridPane = (GridPane) borderPane.getCenter();
+
+        for (Node element : gridPane.getChildren()) {
+            if (GridPane.getRowIndex(element) == row && GridPane.getColumnIndex(element) == column) {
+                return element;
+            }
+        }
+
+        return null;
     }
 
     private void goToNextElement() {

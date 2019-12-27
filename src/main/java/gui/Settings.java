@@ -29,7 +29,7 @@ class Settings extends Observable {
         choiceBox.setValue(handler.getMode());
         choiceBox.setPrefHeight(40);
         choiceBox.setPrefWidth(100);
-        choiceBox.getItems().addAll("normal", "diagonal");
+        choiceBox.getItems().addAll("normal", "diagonal", "jigsaw");
         choiceBox.setStyle("-fx-font-size: 15");
 
         Button okButton = new Button();
