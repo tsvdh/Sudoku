@@ -1,6 +1,7 @@
 package gui;
 
 import javafx.scene.control.Button;
+import javafx.scene.text.Font;
 
 class ColorButton extends Button {
 
@@ -9,8 +10,11 @@ class ColorButton extends Button {
 
     ColorButton(String color, int index) {
         super();
-        setPrefSize(20, 20);
+        this.color = color;
+        this.index = index;
 
+        setPrefSize(45, 30);
+        setFont(new Font(20));
 
         setStyle("-fx-background-color: " + color + ";");
     }

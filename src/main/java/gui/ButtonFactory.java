@@ -9,7 +9,9 @@ import java.util.List;
 
 class ButtonFactory {
 
-    private static final String colors = "";
+    private static final String colors = "lightcoral,limegreen,lightskyblue,"
+                                        + "khaki,violet,slateblue,"
+                                        + "orange,thistle,olivedrab";
 
     static Button makeButton(String text) {
         Button button = new Button();

@@ -14,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import utilities.Grid;
@@ -31,6 +32,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import static gui.ButtonFactory.makeButton;
+import static gui.ButtonFactory.makeColorButtons;
 
 public class Sudoku extends Application implements Observer {
 
@@ -155,39 +157,50 @@ public class Sudoku extends Application implements Observer {
         }
 
         stage.show();
-
-        gridElements.get(0).setBackgroundColor("lightcoral");
-        gridElements.get(1).setBackgroundColor("mediumaquamarine");
-        gridElements.get(2).setBackgroundColor("lightskyblue");
-        gridElements.get(3).setBackgroundColor("khaki");
-        gridElements.get(4).setBackgroundColor("violet");
     }
 
     private void setSpecificButtons() {
-        HBox hBoxBottom = new HBox();
-        hBoxBottom.setPadding(new Insets(50, 10, 40, 10));
-        hBoxBottom.setAlignment(Pos.CENTER);
-        hBoxBottom.setSpacing(40);
+        VBox vBoxBottom = new VBox();
+        vBoxBottom.setPadding(new Insets(50, 10, 40, 10));
+        vBoxBottom.setAlignment(Pos.CENTER);
+        vBoxBottom.setSpacing(40);
 
-        borderPane.setBottom(hBoxBottom);
+        borderPane.setBottom(vBoxBottom);
+
+        HBox topHBox = new HBox();
+        topHBox.setPadding(new Insets(0, 0, 10, 0));
+        topHBox.setAlignment(Pos.CENTER);
+        topHBox.setSpacing(40);
+
+        HBox bottomHBox = new HBox();
+        topHBox.setPadding(new Insets(10, 0, 0, 0));
+        bottomHBox.setAlignment(Pos.CENTER);
+        bottomHBox.setSpacing(14);
+
+        vBoxBottom.getChildren().addAll(topHBox, bottomHBox);
+
 
         String speed = getSettingsHandler().getSpeed();
         String mode = getSettingsHandler().getMode();
+
         if (speed.equals("slow")) {
-            hBoxBottom.getChildren().addAll(pauseButton);
-        }
-        if (mode.equals("jigsaw")) {
-            //hBoxBottom.getChildren().addAll(makeColorButtons());
-        }
-        else {
+            topHBox.getChildren().addAll(pauseButton);
+        } else {
             Button filler = makeButton("Invisible");
             filler.setVisible(false);
-
-            hBoxBottom.getChildren().add(filler);
+            topHBox.getChildren().addAll(filler);
         }
 
-        for (Node node : hBoxBottom.getChildren()) {
-            node.setOnMousePressed(event -> hBoxBottom.requestFocus());
+        if (mode.equals("jigsaw")) {
+            bottomHBox.getChildren().addAll(makeColorButtons());
+        } else {
+            Button filler = makeButton("Invisible");
+            filler.setVisible(false);
+            bottomHBox.getChildren().add(filler);
+        }
+
+        for (Node node : topHBox.getChildren()) {
+            node.setOnMousePressed(event -> topHBox.requestFocus());
         }
     }
 
@@ -252,7 +265,6 @@ public class Sudoku extends Application implements Observer {
                 Button verticalLine = (Button) getFromGridPane(x, y);
 
                 if (verticalLine == null) {
-                    System.out.println("test");
                     verticalLine = new Button();
                     verticalLine.setPrefSize(0, GridElement.size);
                     verticalLine.setFont(new Font(0));
