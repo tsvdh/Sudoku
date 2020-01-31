@@ -148,10 +148,6 @@ public class Grid extends SquareHolder implements Cloneable {
     public boolean isValid() {
         List<Section> sectionList = getSectionList();
 
-        if (sectionList.size() < 27) {
-            return false;
-        }
-
         for (Section section : sectionList) {
             if (section.getSquareList().size() != 9) {
                 return false;

@@ -2,21 +2,19 @@ package utilities;
 
 import java.util.Hashtable;
 
-public class ColorTable extends Hashtable<Integer, String> {
+public class ColorTable extends Hashtable<String, Integer> {
 
     private static ColorTable instance;
 
-    private static final String colors = "lightcoral,limegreen,lightskyblue,"
-                                        + "khaki,violet,slateblue,"
-                                        + "orange,thistle,olivedrab";
+    private static final String[] colors = {"lightcoral", "limegreen", "lightskyblue",
+                                            "khaki" ," violet", "mediumslateblue",
+                                            "orange", "thistle", "olivedrab"};
 
     private ColorTable() {
         super();
 
-        String[] list = colors.split(",");
-
         for (int i = 0; i < 9; i++) {
-            put(i + 1, list[i]);
+            put(colors[i], i + 1);
         }
     }
 
@@ -29,5 +27,9 @@ public class ColorTable extends Hashtable<Integer, String> {
             }
         }
         return instance;
+    }
+
+    public static String[] getColors() {
+        return colors;
     }
 }

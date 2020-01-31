@@ -19,10 +19,10 @@ class ButtonFactory {
 
     static List<ColorButton> makeColorButtons() {
         ArrayList<ColorButton> list = new ArrayList<>(9);
-        ColorTable table = ColorTable.getInstance();
+        String[] colors = ColorTable.getColors();
 
         for (int i = 0; i < 9; i++) {
-            list.add(i, new ColorButton(table.get(i + 1)));
+            list.add(i, new ColorButton(colors[i]));
         }
 
         return list;

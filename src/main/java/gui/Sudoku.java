@@ -353,7 +353,7 @@ public class Sudoku extends Application implements Observer {
                             }
 
                         } else {
-                            String color = ColorTable.getInstance().get(number);
+                            String color = ColorTable.getColors()[number - 1];
                             currentElement.setBackgroundColor(color);
                         }
                     }
@@ -370,6 +370,9 @@ public class Sudoku extends Application implements Observer {
                     }
 
                     lastMove = "next";
+                }
+                else {
+                    currentElement.setBorderColor("lightgreen");
                 }
             }
 
@@ -444,6 +447,7 @@ public class Sudoku extends Application implements Observer {
 
             if (status.equals("done")) {
                 clearButton.setDisable(false);
+                unPaintButton.setDisable(false);
                 pauseButton.setDisable(true);
                 currentElement.revertBorderColor();
             }
@@ -577,6 +581,17 @@ public class Sudoku extends Application implements Observer {
         flipButton(fill);
 
         if (filled && painted) {
+
+            this.grid = new Grid(oldMode);
+            for (GridElement gridElement : gridElements) {
+                String color = gridElement.getBackgroundColor();
+                int index = ColorTable.getInstance().get(color);
+
+                Square square = gridElement.getSquare();
+
+                grid.addSquare(square, index);
+            }
+
             if (grid.isValid()) {
                 solveButton.setDisable(false);
             } else {

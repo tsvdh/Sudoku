@@ -30,6 +30,10 @@ class GridElement extends GridPane implements Observer {
         setSquare(square);
     }
 
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
     private void setSquare(Square square) {
         this.square = square;
         this.square.addObserver(this);
