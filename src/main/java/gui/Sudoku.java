@@ -19,7 +19,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import utilities.ColorTable;
 import utilities.Grid;
-import utilities.GridSolver;
 import utilities.IndependentGridSolver;
 import utilities.LinkedGridSolver;
 import utilities.OverrideException;
@@ -45,6 +44,8 @@ public class Sudoku extends Application implements Observer {
     private String lastMove;
     private BorderPane borderPane;
     private String oldMode;
+    private boolean filled;
+    private boolean painted;
 
     private Button clearButton;
     private Button fillInButton;
@@ -87,6 +88,8 @@ public class Sudoku extends Application implements Observer {
         this.oldMode = mode;
         this.gridElements = new LinkedList<>();
         this.lastMove = "none";
+        this.painted = false;
+        this.filled = false;
 
 
         borderPane = new BorderPane();
@@ -121,14 +124,15 @@ public class Sudoku extends Application implements Observer {
         colorButtons = makeColorButtons();
 
         clearButton.setDisable(true);
+        unPaintButton.setDisable(true);
         solveButton.setDisable(true);
         pauseButton.setDisable(true);
 
 
         HBox hBoxTop = new HBox();
         hBoxTop.setPadding(new Insets(10, 10, 50 ,10));
-        hBoxTop.getChildren().addAll(clearButton,
-                                fillInButton,
+        hBoxTop.getChildren().addAll(fillInButton,
+                                clearButton,
                                 solveButton,
                                 settingsButton);
         hBoxTop.setAlignment(Pos.CENTER);
@@ -415,7 +419,9 @@ public class Sudoku extends Application implements Observer {
 
             gridElement.setBorderColor("black");
         }
-        colorGrid();
+        if (!fill) {
+            colorGrid();
+        }
     }
 
     @Override
@@ -512,6 +518,8 @@ public class Sudoku extends Application implements Observer {
                 fillInButton.setDisable(true);
                 clearButton.setDisable(true);
                 settingsButton.setDisable(true);
+                paintButton.setDisable(true);
+                unPaintButton.setDisable(true);
                 pauseButton.setDisable(false);
 
                 LinkedGridSolver gridSolver = new LinkedGridSolver(grid, pauseButton);
@@ -539,15 +547,37 @@ public class Sudoku extends Application implements Observer {
     private void finishFillingIn(Scene scene, boolean fill) {
         scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
 
-        clearButton.setDisable(false);
-        fillInButton.setDisable(true);
         settingsButton.setDisable(false);
+
+        if (fill) {
+            fillInButton.setDisable(true);
+            clearButton.setDisable(false);
+
+            if (painted) {
+                unPaintButton.setDisable(false);
+            }
+            else {
+                paintButton.setDisable(false);
+            }
+            filled = true;
+        }
+        else {
+            paintButton.setDisable(true);
+            unPaintButton.setDisable(false);
+
+            if (filled) {
+                clearButton.setDisable(false);
+            }
+            else {
+                fillInButton.setDisable(false);
+            }
+            painted = true;
+        }
 
         flipButton(fill);
 
-        if (fill) {
-            GridSolver solver = new IndependentGridSolver(grid);
-            if (solver.isValid()) {
+        if (filled && painted) {
+            if (grid.isValid()) {
                 solveButton.setDisable(false);
             } else {
                 new Message("The sudoku you entered is invalid!");
@@ -565,9 +595,17 @@ public class Sudoku extends Application implements Observer {
 
     private void constructEventHandlers(Scene scene, boolean fill) {
         EventHandler<ActionEvent> startEventHandler = event -> {
-            clearButton.setDisable(true);
             solveButton.setDisable(true);
             settingsButton.setDisable(true);
+            clearButton.setDisable(true);
+            unPaintButton.setDisable(true);
+
+            if (fill) {
+                paintButton.setDisable(true);
+            }
+            else {
+                fillInButton.setDisable(true);
+            }
 
             setKeyAction(scene, fill);
             flipButton(fill);
@@ -580,7 +618,11 @@ public class Sudoku extends Application implements Observer {
                 clearSquares(fill);
 
                 scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
+
+                paintButton.setDisable(false);
+                fillInButton.setDisable(false);
                 settingsButton.setDisable(false);
+
                 flipButton(fill);
             }
         };
@@ -589,11 +631,20 @@ public class Sudoku extends Application implements Observer {
             String result = new Confirmation().getResult();
 
             if (result.equals("yes")) {
+
                 clearSquares(fill);
                 solveButton.setDisable(true);
-                clearButton.setDisable(true);
-                fillInButton.setDisable(false);
-                settingsButton.setDisable(false);
+
+                if (fill) {
+                    fillInButton.setDisable(false);
+                    clearButton.setDisable(true);
+                    filled = false;
+                }
+                else {
+                    paintButton.setDisable(false);
+                    unPaintButton.setDisable(true);
+                    painted = false;
+                }
             }
         };
 

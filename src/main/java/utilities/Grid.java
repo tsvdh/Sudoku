@@ -144,4 +144,52 @@ public class Grid extends SquareHolder implements Cloneable {
     private boolean isJigsaw() {
         return this.mode.equals("jigsaw");
     }
+
+    public boolean isValid() {
+        List<Section> sectionList = getSectionList();
+
+        if (sectionList.size() < 27) {
+            return false;
+        }
+
+        for (Section section : sectionList) {
+            if (section.getSquareList().size() != 9) {
+                return false;
+            }
+        }
+
+        for (Section section : sectionList) {
+
+            List<Integer> list = new LinkedList<>();
+            for (Square square : section.getSquareList()) {
+                if (square.hasValue()) {
+                    list.add(square.getValue());
+                }
+            }
+
+            if (!isValidList(list)) {
+                return false;
+            }
+        }
+
+        //check if from every square, all other squares can be reached
+
+//        for (Section section : sectionList) {
+//
+//        }
+
+        return true;
+    }
+
+    private boolean isValidList(List<Integer> list) {
+        for (int i = 1; i < 10; i++) {
+
+            list.remove(new Integer(i));
+            if (list.contains(i)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

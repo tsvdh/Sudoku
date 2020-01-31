@@ -192,34 +192,4 @@ public abstract class GridSolver extends Observable {
 
         return true;
     }
-
-    public boolean isValid() {
-        for (Section section : grid.getSectionList()) {
-
-            List<Integer> list = new LinkedList<>();
-            for (Square square : section.getSquareList()) {
-                if (square.hasValue()) {
-                    list.add(square.getValue());
-                }
-            }
-
-            if (!isValidList(list)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean isValidList(List<Integer> list) {
-        for (int i = 1; i < 10; i++) {
-
-            list.remove(new Integer(i));
-            if (list.contains(i)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 }
