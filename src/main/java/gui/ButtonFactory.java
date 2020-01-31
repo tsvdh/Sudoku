@@ -2,16 +2,12 @@ package gui;
 
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
+import utilities.ColorTable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 class ButtonFactory {
-
-    private static final String colors = "lightcoral,limegreen,lightskyblue,"
-                                        + "khaki,violet,slateblue,"
-                                        + "orange,thistle,olivedrab";
 
     static Button makeButton(String text) {
         Button button = new Button();
@@ -23,12 +19,10 @@ class ButtonFactory {
 
     static List<ColorButton> makeColorButtons() {
         ArrayList<ColorButton> list = new ArrayList<>(9);
-
-        List<String> colorArray = Arrays.asList(colors.split(","));
+        ColorTable table = ColorTable.getInstance();
 
         for (int i = 0; i < 9; i++) {
-            ColorButton button = new ColorButton(colorArray.get(i), i + 1);
-            list.add(button);
+            list.add(i, new ColorButton(table.get(i + 1)));
         }
 
         return list;

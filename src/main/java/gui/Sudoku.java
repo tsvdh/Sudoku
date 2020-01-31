@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import utilities.ColorTable;
 import utilities.Grid;
 import utilities.GridSolver;
 import utilities.IndependentGridSolver;
@@ -33,6 +34,7 @@ import java.util.Observer;
 
 import static gui.ButtonFactory.makeButton;
 import static gui.ButtonFactory.makeColorButtons;
+import static javafx.scene.input.KeyCode.DIGIT0;
 
 public class Sudoku extends Application implements Observer {
 
@@ -41,16 +43,29 @@ public class Sudoku extends Application implements Observer {
     private ListIterator<GridElement> elementIterator;
     private GridElement currentElement;
     private String lastMove;
+    private BorderPane borderPane;
+    private String oldMode;
+
     private Button clearButton;
     private Button fillInButton;
     private Button solveButton;
     private Button settingsButton;
     private Button pauseButton;
-    private BorderPane borderPane;
+    private Button paintButton;
+    private Button unPaintButton;
+    private List<ColorButton> colorButtons;
+
     private EventHandler<KeyEvent> keyEventHandler;
+
+    private EventHandler<ActionEvent> paintActionEventHandler;
+    private EventHandler<ActionEvent> cancelPaintEventHandler;
+
     private EventHandler<ActionEvent> fillInActionEventHandler;
-    private EventHandler<ActionEvent> cancelActionEventHandler;
-    private String oldMode;
+    private EventHandler<ActionEvent> cancelFillInEventHandler;
+
+    private EventHandler<ActionEvent> clearActionEventHandler;
+    private EventHandler<ActionEvent> unPaintActionEventHandler;
+
     //private Integer[][] given;
 
     private static SettingsHandler settingsHandler;
@@ -80,7 +95,7 @@ public class Sudoku extends Application implements Observer {
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setStyle("-fx-background-color: black;");
+        //gridPane.setStyle("-fx-background-color: black;");
         borderPane.setCenter(gridPane);
 
         /*given = new Integer[9][9];
@@ -101,6 +116,9 @@ public class Sudoku extends Application implements Observer {
         solveButton = makeButton("Solve");
         settingsButton = makeButton("Settings");
         pauseButton = makeButton("Pause");
+        paintButton = makeButton("Paint");
+        unPaintButton = makeButton("Clear");
+        colorButtons = makeColorButtons();
 
         clearButton.setDisable(true);
         solveButton.setDisable(true);
@@ -122,21 +140,13 @@ public class Sudoku extends Application implements Observer {
 
         Scene scene = new Scene(borderPane);
 
-        constructActionEventHandler(scene);
+        constructEventHandlers(scene, true);
+        constructEventHandlers(scene, false);
 
         fillInButton.setOnAction(fillInActionEventHandler);
-
-        clearButton.setOnAction(event -> {
-            String result = new Confirmation().getResult();
-
-            if (result.equals("yes")) {
-                clearSquares();
-                solveButton.setDisable(true);
-                clearButton.setDisable(true);
-                fillInButton.setDisable(false);
-                settingsButton.setDisable(false);
-            }
-        });
+        paintButton.setOnAction(paintActionEventHandler);
+        clearButton.setOnAction(clearActionEventHandler);
+        unPaintButton.setOnAction(unPaintActionEventHandler);
 
         settingsButton.setOnAction(event -> {
             Settings settings = new Settings();
@@ -183,16 +193,17 @@ public class Sudoku extends Application implements Observer {
         String speed = getSettingsHandler().getSpeed();
         String mode = getSettingsHandler().getMode();
 
-        if (speed.equals("slow")) {
-            topHBox.getChildren().addAll(pauseButton);
-        } else {
+        if (!speed.equals("slow") && !mode.equals("jigsaw")) {
             Button filler = makeButton("Invisible");
             filler.setVisible(false);
             topHBox.getChildren().addAll(filler);
         }
-
+        if (speed.equals("slow")) {
+            topHBox.getChildren().addAll(pauseButton);
+        }
         if (mode.equals("jigsaw")) {
-            bottomHBox.getChildren().addAll(makeColorButtons());
+            topHBox.getChildren().addAll(paintButton, unPaintButton);
+            bottomHBox.getChildren().addAll(colorButtons);
         } else {
             Button filler = makeButton("Invisible");
             filler.setVisible(false);
@@ -314,7 +325,7 @@ public class Sudoku extends Application implements Observer {
         currentElement.setBorderColor("lightgreen");
     }
 
-    private void setKeyAction(Scene scene) {
+    private void setKeyAction(Scene scene, boolean fill) {
         elementIterator = gridElements.listIterator();
         goToNextElement();
 
@@ -328,27 +339,34 @@ public class Sudoku extends Application implements Observer {
 
                 if (!keyCode.isWhitespaceKey()) {
                     Integer number = new Integer(keyCode.getName());
-
                     if (number != 0) {
-                        try {
-                            currentElement.getSquare().setValue(number);
-                        } catch (OverrideException e) {
-                            System.out.println(e.getMessage());
+
+                        if (fill) {
+                            try {
+                                currentElement.getSquare().setValue(number);
+                            } catch (OverrideException e) {
+                                System.out.println(e.getMessage());
+                            }
+
+                        } else {
+                            String color = ColorTable.getInstance().get(number);
+                            currentElement.setBackgroundColor(color);
                         }
                     }
                 }
 
-                if (elementIterator.hasNext()) {
-                    if (lastMove.equals("previous")) {
-                        currentElement = elementIterator.next();
+                if (!(keyCode.isWhitespaceKey() || keyCode == DIGIT0) || fill) {
+                    if (elementIterator.hasNext()) {
+                        if (lastMove.equals("previous")) {
+                            currentElement = elementIterator.next();
+                        }
+                        goToNextElement();
+                    } else {
+                        finishFillingIn(scene, fill);
                     }
-                    goToNextElement();
-                } else {
 
-                    finishFillingIn(scene);
+                    lastMove = "next";
                 }
-
-                lastMove = "next";
             }
 
             else if (keyCode.equals(KeyCode.BACK_SPACE) || keyCode.equals(KeyCode.DELETE)) {
@@ -359,10 +377,15 @@ public class Sudoku extends Application implements Observer {
                     }
                     goToPreviousElement();
 
-                    try {
-                        currentElement.getSquare().setValue(null);
-                    } catch (OverrideException e) {
-                        System.out.println(e.getMessage());
+                    if (fill) {
+                        try {
+                            currentElement.getSquare().setValue(null);
+                        } catch (OverrideException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    else {
+                        currentElement.setBackgroundColor("white");
                     }
 
                     lastMove = "previous";
@@ -380,15 +403,19 @@ public class Sudoku extends Application implements Observer {
         scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
     }
 
-    private void clearSquares() {
+    private void clearSquares(boolean fill) {
         for (GridElement gridElement : gridElements) {
-            try {
-                gridElement.getSquare().setValue(null);
-            } catch (OverrideException e) {
-                System.out.println(e.getMessage());
+            if (fill) {
+                try {
+                    gridElement.getSquare().setValue(null);
+                } catch (OverrideException e) {
+                    System.out.println(e.getMessage());
+                }
             }
+
             gridElement.setBorderColor("black");
         }
+        colorGrid();
     }
 
     @Override
@@ -509,22 +536,22 @@ public class Sudoku extends Application implements Observer {
         });
     }
 
-    private void finishFillingIn(Scene scene) {
+    private void finishFillingIn(Scene scene, boolean fill) {
         scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
 
         clearButton.setDisable(false);
         fillInButton.setDisable(true);
         settingsButton.setDisable(false);
 
-        fillInButton.setText("Fill in");
+        flipButton(fill);
 
-        flipButtonAction();
-
-        GridSolver solver = new IndependentGridSolver(grid);
-        if (solver.isValid()) {
-            solveButton.setDisable(false);
-        } else {
-            new Message("The sudoku you entered is invalid!");
+        if (fill) {
+            GridSolver solver = new IndependentGridSolver(grid);
+            if (solver.isValid()) {
+                solveButton.setDisable(false);
+            } else {
+                new Message("The sudoku you entered is invalid!");
+            }
         }
     }
 
@@ -536,41 +563,76 @@ public class Sudoku extends Application implements Observer {
         }
     }
 
-    private void constructActionEventHandler(Scene scene) {
-        fillInActionEventHandler = event -> {
+    private void constructEventHandlers(Scene scene, boolean fill) {
+        EventHandler<ActionEvent> startEventHandler = event -> {
             clearButton.setDisable(true);
             solveButton.setDisable(true);
             settingsButton.setDisable(true);
 
-            setKeyAction(scene);
-            fillInButton.setText("Cancel");
-            flipButtonAction();
+            setKeyAction(scene, fill);
+            flipButton(fill);
         };
 
-        cancelActionEventHandler = event -> {
+        EventHandler<ActionEvent> cancelEventHandler = event -> {
             String result = new Confirmation().getResult();
 
             if (result.equals("yes")) {
-                clearSquares();
+                clearSquares(fill);
+
                 scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
                 settingsButton.setDisable(false);
-                fillInButton.setText("Fill in");
-                flipButtonAction();
+                flipButton(fill);
             }
         };
+
+        EventHandler<ActionEvent> removeEventHandler = event -> {
+            String result = new Confirmation().getResult();
+
+            if (result.equals("yes")) {
+                clearSquares(fill);
+                solveButton.setDisable(true);
+                clearButton.setDisable(true);
+                fillInButton.setDisable(false);
+                settingsButton.setDisable(false);
+            }
+        };
+
+        if (fill) {
+            fillInActionEventHandler = startEventHandler;
+            cancelFillInEventHandler = cancelEventHandler;
+            clearActionEventHandler = removeEventHandler;
+        }
+        else {
+            paintActionEventHandler = startEventHandler;
+            cancelPaintEventHandler = cancelEventHandler;
+            unPaintActionEventHandler = removeEventHandler;
+        }
     }
 
-    private void flipButtonAction() {
-        EventHandler<ActionEvent> eventHandler = fillInButton.getOnAction();
-        if (eventHandler.equals(fillInActionEventHandler)) {
-            fillInButton.setOnAction(cancelActionEventHandler);
-        } else {
-            fillInButton.setOnAction(fillInActionEventHandler);
+    private void flipButton(boolean fill) {
+        if (fill) {
+            EventHandler<ActionEvent> eventHandler = fillInButton.getOnAction();
+            if (eventHandler.equals(fillInActionEventHandler)) {
+                fillInButton.setText("Cancel");
+                fillInButton.setOnAction(cancelFillInEventHandler);
+            } else {
+                fillInButton.setText("Fill in");
+                fillInButton.setOnAction(fillInActionEventHandler);
+            }
+        }
+        else {
+            EventHandler<ActionEvent> eventHandler = paintButton.getOnAction();
+            if (eventHandler.equals(paintActionEventHandler)) {
+                paintButton.setText("Cancel");
+                paintButton.setOnAction(cancelPaintEventHandler);
+            } else {
+                paintButton.setText("Paint");
+                paintButton.setOnAction(paintActionEventHandler);
+            }
         }
     }
 
     private void colorGrid() {
-
         for (GridElement gridElement : gridElements) {
             Square square = gridElement.getSquare();
 

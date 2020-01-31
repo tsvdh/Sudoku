@@ -6,12 +6,10 @@ import javafx.scene.text.Font;
 class ColorButton extends Button {
 
     private String color;
-    private int index;
 
-    ColorButton(String color, int index) {
+    ColorButton(String color) {
         super();
         this.color = color;
-        this.index = index;
 
         setPrefSize(45, 30);
         setFont(new Font(20));
@@ -21,9 +19,5 @@ class ColorButton extends Button {
 
     public String getColor() {
         return color;
-    }
-
-    public int getIndex() {
-        return index;
     }
 }
