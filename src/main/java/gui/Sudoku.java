@@ -54,7 +54,6 @@ public class Sudoku extends Application implements Observer {
     private Button pauseButton;
     private Button paintButton;
     private Button unPaintButton;
-    private List<ColorButton> colorButtons;
 
     private EventHandler<KeyEvent> keyEventHandler;
 
@@ -121,7 +120,6 @@ public class Sudoku extends Application implements Observer {
         pauseButton = makeButton("Pause");
         paintButton = makeButton("Paint");
         unPaintButton = makeButton("Clear");
-        colorButtons = makeColorButtons();
 
         clearButton.setDisable(true);
         unPaintButton.setDisable(true);
@@ -202,13 +200,17 @@ public class Sudoku extends Application implements Observer {
             filler.setVisible(false);
             topHBox.getChildren().addAll(filler);
         }
+
         if (speed.equals("slow")) {
             topHBox.getChildren().addAll(pauseButton);
         }
+
         if (mode.equals("jigsaw")) {
             topHBox.getChildren().addAll(paintButton, unPaintButton);
-            bottomHBox.getChildren().addAll(colorButtons);
-        } else {
+            bottomHBox.getChildren().addAll(makeColorButtons());
+        }
+
+        else {
             Button filler = makeButton("Invisible");
             filler.setVisible(false);
             bottomHBox.getChildren().add(filler);
