@@ -331,6 +331,81 @@ public class Sudoku extends Application implements Observer {
         currentElement.setBorderColor("lightgreen");
     }
 
+    private void goForward(Scene scene, boolean fill) {
+        if (elementIterator.hasNext()) {
+            if (lastMove.equals("previous")) {
+                currentElement = elementIterator.next();
+            }
+            goToNextElement();
+        } else {
+            finishFillingIn(scene, fill);
+        }
+
+        lastMove = "next";
+    }
+
+    private void fillSquare(KeyCode keyCode, boolean fill, Scene scene) {
+        int number = -1;
+        boolean goToNextPainting = false;
+
+        if (!keyCode.isWhitespaceKey()) {
+            number = new Integer(keyCode.getName());
+            if (number != 0) {
+
+                if (fill) {
+                    try {
+                        currentElement.getSquare().setValue(number);
+                    } catch (OverrideException e) {
+                        System.out.println(e.getMessage());
+                    }
+
+                } else {
+                    if (!colorButtons.isFull(number)) {
+                        colorButtons.incrementCount(number);
+                        String color = colorButtons.getColor(number);
+                        currentElement.setBackgroundColor(color);
+                        goToNextPainting = true;
+                    }
+                }
+            }
+        }
+
+        boolean paintButNotNext = keyCode.isWhitespaceKey() || number == 0 || !goToNextPainting;
+
+        if (!paintButNotNext || fill) {
+            goForward(scene, fill);
+        }
+        else {
+            currentElement.setBorderColor("lightgreen");
+        }
+    }
+
+    private void goBackward(boolean fill) {
+        if (elementIterator.hasPrevious()) {
+
+            if (lastMove.equals("next")) {
+                currentElement = elementIterator.previous();
+            }
+            goToPreviousElement();
+
+            if (fill) {
+                try {
+                    currentElement.getSquare().setValue(null);
+                } catch (OverrideException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+            else {
+                currentElement.setBackgroundColor("white");
+            }
+
+            lastMove = "previous";
+
+        } else {
+            currentElement.setBorderColor("lightgreen");
+        }
+    }
+
     private void setKeyAction(Scene scene, boolean fill) {
         elementIterator = gridElements.listIterator();
         goToNextElement();
@@ -342,75 +417,11 @@ public class Sudoku extends Application implements Observer {
             KeyCode keyCode = event.getCode();
 
             if (keyCode.isDigitKey() || keyCode.isWhitespaceKey()) {
-
-                int number = -1;
-                boolean goToNextPainting = false;
-
-                if (!keyCode.isWhitespaceKey()) {
-                    number = new Integer(keyCode.getName());
-                    if (number != 0) {
-
-                        if (fill) {
-                            try {
-                                currentElement.getSquare().setValue(number);
-                            } catch (OverrideException e) {
-                                System.out.println(e.getMessage());
-                            }
-
-                        } else {
-                            if (!colorButtons.isFull(number)) {
-                                colorButtons.incrementCount(number);
-                                String color = colorButtons.getColor(number);
-                                currentElement.setBackgroundColor(color);
-                                goToNextPainting = true;
-                            }
-                        }
-                    }
-                }
-
-                boolean paintButNotNext = keyCode.isWhitespaceKey() || number == 0 || !goToNextPainting;
-
-                if (!paintButNotNext || fill) {
-                    if (elementIterator.hasNext()) {
-                        if (lastMove.equals("previous")) {
-                            currentElement = elementIterator.next();
-                        }
-                        goToNextElement();
-                    } else {
-                        finishFillingIn(scene, fill);
-                    }
-
-                    lastMove = "next";
-                }
-                else {
-                    currentElement.setBorderColor("lightgreen");
-                }
+                fillSquare(keyCode, fill, scene);
             }
 
             else if (keyCode.equals(KeyCode.BACK_SPACE) || keyCode.equals(KeyCode.DELETE)) {
-                if (elementIterator.hasPrevious()) {
-
-                    if (lastMove.equals("next")) {
-                        currentElement = elementIterator.previous();
-                    }
-                    goToPreviousElement();
-
-                    if (fill) {
-                        try {
-                            currentElement.getSquare().setValue(null);
-                        } catch (OverrideException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
-                    else {
-                        currentElement.setBackgroundColor("white");
-                    }
-
-                    lastMove = "previous";
-
-                } else {
-                    currentElement.setBorderColor("lightgreen");
-                }
+                goBackward(fill);
             }
 
             else {
