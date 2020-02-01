@@ -396,6 +396,12 @@ public class Sudoku extends Application implements Observer {
                 }
             }
             else {
+                String color = currentElement.getBackgroundColor();
+                ColorTable table = ColorTable.getInstance();
+
+                Integer number = table.get(color);
+                colorButtons.decreaseCount(number);
+
                 currentElement.setBackgroundColor("white");
             }
 

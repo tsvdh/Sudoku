@@ -49,6 +49,19 @@ class ColorButton extends Button {
         }
     }
 
+    void decreaseCount() {
+        if (count == 0) {
+            throw new IllegalStateException("Count can not be lower than 0");
+        }
+
+        count--;
+
+        if (count == 8) {
+            setDisable(false);
+            setText(number);
+        }
+    }
+
     void reset() {
         setDisable(false);
         setText(number);

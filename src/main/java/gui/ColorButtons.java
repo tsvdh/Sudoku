@@ -28,6 +28,10 @@ class ColorButtons {
         getButton(index).incrementCount();
     }
 
+    void decreaseCount(int index) {
+        getButton(index).decreaseCount();
+    }
+
     boolean isFull(int index) {
         return getButton(index).getCount() >= 9;
     }
