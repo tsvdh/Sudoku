@@ -32,8 +32,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import static gui.ButtonFactory.makeButton;
-import static gui.ButtonFactory.makeColorButtons;
-import static javafx.scene.input.KeyCode.DIGIT0;
 
 public class Sudoku extends Application implements Observer {
 
@@ -54,6 +52,7 @@ public class Sudoku extends Application implements Observer {
     private Button pauseButton;
     private Button paintButton;
     private Button unPaintButton;
+    private ColorButtons colorButtons;
 
     private EventHandler<KeyEvent> keyEventHandler;
 
@@ -120,6 +119,7 @@ public class Sudoku extends Application implements Observer {
         pauseButton = makeButton("Pause");
         paintButton = makeButton("Paint");
         unPaintButton = makeButton("Clear");
+        colorButtons = new ColorButtons();
 
         clearButton.setDisable(true);
         unPaintButton.setDisable(true);
@@ -207,7 +207,7 @@ public class Sudoku extends Application implements Observer {
 
         if (mode.equals("jigsaw")) {
             topHBox.getChildren().addAll(paintButton, unPaintButton);
-            bottomHBox.getChildren().addAll(makeColorButtons());
+            bottomHBox.getChildren().addAll(colorButtons.getButtons());
         }
 
         else {
@@ -343,8 +343,11 @@ public class Sudoku extends Application implements Observer {
 
             if (keyCode.isDigitKey() || keyCode.isWhitespaceKey()) {
 
+                int number = -1;
+                boolean goToNextPainting = false;
+
                 if (!keyCode.isWhitespaceKey()) {
-                    Integer number = new Integer(keyCode.getName());
+                    number = new Integer(keyCode.getName());
                     if (number != 0) {
 
                         if (fill) {
@@ -355,13 +358,19 @@ public class Sudoku extends Application implements Observer {
                             }
 
                         } else {
-                            String color = ColorTable.getColors()[number - 1];
-                            currentElement.setBackgroundColor(color);
+                            if (!colorButtons.isFull(number)) {
+                                colorButtons.incrementCount(number);
+                                String color = colorButtons.getColor(number);
+                                currentElement.setBackgroundColor(color);
+                                goToNextPainting = true;
+                            }
                         }
                     }
                 }
 
-                if (!(keyCode.isWhitespaceKey() || keyCode == DIGIT0) || fill) {
+                boolean paintButNotNext = keyCode.isWhitespaceKey() || number == 0 || !goToNextPainting;
+
+                if (!paintButNotNext || fill) {
                     if (elementIterator.hasNext()) {
                         if (lastMove.equals("previous")) {
                             currentElement = elementIterator.next();
@@ -661,6 +670,7 @@ public class Sudoku extends Application implements Observer {
                     paintButton.setDisable(false);
                     unPaintButton.setDisable(true);
                     painted = false;
+                    colorButtons.resetAll();
                 }
             }
         };
