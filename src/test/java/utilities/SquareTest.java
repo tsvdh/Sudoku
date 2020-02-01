@@ -49,6 +49,31 @@ class SquareTest {
         assertFalse(error);
     }
 
+    @ParameterizedTest
+    @CsvSource({"2, 3",
+                "3, 2",
+                "3, 4",
+                "4, 3"
+    })
+    void neighbours(int xPosition, int yPosition) {
+        Square square1 = new Square(null, 3, 3);
+        Square square2 = new Square(null, xPosition, yPosition);
+        assertThat(square1.isNeighbourOf(square2));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1, 3",
+                "1, 1",
+                "9, 9",
+                "4, 4",
+                "3, 3"
+    })
+    void notNeighbours(int xPosition, int yPosition) {
+        Square square1 = new Square(null, 3, 3);
+        Square square2 = new Square(null, xPosition, yPosition);
+        assertThat(square1.isNeighbourOf(square2)).isFalse();
+    }
+
     @Test
     void noValue() {
         Square square = new Square(null, 1, 1);

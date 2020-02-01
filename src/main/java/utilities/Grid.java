@@ -168,11 +168,11 @@ public class Grid extends SquareHolder implements Cloneable {
             }
         }
 
-        //check if from every square, all other squares can be reached
-
-//        for (Section section : sectionList) {
-//
-//        }
+        for (Section section : sectionList) {
+            if (!section.isValid()) {
+                return false;
+            }
+        }
 
         return true;
     }

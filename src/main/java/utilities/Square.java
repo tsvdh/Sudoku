@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
+import static java.lang.Math.abs;
+
 public class Square extends Observable implements Cloneable {
 
     private Integer value;
@@ -161,5 +163,12 @@ public class Square extends Observable implements Cloneable {
         } else {
             return options.size() == 2;
         }
+    }
+
+    boolean isNeighbourOf(Square other) {
+        int xDifference = abs(this.xPosition - other.xPosition);
+        int yDifference = abs(this.yPosition - other.yPosition);
+
+        return (xDifference == 0 && yDifference == 1) || (yDifference == 0 && xDifference == 1);
     }
 }
