@@ -12,6 +12,7 @@ buildNumber.properties
 data/
 src/main/resources/config/settings.properties
 Sudoku app by tsvdh/
+codemr/
 
 # Exclude maven wrapper
 !/.mvn/wrapper/maven-wrapper.jar
