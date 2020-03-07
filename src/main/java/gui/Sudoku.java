@@ -195,12 +195,6 @@ public class Sudoku extends Application implements Observer {
         String speed = getSettingsHandler().getSpeed();
         String mode = getSettingsHandler().getMode();
 
-        if (!speed.equals("slow") && !mode.equals("jigsaw")) {
-            Button filler = makeButton("Invisible");
-            filler.setVisible(false);
-            topHBox.getChildren().addAll(filler);
-        }
-
         if (speed.equals("slow")) {
             topHBox.getChildren().addAll(pauseButton);
         }
@@ -208,6 +202,15 @@ public class Sudoku extends Application implements Observer {
         if (mode.equals("jigsaw")) {
             topHBox.getChildren().addAll(paintButton, unPaintButton);
             bottomHBox.getChildren().addAll(colorButtons.getButtons());
+
+            if (painted) {
+                paintButton.setDisable(true);
+                unPaintButton.setDisable(false);
+            }
+            else {
+                paintButton.setDisable(false);
+                unPaintButton.setDisable(true);
+            }
         }
 
         else {
@@ -610,14 +613,18 @@ public class Sudoku extends Application implements Observer {
 
         if (filled && painted) {
 
-            this.grid = new Grid(oldMode);
-            for (GridElement gridElement : gridElements) {
-                String color = gridElement.getBackgroundColor();
-                int index = ColorTable.getInstance().get(color);
+            String mode = getSettingsHandler().getMode();
+            if (mode.equals("jigsaw")) {
 
-                Square square = gridElement.getSquare();
+                this.grid = new Grid(mode);
+                for (GridElement gridElement : gridElements) {
+                    String color = gridElement.getBackgroundColor();
+                    int index = ColorTable.getInstance().get(color);
 
-                grid.addSquare(square, index);
+                    Square square = gridElement.getSquare();
+
+                    grid.addSquare(square, index);
+                }
             }
 
             if (grid.isValid()) {
@@ -738,5 +745,8 @@ public class Sudoku extends Application implements Observer {
                 gridElement.setBackgroundColor("white");
             }
         }
+
+        String mode = getSettingsHandler().getMode();
+        painted = !mode.equals("jigsaw");
     }
 }
