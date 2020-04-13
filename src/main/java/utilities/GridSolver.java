@@ -19,10 +19,6 @@ public abstract class GridSolver extends Observable {
         success = true;
     }
 
-    Grid getGrid() {
-        return grid;
-    }
-
     Iterator<Square> getIterator() {
         return iterator;
     }
