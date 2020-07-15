@@ -1,4 +1,4 @@
-package utilities;
+package utils;
 
 import java.util.Iterator;
 import java.util.LinkedList;

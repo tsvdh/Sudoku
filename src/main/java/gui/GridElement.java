@@ -7,7 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import utilities.Square;
+import utils.Square;
 
 import java.util.Observable;
 import java.util.Observer;

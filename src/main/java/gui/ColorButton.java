@@ -2,7 +2,7 @@ package gui;
 
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
-import utilities.ColorTable;
+import utils.ColorTable;
 
 import static java.lang.String.valueOf;
 

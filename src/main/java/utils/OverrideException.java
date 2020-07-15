@@ -1,4 +1,4 @@
-package utilities;
+package utils;
 
 public class OverrideException extends Exception{
 

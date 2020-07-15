@@ -14,7 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import utilities.SettingsHandler;
+import utils.SettingsHandler;
 
 import java.util.Observable;
 
