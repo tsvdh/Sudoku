@@ -1,5 +1,8 @@
 package utils;
 
+import utils.SettingsPossibilities.Mode;
+import utils.SettingsPossibilities.Speed;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -70,8 +73,9 @@ public class SettingsHandler {
         return new Integer(string);
     }
 
-    public String getMode() {
-        return properties.getProperty("mode");
+    public Mode getMode() {
+        String mode = properties.getProperty("mode");
+        return Mode.valueOf(mode);
     }
 
     public Integer getPause() {
@@ -79,12 +83,13 @@ public class SettingsHandler {
         return new Integer(string);
     }
 
-    public String getSpeed() {
-        return properties.getProperty("speed");
+    public Speed getSpeed() {
+        String speed = properties.getProperty("speed");
+        return Speed.valueOf(speed);
     }
 
-    public void setMode(String mode) {
-        properties.setProperty("mode", mode);
+    public void setMode(Mode mode) {
+        properties.setProperty("mode", mode.name());
     }
 
     public void setInterval(Integer interval) {
@@ -95,7 +100,7 @@ public class SettingsHandler {
         properties.setProperty("pause", pause.toString());
     }
 
-    public void setSpeed(String speed) {
-        properties.setProperty("speed", speed);
+    public void setSpeed(Speed speed) {
+        properties.setProperty("speed", speed.name());
     }
 }

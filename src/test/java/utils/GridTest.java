@@ -1,5 +1,7 @@
 package utils;
 
+import utils.SettingsPossibilities.*;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -9,7 +11,7 @@ class GridTest {
 
     @BeforeEach
     void setUp() {
-        grid = new Grid("normal");
+        grid = new Grid(Mode.NORMAL);
     }
 
     @AfterEach

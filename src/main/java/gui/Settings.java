@@ -15,8 +15,13 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import utils.SettingsHandler;
+import utils.SettingsPossibilities.Mode;
+import utils.SettingsPossibilities.Speed;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Observable;
+import java.util.stream.Collectors;
 
 import static gui.Sudoku.getSettingsHandler;
 
@@ -26,11 +31,16 @@ class Settings extends Observable {
         SettingsHandler handler = getSettingsHandler();
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.setValue(handler.getMode());
+        choiceBox.setValue(handler.getMode().toString().toLowerCase());
         choiceBox.setPrefHeight(40);
         choiceBox.setPrefWidth(100);
-        choiceBox.getItems().addAll("normal", "diagonal", "jigsaw");
         choiceBox.setStyle("-fx-font-size: 15");
+
+        List<String> modes = Arrays .stream(Mode.values())
+                                    .map(Enum::name)
+                                    .map(String::toLowerCase)
+                                    .collect(Collectors.toList());
+        choiceBox.getItems().addAll(modes);
 
         Button okButton = new Button();
         okButton.setFont(new Font(15));
@@ -67,7 +77,7 @@ class Settings extends Observable {
         checkBox.setText("Slow mode");
         checkBox.setPrefHeight(40);
         checkBox.setFont(new Font(18));
-        if (handler.getSpeed().equals("slow")) {
+        if (handler.getSpeed() == Speed.SLOW) {
             checkBox.setSelected(true);
         }
 
@@ -123,11 +133,11 @@ class Settings extends Observable {
             handler.setInterval((int) intervalSlider.getValue());
             handler.setPause((int) (pauseSlider.getValue() * 1000));
             if (checkBox.isSelected()) {
-                handler.setSpeed("slow");
+                handler.setSpeed(Speed.SLOW);
             } else {
-                handler.setSpeed("quick");
+                handler.setSpeed(Speed.QUICK);
             }
-            handler.setMode(choiceBox.getValue());
+            handler.setMode(Mode.valueOf(choiceBox.getValue().toUpperCase()));
 
             handler.updateFile();
             setChanged();

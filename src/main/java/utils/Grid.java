@@ -1,21 +1,23 @@
 package utils;
 
+import utils.SettingsPossibilities.Mode;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class Grid extends SquareHolder implements Cloneable {
 
     private List<Section> sectionList;
-    private String mode;
+    private Mode mode;
     private int blockIndex;
 
-    public Grid(String mode) {
+    public Grid(Mode mode) {
         super();
         this.sectionList = new LinkedList<>();
         this.mode = mode;
 
         int upper = 27;
-        if (mode.equals("diagonal")) {
+        if (mode == Mode.DIAGONAL) {
             upper = 29;
         }
         for (int i = 1; i <= upper; i++) {
@@ -90,14 +92,14 @@ public class Grid extends SquareHolder implements Cloneable {
 
     private void addToSections(Square square) {
         int[] indexes = new int[3];
-        if (mode.equals("diagonal")) {
+        if (mode == Mode.DIAGONAL) {
             indexes = new int[5];
         }
 
         indexes[0] = getHorizontalSectionIndex(square);
         indexes[1] = getVerticalSectionIndex(square);
         indexes[2] = getBlockSectionIndex(square);
-        if (mode.equals("diagonal")) {
+        if (mode == Mode.DIAGONAL) {
             addDiagonalIndexes(square, indexes);
         }
 
@@ -142,7 +144,7 @@ public class Grid extends SquareHolder implements Cloneable {
     }
 
     private boolean isJigsaw() {
-        return this.mode.equals("jigsaw");
+        return this.mode == Mode.JIGSAW;
     }
 
     public boolean isValid() {
