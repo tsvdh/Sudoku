@@ -24,6 +24,7 @@ import utils.LinkedGridSolver;
 import utils.OverrideException;
 import utils.SettingsHandler;
 import utils.Square;
+
 import utils.SettingsPossibilities.Speed;
 import utils.SettingsPossibilities.Mode;
 
@@ -100,17 +101,6 @@ public class Sudoku extends Application implements Observer {
         gridPane.setAlignment(Pos.CENTER);
         //gridPane.setStyle("-fx-background-color: black;");
         borderPane.setCenter(gridPane);
-
-        /*given = new Integer[9][9];
-        given[0] = new Integer[]{0, 4, 6, 0, 0, 5, 0, 0, 0};
-        given[1] = new Integer[]{0, 2, 0, 3, 0, 0, 0, 0, 0};
-        given[2] = new Integer[]{9, 0, 0, 0, 4, 0, 0, 0, 7};
-        given[3] = new Integer[]{0, 0, 0, 0, 0, 7, 0, 0, 9};
-        given[4] = new Integer[]{8, 0, 1, 0, 0, 0, 4, 0, 3};
-        given[5] = new Integer[]{3, 0, 0, 6, 0, 0, 0, 0, 0};
-        given[6] = new Integer[]{7, 0, 0, 0, 2, 0, 0, 0, 6};
-        given[7] = new Integer[]{0, 0, 0, 0, 0, 6, 0, 5, 0};
-        given[8] = new Integer[]{0, 0, 0, 9, 0, 0, 7, 3, 0};*/
 
         buildGrid();
 
@@ -237,16 +227,6 @@ public class Sudoku extends Application implements Observer {
 
                 gridPane.add(gridElement, x , y);
                 gridElements.add(gridElement);
-
-                /*Integer value = given[y/ 2][x / 2];
-                if (value == 0) {
-                    value = null;
-                }
-                try {
-                    square.setValue(value);
-                } catch (OverrideException e) {
-                    System.out.println(e.getMessage());
-                }*/
             }
         }
 
@@ -274,7 +254,7 @@ public class Sudoku extends Application implements Observer {
     private void addLines() {
         GridPane gridPane = (GridPane) borderPane.getCenter();
         float width = 0.5f;
-        if (getSettingsHandler().getMode().equals("jigsaw")) {
+        if (getSettingsHandler().getMode() == Mode.JIGSAW) {
             width = 0;
         }
         String style = "-fx-border-radius: 0px;"

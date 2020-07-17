@@ -14,7 +14,7 @@ public class ColorTable extends Hashtable<String, Integer> {
         super();
 
         for (int i = 0; i < 9; i++) {
-            put(colors[i], i + 1);
+            this.put(colors[i], i + 1);
         }
     }
 

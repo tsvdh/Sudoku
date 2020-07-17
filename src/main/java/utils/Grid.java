@@ -1,5 +1,6 @@
 package utils;
 
+import org.jetbrains.annotations.Nullable;
 import utils.SettingsPossibilities.Mode;
 
 import java.util.LinkedList;
@@ -9,7 +10,6 @@ public class Grid extends SquareHolder implements Cloneable {
 
     private List<Section> sectionList;
     private Mode mode;
-    private int blockIndex;
 
     public Grid(Mode mode) {
         super();
@@ -43,16 +43,23 @@ public class Grid extends SquareHolder implements Cloneable {
 
     @Override
     public void addSquare(Square square) {
-        super.addSquare(square);
-        this.addToSections(square);
+        this.addSquare(square, null);
     }
 
-
-    public void addSquare(Square square, int blockIndex) {
-        if (isJigsaw()) {
-            this.blockIndex = blockIndex;
+    public void addSquare(Square square, @Nullable Integer blockIndex) {
+        if (isNotJigsaw()) {
+            super.addSquare(square);
+            this.addToSections(square);
         }
-        addSquare(square);
+        else {
+            if (!getSquareList().contains(square)) {
+                super.addSquare(square);
+            }
+
+            if (blockIndex != null) {
+                this.addToSections(square, blockIndex);
+            }
+        }
     }
 
     private int getHorizontalSectionIndex(Square square) {
@@ -64,14 +71,14 @@ public class Grid extends SquareHolder implements Cloneable {
     }
 
     private int getBlockSectionIndex(Square square) {
-        if (!isJigsaw()) {
+        if (isNotJigsaw()) {
             int xCoordinate = ((square.getXPosition() - 1) / 3) + 1;
             int yCoordinate = ((square.getYPosition() - 1) / 3);
 
             return (xCoordinate + (yCoordinate * 3)) + 18;
         }
         else {
-            return blockIndex + 18;
+            throw new IllegalStateException("This method should only be called when not in jigsaw mode.");
         }
     }
 
@@ -91,6 +98,13 @@ public class Grid extends SquareHolder implements Cloneable {
     }
 
     private void addToSections(Square square) {
+        addToSections(square, null);
+    }
+
+    /**
+     * Note to self: the combination blockIndex: null and mode: jigsaw will never occur.
+     */
+    private void addToSections(Square square, @Nullable Integer blockIndex) {
         int[] indexes = new int[3];
         if (mode == Mode.DIAGONAL) {
             indexes = new int[5];
@@ -98,7 +112,12 @@ public class Grid extends SquareHolder implements Cloneable {
 
         indexes[0] = getHorizontalSectionIndex(square);
         indexes[1] = getVerticalSectionIndex(square);
-        indexes[2] = getBlockSectionIndex(square);
+        if (isNotJigsaw()) {
+            indexes[2] = getBlockSectionIndex(square);
+        } else {
+            //noinspection ConstantConditions
+            indexes[2] = blockIndex + 18;
+        }
         if (mode == Mode.DIAGONAL) {
             addDiagonalIndexes(square, indexes);
         }
@@ -114,13 +133,35 @@ public class Grid extends SquareHolder implements Cloneable {
     protected Object clone() throws CloneNotSupportedException {
         super.clone();
 
-        Grid grid = new Grid(mode);
+        Grid newGrid = new Grid(mode);
         for (Square square : this.getSquareList()) {
             Square clone = (Square) square.clone();
-            grid.addSquare(clone);
+
+            if (isNotJigsaw()) {
+                newGrid.addSquare(clone);
+            }
+            else {
+                List<Section> sections = this.getSectionList();
+                Section[] sectionArray = sections.toArray(new Section[]{});
+
+                boolean added = false;
+                for (Section sectionContaining : this.getSectionsContaining(square)) {
+
+                    for (int i = 18; i < sectionArray.length; i++) {
+                        if (sectionArray[i] == sectionContaining) {
+                            newGrid.addSquare(clone, i - 17);
+                            added = true;
+                            break;
+                        }
+                    }
+                    if (added) {
+                        break;
+                    }
+                }
+            }
         }
 
-        return grid;
+        return newGrid;
     }
 
     Square getEquivalent(Square square) {
@@ -143,8 +184,8 @@ public class Grid extends SquareHolder implements Cloneable {
         return diagonal1.contains(square) || diagonal2.contains(square);
     }
 
-    private boolean isJigsaw() {
-        return this.mode == Mode.JIGSAW;
+    private boolean isNotJigsaw() {
+        return this.mode != Mode.JIGSAW;
     }
 
     public boolean isValid() {

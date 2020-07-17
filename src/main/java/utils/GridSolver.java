@@ -14,6 +14,10 @@ public abstract class GridSolver extends Observable {
 
     GridSolver(Grid grid) {
         this.grid = grid;
+        if (!filledIn()) {
+            throw new IllegalArgumentException("Not all sections of given grid are completely filled.");
+        }
+
         this.gridChanged = false;
         resetIterator();
         success = true;
@@ -182,6 +186,16 @@ public abstract class GridSolver extends Observable {
     private boolean isCompleteList(List<Integer> list) {
         for (int i = 1; i < 10; i++) {
             if (!list.contains(i)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean filledIn() {
+        for (Section section : grid.getSectionList()) {
+            if (section.getSquareList().size() != 9) {
                 return false;
             }
         }
