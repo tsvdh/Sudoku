@@ -596,7 +596,7 @@ public class Sudoku extends Application implements Observer {
         if (filled && painted) {
 
             Mode mode = getSettingsHandler().getMode();
-            if (mode == Mode.JIGSAW) {
+            if (mode == Mode.JIGSAW && !grid.isValid()) {
 
                 for (GridElement gridElement : gridElements) {
                     String color = gridElement.getBackgroundColor();

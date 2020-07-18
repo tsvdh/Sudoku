@@ -211,6 +211,12 @@ public class Grid extends SquareHolder implements Cloneable {
             }
         }
 
+        if (isNotJigsaw()) {
+            return true;
+        }
+
+        // Jigsaw specific tests
+
         for (Section section : sectionList) {
             if (!section.isValid()) {
                 return false;
