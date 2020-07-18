@@ -598,7 +598,6 @@ public class Sudoku extends Application implements Observer {
             Mode mode = getSettingsHandler().getMode();
             if (mode == Mode.JIGSAW) {
 
-                this.grid = new Grid(mode);
                 for (GridElement gridElement : gridElements) {
                     String color = gridElement.getBackgroundColor();
                     int index = ColorTable.getInstance().get(color);

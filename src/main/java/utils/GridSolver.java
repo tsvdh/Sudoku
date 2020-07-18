@@ -136,6 +136,7 @@ public abstract class GridSolver extends Observable {
         } catch (CloneNotSupportedException e) {
             System.out.println(e.getMessage());
         }
+        assert clone != null;
 
         int option1 = pairSquare.getOptions().get(0);
         int option2 = pairSquare.getOptions().get(1);
