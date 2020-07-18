@@ -670,6 +670,7 @@ public class Sudoku extends Application implements Observer {
                     fillInButton.setDisable(false);
                     clearButton.setDisable(true);
                     filled = false;
+                    settingsButton.setDisable(false);
                 }
                 else {
                     paintButton.setDisable(false);
