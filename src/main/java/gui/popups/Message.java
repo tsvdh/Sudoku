@@ -1,4 +1,4 @@
-package gui;
+package gui.popups;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,9 +12,9 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-class Message {
+public class Message {
 
-    Message(String text) {
+    public Message(String text) {
         Button button = new Button();
         button.setText("OK");
         button.setFont(new Font(20));

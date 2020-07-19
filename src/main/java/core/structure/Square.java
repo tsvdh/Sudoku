@@ -1,6 +1,7 @@
-package utils;
+package core.structure;
 
 import org.jetbrains.annotations.Nullable;
+import core.misc.OverrideException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -82,7 +83,7 @@ public class Square extends Observable implements Cloneable {
         notifyObservers(false);
     }
 
-    boolean removeOption(Integer option) {
+    public boolean removeOption(Integer option) {
 
         if (options.contains(option)) {
 

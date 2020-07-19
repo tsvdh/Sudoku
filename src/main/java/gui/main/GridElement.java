@@ -1,4 +1,4 @@
-package gui;
+package gui.main;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -8,7 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import utils.Square;
+import core.structure.Square;
 
 import java.util.Observable;
 import java.util.Observer;

@@ -1,12 +1,13 @@
-package utils;
+package core.solving;
 
+import core.misc.SettingsHandler;
 import javafx.scene.control.Button;
+import core.structure.Grid;
+import core.structure.Square;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static gui.Sudoku.getSettingsHandler;
 
 public class LinkedGridSolver extends GridSolver {
 
@@ -14,6 +15,8 @@ public class LinkedGridSolver extends GridSolver {
     private Square currentSquare;
     private Square previousSquare;
     private Button pauseButton;
+
+    private static final SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
     public LinkedGridSolver(Grid grid, Button pauseButton) {
         super(grid);
@@ -57,7 +60,7 @@ public class LinkedGridSolver extends GridSolver {
 
                     pauseButton.setDisable(true);
                     try {
-                        Thread.sleep(getSettingsHandler().getPause());
+                        Thread.sleep(settingsHandler.getPause());
                     } catch (InterruptedException e) {
                         System.out.println(e.getMessage());
                     }
@@ -81,7 +84,7 @@ public class LinkedGridSolver extends GridSolver {
 
     @Override
     public void solve() {
-        int interval = getSettingsHandler().getInterval();
+        int interval = settingsHandler.getInterval();
         executor.scheduleWithFixedDelay(this :: updateNextSquare, 1000, interval, TimeUnit.MILLISECONDS);
     }
 
@@ -96,7 +99,7 @@ public class LinkedGridSolver extends GridSolver {
         if (executor.isShutdown()) {
             executor = Executors.newSingleThreadScheduledExecutor();
 
-            int interval = getSettingsHandler().getInterval();
+            int interval = settingsHandler.getInterval();
             executor.scheduleWithFixedDelay(this :: updateNextSquare, 0, interval, TimeUnit.MILLISECONDS);
         } else {
             updateNextSquare();

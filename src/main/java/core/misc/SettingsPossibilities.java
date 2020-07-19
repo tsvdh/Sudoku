@@ -1,4 +1,4 @@
-package utils;
+package core.misc;
 
 public class SettingsPossibilities {
 

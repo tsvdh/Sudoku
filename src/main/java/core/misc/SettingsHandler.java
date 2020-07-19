@@ -1,7 +1,7 @@
-package utils;
+package core.misc;
 
-import utils.SettingsPossibilities.Mode;
-import utils.SettingsPossibilities.Speed;
+import core.misc.SettingsPossibilities.Mode;
+import core.misc.SettingsPossibilities.Speed;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,13 +15,26 @@ import java.util.Properties;
 
 public class SettingsHandler {
 
+    private static SettingsHandler instance;
+
     private Properties properties;
     private final String filePath = "/config/settings.properties";
     private final String jarFilePath = "/settings.properties";
 
-    public SettingsHandler() {
+    private SettingsHandler() {
         properties = new Properties();
         fileIO("read");
+    }
+
+    public static SettingsHandler getInstance() {
+        if (instance == null) {
+            synchronized (SettingsHandler.class) {
+                if (instance == null) {
+                    instance = new SettingsHandler();
+                }
+            }
+        }
+        return instance;
     }
 
     public void updateFile() {

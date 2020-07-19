@@ -1,4 +1,7 @@
-package utils;
+package core.solving;
+
+import core.structure.Grid;
+import core.structure.Square;
 
 public class IndependentGridSolver extends GridSolver {
 

@@ -1,15 +1,15 @@
-package gui;
+package gui.buttons;
 
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
-import utils.ColorTable;
+import core.misc.ColorTable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class ButtonFactory {
+public class ButtonFactory {
 
-    static Button makeButton(String text) {
+    public static Button makeButton(String text) {
         Button button = new Button();
         button.setFont(new Font(20));
         button.setPrefSize(100, 30);

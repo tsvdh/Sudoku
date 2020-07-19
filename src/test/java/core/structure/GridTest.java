@@ -1,6 +1,8 @@
-package utils;
+package core.structure;
 
-import utils.SettingsPossibilities.*;
+import core.structure.Grid;
+import core.structure.Square;
+import core.misc.SettingsPossibilities.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;

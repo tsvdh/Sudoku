@@ -1,4 +1,4 @@
-package gui;
+package gui.popups;
 
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -14,11 +14,11 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-class Confirmation {
+public class Confirmation {
 
     private String result;
 
-    Confirmation() {
+    public Confirmation() {
         result = "no";
 
         Button yesButton = new Button();
@@ -72,7 +72,7 @@ class Confirmation {
         stage.showAndWait();
     }
 
-    String getResult() {
+    public String getResult() {
         return result;
     }
 }

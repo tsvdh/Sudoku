@@ -1,6 +1,8 @@
-package utils;
+package core.structure;
 
 import org.junit.jupiter.api.Test;
+import core.structure.Square;
+import core.structure.SquareHolder;
 
 import static org.junit.jupiter.api.Assertions.*;
 

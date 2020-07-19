@@ -1,4 +1,4 @@
-package gui;
+package gui.popups;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,21 +14,19 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import utils.SettingsHandler;
-import utils.SettingsPossibilities.Mode;
-import utils.SettingsPossibilities.Speed;
+import core.misc.SettingsHandler;
+import core.misc.SettingsPossibilities.Mode;
+import core.misc.SettingsPossibilities.Speed;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.stream.Collectors;
 
-import static gui.Sudoku.getSettingsHandler;
+public class Settings extends Observable {
 
-class Settings extends Observable {
-
-    void build() {
-        SettingsHandler handler = getSettingsHandler();
+    public void build() {
+        SettingsHandler handler = SettingsHandler.getInstance();
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         choiceBox.setValue(handler.getMode().toString().toLowerCase());

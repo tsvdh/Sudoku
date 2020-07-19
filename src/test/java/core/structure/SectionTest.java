@@ -1,10 +1,12 @@
-package utils;
+package core.structure;
 
 import org.junit.jupiter.api.Test;
+import core.structure.Section;
+import core.structure.Square;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SectionTest {
+class SectionTest {
 
     @Test
     void valid() {

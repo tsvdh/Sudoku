@@ -1,4 +1,4 @@
-package utils;
+package core.structure;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +15,7 @@ class SquareHolder {
         squareList.add(square);
     }
 
-    List<Square> getSquareList() {
+    public List<Square> getSquareList() {
         return squareList;
     }
 

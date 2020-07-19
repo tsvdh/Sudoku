@@ -1,4 +1,4 @@
-package utils;
+package core.misc;
 
 import java.util.Hashtable;
 

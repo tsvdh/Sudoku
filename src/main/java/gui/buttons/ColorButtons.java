@@ -1,16 +1,16 @@
-package gui;
+package gui.buttons;
 
 import java.util.List;
 
-class ColorButtons {
+public class ColorButtons {
 
     private List<ColorButton> buttons;
 
-    ColorButtons() {
+    public ColorButtons() {
         buttons = ButtonFactory.makeColorButtons();
     }
 
-    List<ColorButton> getButtons() {
+    public List<ColorButton> getButtons() {
         return buttons;
     }
 
@@ -18,25 +18,25 @@ class ColorButtons {
         return buttons.get(index - 1);
     }
 
-    void resetAll() {
+    public void resetAll() {
         for (ColorButton button : buttons) {
             button.reset();
         }
     }
 
-    void incrementCount(int index) {
+    public void incrementCount(int index) {
         getButton(index).incrementCount();
     }
 
-    void decreaseCount(int index) {
+    public void decreaseCount(int index) {
         getButton(index).decreaseCount();
     }
 
-    boolean isFull(int index) {
+    public boolean isFull(int index) {
         return getButton(index).getCount() >= 9;
     }
 
-    String getColor(int index) {
+    public String getColor(int index) {
         return getButton(index).getColor();
     }
 }

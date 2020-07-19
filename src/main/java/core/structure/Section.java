@@ -1,11 +1,11 @@
-package utils;
+package core.structure;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-class Section extends SquareHolder {
+public class Section extends SquareHolder {
 
     boolean isValid() {
         List<Square> squares = getSquareList();

@@ -1,6 +1,18 @@
-package gui;
+package gui.main;
 
-import javafx.application.Application;
+import core.misc.ColorTable;
+import core.misc.OverrideException;
+import core.misc.SettingsHandler;
+import core.misc.SettingsPossibilities.Mode;
+import core.misc.SettingsPossibilities.Speed;
+import core.solving.IndependentGridSolver;
+import core.solving.LinkedGridSolver;
+import core.structure.Grid;
+import core.structure.Square;
+import gui.buttons.ColorButtons;
+import gui.popups.Confirmation;
+import gui.popups.Message;
+import gui.popups.Settings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -17,16 +29,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import utils.ColorTable;
-import utils.Grid;
-import utils.IndependentGridSolver;
-import utils.LinkedGridSolver;
-import utils.OverrideException;
-import utils.SettingsHandler;
-import utils.Square;
-
-import utils.SettingsPossibilities.Speed;
-import utils.SettingsPossibilities.Mode;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,9 +36,9 @@ import java.util.ListIterator;
 import java.util.Observable;
 import java.util.Observer;
 
-import static gui.ButtonFactory.makeButton;
+import static gui.buttons.ButtonFactory.makeButton;
 
-public class Sudoku extends Application implements Observer {
+public class Sudoku implements Observer {
 
     private Grid grid;
     private List<GridElement> gridElements;
@@ -68,23 +70,10 @@ public class Sudoku extends Application implements Observer {
     private EventHandler<ActionEvent> clearActionEventHandler;
     private EventHandler<ActionEvent> unPaintActionEventHandler;
 
-    //private Integer[][] given;
+    private final static SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
-    private static SettingsHandler settingsHandler;
-
-    public static SettingsHandler getSettingsHandler() {
-        return settingsHandler;
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage stage) {
-        settingsHandler = new SettingsHandler();
-
-        Mode mode = getSettingsHandler().getMode();
+    public void build(Stage stage) {
+        Mode mode = settingsHandler.getMode();
         this.grid = new Grid(mode);
         this.oldMode = mode;
         this.gridElements = new LinkedList<>();
@@ -184,8 +173,8 @@ public class Sudoku extends Application implements Observer {
         vBoxBottom.getChildren().addAll(topHBox, bottomHBox);
 
 
-        Speed speed = getSettingsHandler().getSpeed();
-        Mode mode = getSettingsHandler().getMode();
+        Speed speed = settingsHandler.getSpeed();
+        Mode mode = settingsHandler.getMode();
 
         if (speed == Speed.SLOW) {
             topHBox.getChildren().addAll(pauseButton);
@@ -236,7 +225,7 @@ public class Sudoku extends Application implements Observer {
     }
 
     private void rebuildGrid() {
-        Mode newMode = getSettingsHandler().getMode();
+        Mode newMode = settingsHandler.getMode();
         if (!newMode.equals(oldMode)) {
 
             this.grid = new Grid(newMode);
@@ -254,7 +243,7 @@ public class Sudoku extends Application implements Observer {
     private void addLines() {
         GridPane gridPane = (GridPane) borderPane.getCenter();
         float width = 0.5f;
-        if (getSettingsHandler().getMode() == Mode.JIGSAW) {
+        if (settingsHandler.getMode() == Mode.JIGSAW) {
             width = 0;
         }
         String style = "-fx-border-radius: 0px;"
@@ -478,7 +467,7 @@ public class Sudoku extends Application implements Observer {
             rebuildGrid();
             setSpecificButtons();
 
-            oldMode = getSettingsHandler().getMode();
+            oldMode = settingsHandler.getMode();
         }
     }
 
@@ -515,7 +504,7 @@ public class Sudoku extends Application implements Observer {
     }
 
     private void setSolveButtonAction() {
-        Speed speed = getSettingsHandler().getSpeed();
+        Speed speed = settingsHandler.getSpeed();
 
         if (speed == Speed.QUICK) {
             solveButton.setOnAction(event -> {
@@ -595,7 +584,7 @@ public class Sudoku extends Application implements Observer {
 
         if (filled && painted) {
 
-            Mode mode = getSettingsHandler().getMode();
+            Mode mode = settingsHandler.getMode();
             if (mode == Mode.JIGSAW && !grid.isValid()) {
 
                 for (GridElement gridElement : gridElements) {
@@ -728,7 +717,7 @@ public class Sudoku extends Application implements Observer {
             }
         }
 
-        Mode mode = getSettingsHandler().getMode();
+        Mode mode = settingsHandler.getMode();
         painted = !(mode == Mode.JIGSAW);
     }
 }

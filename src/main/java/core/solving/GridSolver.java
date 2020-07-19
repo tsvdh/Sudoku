@@ -1,4 +1,9 @@
-package utils;
+package core.solving;
+
+import core.structure.Grid;
+import core.misc.OverrideException;
+import core.structure.Section;
+import core.structure.Square;
 
 import java.util.Iterator;
 import java.util.LinkedList;

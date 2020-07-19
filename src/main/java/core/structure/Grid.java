@@ -1,7 +1,7 @@
-package utils;
+package core.structure;
 
 import org.jetbrains.annotations.Nullable;
-import utils.SettingsPossibilities.Mode;
+import core.misc.SettingsPossibilities.Mode;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,11 +25,11 @@ public class Grid extends SquareHolder implements Cloneable {
         }
     }
 
-    List<Section> getSectionList() {
+    public List<Section> getSectionList() {
         return sectionList;
     }
 
-    List<Section> getSectionsContaining(Square square) {
+    public List<Section> getSectionsContaining(Square square) {
         List<Section> sectionList = new LinkedList<>();
 
         for (Section section : this.sectionList) {
@@ -130,7 +130,7 @@ public class Grid extends SquareHolder implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         super.clone();
 
         Grid newGrid = new Grid(mode);
@@ -141,7 +141,7 @@ public class Grid extends SquareHolder implements Cloneable {
                 newGrid.addSquare(clone);
             }
             else {
-                List<Section> sections = this.getSectionList();
+                List<Section> sections = this.sectionList;
                 Section[] sectionArray = sections.toArray(new Section[]{});
 
                 boolean added = false;
@@ -164,7 +164,7 @@ public class Grid extends SquareHolder implements Cloneable {
         return newGrid;
     }
 
-    Square getEquivalent(Square square) {
+    public Square getEquivalent(Square square) {
         for (Square tempSquare : getSquareList()) {
             if (tempSquare.equals(square)) {
                 return tempSquare;
@@ -174,12 +174,12 @@ public class Grid extends SquareHolder implements Cloneable {
     }
 
     public boolean diagonalModeEnabledAndOnDiagonal(Square square) {
-        if (getSectionList().size() == 27) {
+        if (this.sectionList.size() == 27) {
             return false;
         }
 
-        Section diagonal1 = getSectionList().get(27);
-        Section diagonal2 = getSectionList().get(28);
+        Section diagonal1 = this.sectionList.get(27);
+        Section diagonal2 = this.sectionList.get(28);
 
         return diagonal1.contains(square) || diagonal2.contains(square);
     }
@@ -189,7 +189,7 @@ public class Grid extends SquareHolder implements Cloneable {
     }
 
     public boolean isValid() {
-        List<Section> sectionList = getSectionList();
+        List<Section> sectionList = this.sectionList;
 
         for (Section section : sectionList) {
             if (section.getSquareList().size() != 9) {

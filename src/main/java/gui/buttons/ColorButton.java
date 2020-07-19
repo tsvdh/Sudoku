@@ -1,8 +1,8 @@
-package gui;
+package gui.buttons;
 
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
-import utils.ColorTable;
+import core.misc.ColorTable;
 
 import static java.lang.String.valueOf;
 
