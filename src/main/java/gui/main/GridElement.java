@@ -31,7 +31,7 @@ class GridElement extends GridPane implements Observer {
         setSquare(square);
     }
 
-    public String getBackgroundColor() {
+    String getBackgroundColor() {
         return backgroundColor;
     }
 

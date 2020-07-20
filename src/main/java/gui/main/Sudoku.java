@@ -220,7 +220,6 @@ public class Sudoku implements Observer {
         }
 
         addLines();
-
         colorGrid();
     }
 
@@ -234,10 +233,9 @@ public class Sudoku implements Observer {
                 grid.addSquare(square);
             }
 
+            addLines();
             colorGrid();
         }
-
-        addLines();
     }
 
     private void addLines() {
@@ -412,23 +410,6 @@ public class Sudoku implements Observer {
         scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
     }
 
-    private void clearSquares(boolean fill) {
-        for (GridElement gridElement : gridElements) {
-            if (fill) {
-                try {
-                    gridElement.getSquare().setValue(null);
-                } catch (OverrideException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-
-            gridElement.setBorderColor("black");
-        }
-        if (!fill) {
-            colorGrid();
-        }
-    }
-
     @Override
     public void update(Observable o, Object arg) {
         String status = (String) arg;
@@ -472,21 +453,20 @@ public class Sudoku implements Observer {
     }
 
     private List<GridElement> getGridElements(LinkedGridSolver gridSolver) {
-        List<GridElement> list = new LinkedList<>();
+        LinkedList<GridElement> list = new LinkedList<>();
 
         Square previousSquare = gridSolver.getPreviousSquare();
         Square currentSquare = gridSolver.getCurrentSquare();
 
+        boolean foundPrevious = false;
         for (GridElement gridElement : gridElements) {
-            if (gridElement.getSquare().equals(currentSquare)) {
-                list.add(gridElement);
-                break;
+
+            if (!foundPrevious && gridElement.getSquare().equals(previousSquare)) {
+                list.addLast(gridElement);
+                foundPrevious = true;
             }
-        }
-        for (GridElement gridElement : gridElements) {
-            if (gridElement.getSquare().equals(previousSquare)) {
-                list.add(gridElement);
-                break;
+            else if (gridElement.getSquare().equals(currentSquare)) {
+                list.addFirst(gridElement);
             }
         }
 
@@ -610,6 +590,23 @@ public class Sudoku implements Observer {
             if (gridElement.getSquare().hasNoValue()) {
                 gridElement.update(null, true);
             }
+        }
+    }
+
+    private void clearSquares(boolean fill) {
+        for (GridElement gridElement : gridElements) {
+            if (fill) {
+                try {
+                    gridElement.getSquare().setValue(null);
+                } catch (OverrideException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+
+            gridElement.setBorderColor("black");
+        }
+        if (!fill) {
+            colorGrid();
         }
     }
 
