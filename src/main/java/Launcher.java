@@ -6,6 +6,6 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        new Sudoku().build(primaryStage);
+        new Sudoku(primaryStage);
     }
 }
