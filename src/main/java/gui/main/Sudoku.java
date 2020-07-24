@@ -23,10 +23,8 @@ public class Sudoku {
     IterationComponent iterationComponent;
     ObserverComponent observerComponent;
 
-    private final static SettingsHandler settingsHandler = SettingsHandler.getInstance();
-
     public Sudoku(Stage stage) {
-        Mode mode = settingsHandler.getMode();
+        Mode mode = SettingsHandler.getInstance().getMode();
         this.grid = new Grid(mode);
         this.gridElements = new LinkedList<>();
         this.oldMode = mode;
@@ -65,7 +63,7 @@ public class Sudoku {
             }
         }
 
-        Mode mode = settingsHandler.getMode();
-        eventComponent.painted = !(mode == Mode.JIGSAW);
+        Mode mode = SettingsHandler.getInstance().getMode();
+        eventComponent.painted = (mode != Mode.JIGSAW);
     }
 }

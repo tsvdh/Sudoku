@@ -28,11 +28,11 @@ class ColorButton extends Button {
         setText(number);
     }
 
-    public int getCount() {
+    int getCount() {
         return count;
     }
 
-    public String getColor() {
+    String getColor() {
         return color;
     }
 

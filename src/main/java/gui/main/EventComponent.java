@@ -3,7 +3,7 @@ package gui.main;
 import core.misc.ColorTable;
 import core.misc.OverrideException;
 import core.misc.SettingsHandler;
-import core.misc.SettingsPossibilities;
+import core.misc.SettingsPossibilities.*;
 import core.solving.IndependentGridSolver;
 import core.solving.LinkedGridSolver;
 import core.structure.Square;
@@ -107,9 +107,9 @@ class EventComponent {
     }
 
     void setSolveButtonAction() {
-        SettingsPossibilities.Speed speed = SettingsHandler.getInstance().getSpeed();
+        Speed speed = SettingsHandler.getInstance().getSpeed();
 
-        if (speed == SettingsPossibilities.Speed.QUICK) {
+        if (speed == Speed.QUICK) {
             solveButton.setOnAction(event -> {
 
                 solveButton.setDisable(true);
@@ -120,7 +120,7 @@ class EventComponent {
             });
         }
 
-        if (speed == SettingsPossibilities.Speed.SLOW) {
+        if (speed == Speed.SLOW) {
             solveButton.setOnAction(event -> {
 
                 solveButton.setDisable(true);
@@ -187,8 +187,8 @@ class EventComponent {
 
         if (filled && painted) {
 
-            SettingsPossibilities.Mode mode = SettingsHandler.getInstance().getMode();
-            if (mode == SettingsPossibilities.Mode.JIGSAW && !parent.grid.isValid()) {
+            Mode mode = SettingsHandler.getInstance().getMode();
+            if (mode == Mode.JIGSAW && !parent.grid.isValid()) {
 
                 for (GridElement gridElement : parent.gridElements) {
                     String color = gridElement.getBackgroundColor();
