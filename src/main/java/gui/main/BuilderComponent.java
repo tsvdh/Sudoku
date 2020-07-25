@@ -4,6 +4,7 @@ import core.misc.SettingsHandler;
 import core.misc.SettingsPossibilities;
 import core.structure.Grid;
 import core.structure.Square;
+import gui.buttons.ColorButtons;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -179,7 +180,9 @@ class BuilderComponent {
         Button unPaintButton = eventComponent.unPaintButton;
         if (mode == SettingsPossibilities.Mode.JIGSAW) {
             topHBox.getChildren().addAll(paintButton, unPaintButton);
-            bottomHBox.getChildren().addAll(eventComponent.colorButtons.getButtons());
+            ColorButtons colorButtons = eventComponent.colorButtons;
+            colorButtons.disableAll();
+            bottomHBox.getChildren().addAll(colorButtons.getButtons());
 
             if (eventComponent.painted) {
                 paintButton.setDisable(true);

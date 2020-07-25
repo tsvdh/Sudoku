@@ -248,6 +248,7 @@ class EventComponent {
             }
             else {
                 fillInButton.setDisable(true);
+                colorButtons.enableAll();
             }
 
             parent.iterationComponent.setKeyAction(scene, fill);
@@ -259,6 +260,11 @@ class EventComponent {
 
             if (result.equals("yes")) {
                 clearSquares(fill);
+
+                if (!fill) {
+                    colorButtons.resetAll();
+                    colorButtons.disableAll();
+                }
 
                 scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
 
@@ -289,6 +295,7 @@ class EventComponent {
                     unPaintButton.setDisable(true);
                     painted = false;
                     colorButtons.resetAll();
+                    colorButtons.disableAll();
                 }
             }
         };

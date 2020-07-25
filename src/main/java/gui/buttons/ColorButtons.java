@@ -1,5 +1,7 @@
 package gui.buttons;
 
+import javafx.scene.control.Button;
+
 import java.util.List;
 
 public class ColorButtons {
@@ -38,5 +40,17 @@ public class ColorButtons {
 
     public String getColor(int index) {
         return getButton(index).getColor();
+    }
+
+    public void enableAll() {
+        for (Button button : buttons) {
+            button.setDisable(false);
+        }
+    }
+
+    public void disableAll() {
+        for (Button button : buttons) {
+            button.setDisable(true);
+        }
     }
 }
