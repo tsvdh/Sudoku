@@ -12,6 +12,7 @@ import java.util.ListIterator;
 class IterationComponent {
 
     private Sudoku parent;
+    private EventComponent eventComponent;
 
     private ListIterator<GridElement> elementIterator;
     private GridElement currentElement;
@@ -19,6 +20,7 @@ class IterationComponent {
 
     IterationComponent(Sudoku parent) {
         this.parent = parent;
+        this.eventComponent = parent.eventComponent;
         this.lastMove = "none";
     }
 
@@ -39,7 +41,7 @@ class IterationComponent {
             }
             goToNextElement();
         } else {
-            parent.eventComponent.finishFillingIn(scene, fill);
+            eventComponent.finishFillingIn(scene, fill);
         }
 
         lastMove = "next";
@@ -61,7 +63,7 @@ class IterationComponent {
                     }
 
                 } else {
-                    ColorButtons colorButtons = parent.eventComponent.colorButtons;
+                    ColorButtons colorButtons = eventComponent.colorButtons;
 
                     if (!colorButtons.isFull(number)) {
                         colorButtons.incrementCount(number);
@@ -103,7 +105,7 @@ class IterationComponent {
                 ColorTable table = ColorTable.getInstance();
 
                 Integer number = table.get(color);
-                parent.eventComponent.colorButtons.decreaseCount(number);
+                eventComponent.colorButtons.decreaseCount(number);
 
                 currentElement.setBackgroundColor("white");
             }
@@ -119,7 +121,7 @@ class IterationComponent {
         elementIterator = parent.gridElements.listIterator();
         goToNextElement();
 
-        parent.eventComponent.keyEventHandler = event -> {
+        eventComponent.keyEventHandler = event -> {
 
             currentElement.setBorderColor("black");
 
@@ -138,6 +140,6 @@ class IterationComponent {
             }
         };
 
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, parent.eventComponent.keyEventHandler);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, eventComponent.keyEventHandler);
     }
 }

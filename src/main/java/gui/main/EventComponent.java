@@ -6,6 +6,7 @@ import core.misc.SettingsHandler;
 import core.misc.SettingsPossibilities.*;
 import core.solving.IndependentGridSolver;
 import core.solving.LinkedGridSolver;
+import core.structure.Grid;
 import core.structure.Square;
 import gui.buttons.ColorButtons;
 import gui.popups.Confirmation;
@@ -25,6 +26,7 @@ import static gui.buttons.ButtonFactory.makeButton;
 class EventComponent {
 
     private Sudoku parent;
+    private Grid grid;
 
     private boolean filled;
     boolean painted;
@@ -56,6 +58,7 @@ class EventComponent {
         }
 
         this.parent = parent;
+        this.grid = parent.grid;
         this.painted = false;
         this.filled = false;
 
@@ -114,7 +117,7 @@ class EventComponent {
 
                 solveButton.setDisable(true);
                 settingsButton.setDisable(true);
-                IndependentGridSolver gridSolver = new IndependentGridSolver(parent.grid);
+                IndependentGridSolver gridSolver = new IndependentGridSolver(grid);
                 showOptionsOfAllSquares();
                 gridSolver.solve();
             });
@@ -131,7 +134,7 @@ class EventComponent {
                 unPaintButton.setDisable(true);
                 pauseButton.setDisable(false);
 
-                LinkedGridSolver gridSolver = new LinkedGridSolver(parent.grid, pauseButton);
+                LinkedGridSolver gridSolver = new LinkedGridSolver(grid, pauseButton);
                 gridSolver.addObserver(parent.observerComponent);
 
                 setPauseButtonAction(gridSolver);
@@ -188,7 +191,7 @@ class EventComponent {
         if (filled && painted) {
 
             Mode mode = SettingsHandler.getInstance().getMode();
-            if (mode == Mode.JIGSAW && !parent.grid.isValid()) {
+            if (mode == Mode.JIGSAW && !grid.isValid()) {
 
                 for (GridElement gridElement : parent.gridElements) {
                     String color = gridElement.getBackgroundColor();
@@ -200,7 +203,7 @@ class EventComponent {
                 }
             }
 
-            if (parent.grid.isValid()) {
+            if (grid.isValid()) {
                 solveButton.setDisable(false);
             } else {
                 new Message("The sudoku you entered is invalid!");
