@@ -1,9 +1,6 @@
 package core.structure;
 
-import core.structure.Grid;
-import core.structure.Square;
-import core.misc.SettingsPossibilities.*;
-
+import core.misc.options.Mode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

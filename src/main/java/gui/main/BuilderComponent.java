@@ -1,7 +1,8 @@
 package gui.main;
 
 import core.misc.SettingsHandler;
-import core.misc.SettingsPossibilities;
+import core.misc.options.Mode;
+import core.misc.options.Speed;
 import core.structure.Grid;
 import core.structure.Square;
 import gui.buttons.ColorButtons;
@@ -81,8 +82,8 @@ class BuilderComponent {
     }
 
     void rebuildGrid() {
-        SettingsPossibilities.Mode newMode = settingsHandler.getMode();
-        if (!newMode.equals(parent.oldMode)) {
+        Mode newMode = settingsHandler.getMode();
+        if (!newMode.equals(settingsHandler.getOldMode())) {
 
             parent.grid = new Grid(newMode);
             for (GridElement gridElement : parent.gridElements) {
@@ -98,7 +99,7 @@ class BuilderComponent {
     private void addLines() {
         GridPane gridPane = (GridPane) borderPane.getCenter();
         float width = 0.5f;
-        if (settingsHandler.getMode() == SettingsPossibilities.Mode.JIGSAW) {
+        if (settingsHandler.getMode() == Mode.JIGSAW) {
             width = 0;
         }
         String style = "-fx-border-radius: 0px;"
@@ -169,16 +170,16 @@ class BuilderComponent {
         vBoxBottom.getChildren().addAll(topHBox, bottomHBox);
 
 
-        SettingsPossibilities.Speed speed = settingsHandler.getSpeed();
-        SettingsPossibilities.Mode mode = settingsHandler.getMode();
+        Speed speed = settingsHandler.getSpeed();
+        Mode mode = settingsHandler.getMode();
 
-        if (speed == SettingsPossibilities.Speed.SLOW) {
+        if (speed == Speed.SLOW) {
             topHBox.getChildren().addAll(eventComponent.pauseButton);
         }
 
         Button paintButton = eventComponent.paintButton;
         Button unPaintButton = eventComponent.unPaintButton;
-        if (mode == SettingsPossibilities.Mode.JIGSAW) {
+        if (mode == Mode.JIGSAW) {
             topHBox.getChildren().addAll(paintButton, unPaintButton);
             ColorButtons colorButtons = eventComponent.colorButtons;
             colorButtons.disableAll();

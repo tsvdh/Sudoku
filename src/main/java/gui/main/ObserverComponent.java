@@ -53,8 +53,6 @@ class ObserverComponent implements Observer {
 
             parent.builderComponent.rebuildGrid();
             parent.builderComponent.setSpecificButtons();
-
-            parent.oldMode = SettingsHandler.getInstance().getMode();
         }
     }
 

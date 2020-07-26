@@ -1,7 +1,7 @@
 package gui.main;
 
 import core.misc.SettingsHandler;
-import core.misc.SettingsPossibilities.Mode;
+import core.misc.options.Mode;
 import core.structure.Grid;
 import core.structure.Square;
 import javafx.scene.Scene;
@@ -16,7 +16,6 @@ public class Sudoku {
 
     Grid grid;
     List<GridElement> gridElements;
-    Mode oldMode;
 
     BuilderComponent builderComponent;
     EventComponent eventComponent;
@@ -27,7 +26,6 @@ public class Sudoku {
         Mode mode = SettingsHandler.getInstance().getMode();
         this.grid = new Grid(mode);
         this.gridElements = new LinkedList<>();
-        this.oldMode = mode;
 
         Scene scene = new Scene(new Region());
 

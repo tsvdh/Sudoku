@@ -1,7 +1,10 @@
 package core.misc;
 
-import core.misc.SettingsPossibilities.Mode;
-import core.misc.SettingsPossibilities.Speed;
+
+
+import core.misc.options.InputMethod;
+import core.misc.options.Mode;
+import core.misc.options.Speed;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +16,8 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
+
+
 public class SettingsHandler {
 
     private static SettingsHandler instance;
@@ -21,9 +26,12 @@ public class SettingsHandler {
     private final String filePath = "/config/settings.properties";
     private final String jarFilePath = "/settings.properties";
 
+    private Mode oldMode;
+
     private SettingsHandler() {
         properties = new Properties();
         fileIO("read");
+        oldMode = getMode();
     }
 
     public static SettingsHandler getInstance() {
@@ -54,10 +62,11 @@ public class SettingsHandler {
 
                 if (file.createNewFile()) {
                     FileWriter writer = new FileWriter(file);
-                    writer.write("interval=40\n");
+                    writer.write("interval=80\n");
                     writer.write("pause=2000\n");
-                    writer.write("speed=quick\n");
-                    writer.write("mode=normal");
+                    writer.write("speed=SLOW\n");
+                    writer.write("mode=NORMAL\n");
+                    writer.write("inputMethod=LEGACY");
                     writer.flush();
                     writer.close();
                 }
@@ -101,7 +110,17 @@ public class SettingsHandler {
         return Speed.valueOf(speed);
     }
 
+    public InputMethod getInputMethod() {
+        String inputMethod = properties.getProperty("inputMethod");
+        return InputMethod.valueOf(inputMethod);
+    }
+
+    public Mode getOldMode() {
+        return oldMode;
+    }
+
     public void setMode(Mode mode) {
+        oldMode = getMode();
         properties.setProperty("mode", mode.name());
     }
 
@@ -115,5 +134,9 @@ public class SettingsHandler {
 
     public void setSpeed(Speed speed) {
         properties.setProperty("speed", speed.name());
+    }
+
+    public void setInputMethod(InputMethod inputMethod) {
+        properties.setProperty("inputMethod", inputMethod.toString());
     }
 }

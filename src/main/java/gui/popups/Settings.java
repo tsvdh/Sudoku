@@ -1,5 +1,10 @@
 package gui.popups;
 
+import core.misc.SettingsHandler;
+import core.misc.options.InputMethod;
+import core.misc.options.Mode;
+import core.misc.options.Speed;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -11,13 +16,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import core.misc.SettingsHandler;
-import core.misc.SettingsPossibilities.Mode;
-import core.misc.SettingsPossibilities.Speed;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
@@ -28,17 +32,52 @@ public class Settings extends Observable {
     public void build() {
         SettingsHandler handler = SettingsHandler.getInstance();
 
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.setValue(handler.getMode().toString().toLowerCase());
-        choiceBox.setPrefHeight(40);
-        choiceBox.setPrefWidth(100);
-        choiceBox.setStyle("-fx-font-size: 15");
+        ChoiceBox<String> modeChoiceBox = new ChoiceBox<>();
+        modeChoiceBox.setValue(handler.getMode().toString().toLowerCase());
+        modeChoiceBox.setPrefHeight(40);
+        modeChoiceBox.setPrefWidth(100);
+        modeChoiceBox.setStyle("-fx-font-size: 15");
 
         List<String> modes = Arrays .stream(Mode.values())
                                     .map(Enum::name)
                                     .map(String::toLowerCase)
                                     .collect(Collectors.toList());
-        choiceBox.getItems().addAll(modes);
+        modeChoiceBox.getItems().addAll(modes);
+
+        Label modeLabel = new Label();
+        modeLabel.setText("Mode:");
+        modeLabel.setStyle("-fx-font-size: 18");
+        modeLabel.setPrefWidth(120);
+
+        HBox modeContainer = new HBox();
+        modeContainer.setAlignment(Pos.CENTER_LEFT);
+        modeContainer.setSpacing(40);
+        modeContainer.getChildren().addAll(modeLabel, modeChoiceBox);
+
+
+        ChoiceBox<String> inputMethodChoiceBox = new ChoiceBox<>();
+        inputMethodChoiceBox.setValue(handler.getInputMethod().toString().toLowerCase());
+        inputMethodChoiceBox.setPrefHeight(40);
+        inputMethodChoiceBox.setPrefWidth(100);
+        inputMethodChoiceBox.setStyle("-fx-font-size: 15");
+
+        List<String> inputMethods = Arrays  .stream(InputMethod.values())
+                                            .map(Enum::toString)
+                                            .map(String::toLowerCase)
+                                            .collect(Collectors.toList());
+        inputMethodChoiceBox.getItems().addAll(inputMethods);
+
+        Label inputMethodLabel = new Label();
+        inputMethodLabel.setText("Input method:");
+        inputMethodLabel.setStyle("-fx-font-size: 18");
+        inputMethodLabel.setPrefWidth(120);
+
+        HBox inputMethodContainer = new HBox();
+        inputMethodContainer.setAlignment(Pos.CENTER_LEFT);
+        inputMethodContainer.setSpacing(40);
+        inputMethodContainer.setPadding(new Insets(20, 0, 20, 0));
+        inputMethodContainer.getChildren().addAll(inputMethodLabel, inputMethodChoiceBox);
+
 
         Button okButton = new Button();
         okButton.setFont(new Font(15));
@@ -89,35 +128,31 @@ public class Settings extends Observable {
         description2.setFont(new Font(18));
         description2.setPadding(new Insets(20, 0, 0, 0));
 
-        Button line1 = new Button();
-        line1.setPrefSize(300, 1);
-        line1.setFont(new Font(0));
 
-        Button line2 = new Button();
-        line2.setPrefSize(300, 1);
-        line2.setFont(new Font(0));
-
-        Button filler1 = createFiller();
-        Button filler2 = createFiller();
-
+        ArrayList<Node> list = new ArrayList<>();
+        list.add(modeContainer);
+        list.add(inputMethodContainer);
+        list.add(createLine());
+        list.add(createFiller());
+        list.add(checkBox);
+        list.add(createFiller());
+        list.add(createLine());
+        list.add(description1);
+        list.add(intervalSlider);
+        list.add(createLine());
+        list.add(description2);
+        list.add(pauseSlider);
 
         GridPane gridPane = new GridPane();
-        gridPane.add(choiceBox, 0, 0);
-        gridPane.add(filler1, 0, 1);
-        gridPane.add(checkBox, 0, 2);
-        gridPane.add(filler2, 0, 3);
-        gridPane.add(line1, 0, 4);
-        gridPane.add(description1, 0, 5);
-        gridPane.add(intervalSlider, 0, 6);
-        gridPane.add(line2, 0, 7);
-        gridPane.add(description2, 0, 8);
-        gridPane.add(pauseSlider, 0, 9);
+        for (int i = 0; i < list.size(); i++) {
+            gridPane.add(list.get(i), 0, i);
+        }
 
-        setCheckboxVisibility(gridPane, checkBox);
-
-        gridPane.add(okButton, 1, 10);
+        gridPane.add(okButton, 1, list.size());
         gridPane.setPadding(new Insets(20));
         gridPane.setAlignment(Pos.CENTER);
+
+        setCheckboxVisibility(gridPane, checkBox);
 
         Scene scene = new Scene(gridPane);
 
@@ -135,7 +170,8 @@ public class Settings extends Observable {
             } else {
                 handler.setSpeed(Speed.QUICK);
             }
-            handler.setMode(Mode.valueOf(choiceBox.getValue().toUpperCase()));
+            handler.setMode(Mode.valueOf(modeChoiceBox.getValue().toUpperCase()));
+            handler.setInputMethod(InputMethod.valueOf(inputMethodChoiceBox.getValue().toUpperCase()));
 
             handler.updateFile();
             setChanged();
@@ -147,6 +183,9 @@ public class Settings extends Observable {
         checkBox.setOnAction(event -> setCheckboxVisibility(gridPane, checkBox));
 
         gridPane.requestFocus();
+        for (Node node : modeContainer.getChildren()) {
+            node.setOnMousePressed(event -> gridPane.requestFocus());
+        }
         for (Node node : gridPane.getChildren()) {
             node.setOnMousePressed(event -> gridPane.requestFocus());
         }
@@ -156,21 +195,17 @@ public class Settings extends Observable {
 
     private void setCheckboxVisibility(GridPane gridPane, CheckBox checkBox) {
         boolean checked = checkBox.isSelected();
-        int start = 3;
-        int end = 9;
-        int counter = 0;
+        ObservableList<Node> children = gridPane.getChildren();
 
-        for (Node node : gridPane.getChildren()) {
+        int start = GridPane.getRowIndex(checkBox) + 1;
+        int end = children.size() - 1;
 
-            if (counter >= start && counter <= end) {
-                node.setVisible(checked);
-            }
-
-            counter++;
+        for (int i = start; i < end; i++) {
+            children.get(i).setVisible(checked);
         }
     }
 
-    private Button createFiller() {
+    private static Button createFiller() {
         Button filler = new Button();
         filler.setVisible(false);
         filler.setPrefSize(0, 0);
@@ -178,5 +213,13 @@ public class Settings extends Observable {
         filler.setPadding(new Insets(20, 0, 0, 0));
 
         return filler;
+    }
+
+    private static Button createLine() {
+        Button line = new Button();
+        line.setPrefSize(300, 1);
+        line.setFont(new Font(0));
+
+        return line;
     }
 }

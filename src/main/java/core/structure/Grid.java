@@ -1,7 +1,7 @@
 package core.structure;
 
+import core.misc.options.Mode;
 import org.jetbrains.annotations.Nullable;
-import core.misc.SettingsPossibilities.Mode;
 
 import java.util.LinkedList;
 import java.util.List;
