@@ -16,7 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-import static gui.buttons.ButtonFactory.makeButton;
 import static gui.buttons.ButtonFactory.makeInvisibleButton;
 
 class BuilderComponent {

@@ -3,6 +3,7 @@ package gui.main;
 import core.misc.ColorTable;
 import core.misc.OverrideException;
 import core.misc.SettingsHandler;
+import core.misc.options.InputMethod;
 import core.misc.options.Mode;
 import core.misc.options.Speed;
 import core.solving.IndependentGridSolver;
@@ -53,6 +54,8 @@ class EventComponent {
     private EventHandler<ActionEvent> clearActionEventHandler;
     private EventHandler<ActionEvent> unPaintActionEventHandler;
 
+    private EventHandler<ActionEvent> doneActionEventHandler;
+
     EventComponent(Sudoku parent, Scene scene) {
         if (parent.observerComponent == null) {
             throw new IllegalStateException("Parent Sudoku must have an ObserverComponent called 'observerComponent'.");
@@ -92,6 +95,14 @@ class EventComponent {
         });
 
         setSolveButtonAction();
+
+        doneActionEventHandler = (event) -> {
+            String result = new Confirmation().getResult();
+
+            if (result.equals("yes")) {
+                finishFillingIn(scene, true);
+            }
+        };
     }
 
     List<Button> getTopButtons() {
@@ -187,7 +198,8 @@ class EventComponent {
             painted = true;
         }
 
-        flipButton(fill);
+        flipFillButton(fill);
+        flipClearButton(false);
 
         if (filled && painted) {
 
@@ -237,15 +249,21 @@ class EventComponent {
         }
     }
 
+    private void clearIndicator() {
+        for (GridElement gridElement : parent.gridElements) {
+            gridElement.setBorderColor("black");
+        }
+    }
+
     private void constructEventHandlers(Scene scene, boolean fill) {
         EventHandler<ActionEvent> startEventHandler = event -> {
             solveButton.setDisable(true);
             settingsButton.setDisable(true);
-            clearButton.setDisable(true);
             unPaintButton.setDisable(true);
 
             if (fill) {
                 paintButton.setDisable(true);
+                flipClearButton(false);
             }
             else {
                 fillInButton.setDisable(true);
@@ -253,7 +271,7 @@ class EventComponent {
             }
 
             parent.iterationComponent.setKeyAction(scene, fill);
-            flipButton(fill);
+            flipFillButton(fill);
         };
 
         EventHandler<ActionEvent> cancelEventHandler = event -> {
@@ -262,7 +280,10 @@ class EventComponent {
             if (result.equals("yes")) {
                 clearSquares(fill);
 
-                if (!fill) {
+                if (fill) {
+                    flipClearButton(true);
+                }
+                else {
                     colorButtons.resetAll();
                     colorButtons.disableAll();
                 }
@@ -273,7 +294,7 @@ class EventComponent {
                 fillInButton.setDisable(false);
                 settingsButton.setDisable(false);
 
-                flipButton(fill);
+                flipFillButton(fill);
             }
         };
 
@@ -313,10 +334,10 @@ class EventComponent {
         }
     }
 
-    private void flipButton(boolean fill) {
+    private void flipFillButton(boolean fill) {
         if (fill) {
             EventHandler<ActionEvent> eventHandler = fillInButton.getOnAction();
-            if (eventHandler.equals(fillInActionEventHandler)) {
+            if (eventHandler == fillInActionEventHandler) {
                 fillInButton.setText("Cancel");
                 fillInButton.setOnAction(cancelFillInEventHandler);
             } else {
@@ -326,7 +347,7 @@ class EventComponent {
         }
         else {
             EventHandler<ActionEvent> eventHandler = paintButton.getOnAction();
-            if (eventHandler.equals(paintActionEventHandler)) {
+            if (eventHandler == paintActionEventHandler) {
                 paintButton.setText("Cancel");
                 paintButton.setOnAction(cancelPaintEventHandler);
             } else {
@@ -334,5 +355,22 @@ class EventComponent {
                 paintButton.setOnAction(paintActionEventHandler);
             }
         }
+    }
+
+    private void flipClearButton(boolean disable) {
+        if (SettingsHandler.getInstance().getInputMethod() == InputMethod.LEGACY) {
+            return;
+        }
+
+        EventHandler<ActionEvent> eventHandler = clearButton.getOnAction();
+        if (eventHandler == clearActionEventHandler) {
+            clearButton.setText("Done");
+            clearButton.setOnAction(doneActionEventHandler);
+        }
+        else {
+            clearButton.setText("Clear");
+            clearButton.setOnAction(clearActionEventHandler);
+        }
+        clearButton.setDisable(disable);
     }
 }
