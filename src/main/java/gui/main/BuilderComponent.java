@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 import static gui.buttons.ButtonFactory.makeButton;
+import static gui.buttons.ButtonFactory.makeInvisibleButton;
 
 class BuilderComponent {
 
@@ -174,7 +175,10 @@ class BuilderComponent {
         Mode mode = settingsHandler.getMode();
 
         if (speed == Speed.SLOW) {
-            topHBox.getChildren().addAll(eventComponent.pauseButton);
+            topHBox.getChildren().add(eventComponent.pauseButton);
+        }
+        else {
+            topHBox.getChildren().add(makeInvisibleButton());
         }
 
         Button paintButton = eventComponent.paintButton;
@@ -194,11 +198,8 @@ class BuilderComponent {
                 unPaintButton.setDisable(true);
             }
         }
-
         else {
-            Button filler = makeButton("Invisible");
-            filler.setVisible(false);
-            bottomHBox.getChildren().add(filler);
+            bottomHBox.getChildren().add(makeInvisibleButton());
         }
 
         for (Node node : topHBox.getChildren()) {

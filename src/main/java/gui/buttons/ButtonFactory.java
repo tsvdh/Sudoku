@@ -27,4 +27,11 @@ public class ButtonFactory {
 
         return list;
     }
+
+    public static Button makeInvisibleButton() {
+        Button filler = makeButton("Invisible");
+        filler.setVisible(false);
+
+        return filler;
+    }
 }
