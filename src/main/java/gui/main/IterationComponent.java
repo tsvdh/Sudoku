@@ -128,6 +128,9 @@ class IterationComponent {
             KeyCode keyCode = event.getCode();
 
             if (keyCode.isDigitKey() || keyCode.isWhitespaceKey()) {
+                if (keyCode.isKeypadKey()) {
+                    keyCode = KeyCode.valueOf(keyCode.getName().split(" ")[1]);
+                }
                 fillSquare(keyCode, fill, scene);
             }
 
