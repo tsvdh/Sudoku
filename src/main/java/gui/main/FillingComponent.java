@@ -75,9 +75,18 @@ class FillingComponent {
                 ColorButtons colorButtons = eventComponent.colorButtons;
 
                 if (!colorButtons.isFull(number)) {
+
+                    String oldColor = currentElement.getBackgroundColor();
+                    if (!oldColor.equals("white")) {
+
+                        int oldNumber = ColorTable.getInstance().get(oldColor);
+                        colorButtons.decreaseCount(oldNumber);
+                    }
+
+                    String newColor = colorButtons.getColor(number);
                     colorButtons.incrementCount(number);
-                    String color = colorButtons.getColor(number);
-                    currentElement.setBackgroundColor(color);
+
+                    currentElement.setBackgroundColor(newColor);
                     return true;
                 }
             }
