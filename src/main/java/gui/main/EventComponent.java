@@ -47,10 +47,12 @@ class EventComponent {
     private EventHandler<ActionEvent> fillInActionEventHandler;
     private EventHandler<ActionEvent> cancelFillInEventHandler;
 
-    private EventHandler<ActionEvent> clearActionEventHandler;
-    private EventHandler<ActionEvent> unPaintActionEventHandler;
+    private EventHandler<ActionEvent> clearFillActionEventHandler;
+    private EventHandler<ActionEvent> doneFillingActionEventHandler;
 
-    private EventHandler<ActionEvent> doneActionEventHandler;
+    private EventHandler<ActionEvent> clearPaintActionEventHandler;
+    private EventHandler<ActionEvent> donePaintingActionEventHandler;
+
 
     EventComponent(Sudoku parent) {
         this.parent = parent;
@@ -82,8 +84,8 @@ class EventComponent {
 
         fillInButton.setOnAction(fillInActionEventHandler);
         paintButton.setOnAction(paintActionEventHandler);
-        clearButton.setOnAction(clearActionEventHandler);
-        unPaintButton.setOnAction(unPaintActionEventHandler);
+        clearButton.setOnAction(clearFillActionEventHandler);
+        unPaintButton.setOnAction(clearPaintActionEventHandler);
 
         settingsButton.setOnAction(event -> {
             Settings settings = new Settings();
@@ -92,15 +94,6 @@ class EventComponent {
         });
 
         setSolveButtonAction();
-
-        doneActionEventHandler = (event) -> {
-            String result = new Confirmation().getResult();
-
-            if (result.equals("yes")) {
-                finishFillingIn(true);
-                removeIndicator();
-            }
-        };
     }
 
     List<Button> getTopButtons() {
@@ -167,6 +160,8 @@ class EventComponent {
     }
 
     void finishFillingIn(boolean fill) {
+        // TODO warn in jigsaw mode if not filled and painted
+
         fillingComponent.removeFillingAction();
 
         settingsButton.setDisable(false);
@@ -197,11 +192,13 @@ class EventComponent {
         }
 
         flipFillButton(fill);
-        flipClearButton(false);
+        flipClearButton(fill, false);
 
         if (filled && painted) {
 
             Mode mode = SettingsHandler.getInstance().getMode();
+            // This if is run if the squares still have to be put in their jigsaw sections.
+            // Therefore, the if runs only if that is not the case, i.e. the grid is not valid.
             if (mode == Mode.JIGSAW && !grid.isValid()) {
 
                 for (GridElement gridElement : parent.gridElements) {
@@ -257,7 +254,6 @@ class EventComponent {
 
             if (fill) {
                 paintButton.setDisable(true);
-                flipClearButton(false);
             }
             else {
                 fillInButton.setDisable(true);
@@ -266,6 +262,7 @@ class EventComponent {
 
             fillingComponent.setFillingAction(fill);
             flipFillButton(fill);
+            flipClearButton(fill, false);
         };
 
         EventHandler<ActionEvent> cancelEventHandler = event -> {
@@ -274,21 +271,18 @@ class EventComponent {
             if (result.equals("yes")) {
                 clearSquares(fill);
 
-                if (fill) {
-                    flipClearButton(true);
-                }
-                else {
+                if (!fill) {
                     colorButtons.resetAll();
                     colorButtons.disableAll();
                 }
-
-                fillingComponent.removeFillingAction();
 
                 paintButton.setDisable(false);
                 fillInButton.setDisable(false);
                 settingsButton.setDisable(false);
 
+                fillingComponent.removeFillingAction();
                 flipFillButton(fill);
+                flipClearButton(fill, true);
             }
         };
 
@@ -316,15 +310,26 @@ class EventComponent {
             }
         };
 
+        EventHandler<ActionEvent> doneEventHandler = (event) -> {
+            String result = new Confirmation().getResult();
+
+            if (result.equals("yes")) {
+                finishFillingIn(fill);
+                removeIndicator();
+            }
+        };
+
         if (fill) {
             fillInActionEventHandler = startEventHandler;
             cancelFillInEventHandler = cancelEventHandler;
-            clearActionEventHandler = removeEventHandler;
+            clearFillActionEventHandler = removeEventHandler;
+            doneFillingActionEventHandler = doneEventHandler;
         }
         else {
             paintActionEventHandler = startEventHandler;
             cancelPaintEventHandler = cancelEventHandler;
-            unPaintActionEventHandler = removeEventHandler;
+            clearPaintActionEventHandler = removeEventHandler;
+            donePaintingActionEventHandler = doneEventHandler;
         }
     }
 
@@ -351,20 +356,32 @@ class EventComponent {
         }
     }
 
-    private void flipClearButton(boolean disable) {
+    private void flipClearButton(boolean fill, boolean disable) {
         if (SettingsHandler.getInstance().getInputMethod() == InputMethod.LEGACY) {
             return;
         }
 
-        EventHandler<ActionEvent> eventHandler = clearButton.getOnAction();
-        if (eventHandler == clearActionEventHandler) {
-            clearButton.setText("Done");
-            clearButton.setOnAction(doneActionEventHandler);
+        if (fill) {
+            EventHandler<ActionEvent> eventHandler = clearButton.getOnAction();
+            if (eventHandler == clearFillActionEventHandler) {
+                clearButton.setText("Done");
+                clearButton.setOnAction(doneFillingActionEventHandler);
+            } else {
+                clearButton.setText("Clear");
+                clearButton.setOnAction(clearFillActionEventHandler);
+            }
+            clearButton.setDisable(disable);
         }
         else {
-            clearButton.setText("Clear");
-            clearButton.setOnAction(clearActionEventHandler);
+            EventHandler<ActionEvent> eventHandler = unPaintButton.getOnAction();
+            if (eventHandler == clearPaintActionEventHandler) {
+                unPaintButton.setText("Done");
+                unPaintButton.setOnAction(donePaintingActionEventHandler);
+            } else {
+                unPaintButton.setText("Clear");
+                unPaintButton.setOnAction(clearPaintActionEventHandler);
+            }
+            unPaintButton.setDisable(disable);
         }
-        clearButton.setDisable(disable);
     }
 }
