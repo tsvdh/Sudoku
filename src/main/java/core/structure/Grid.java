@@ -188,9 +188,26 @@ public class Grid extends SquareHolder implements Cloneable {
         return this.mode != Mode.JIGSAW;
     }
 
-    public boolean isValid() {
-        List<Section> sectionList = this.sectionList;
+    public boolean isValid(boolean filled, boolean painted) {
+        if (filled) {
+            if (!validFill()) {
+                return false;
+            }
+        }
 
+        if (isNotJigsaw()) {
+            return true;
+        }
+
+        // Jigsaw specific tests
+        if (painted) {
+            return validPaint();
+        }
+
+        return true;
+    }
+
+    private boolean validFill() {
         for (Section section : sectionList) {
             if (section.getSquareList().size() != 9) {
                 return false;
@@ -211,15 +228,10 @@ public class Grid extends SquareHolder implements Cloneable {
             }
         }
 
-        if (isNotJigsaw()) {
-            return true;
-        }
-
-        // Jigsaw specific tests
-        return sectionsValid();
+        return true;
     }
 
-    public boolean sectionsValid() {
+    private boolean validPaint() {
         for (Section section : sectionList) {
             if (!section.isValid()) {
                 return false;

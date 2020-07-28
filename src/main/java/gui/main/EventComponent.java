@@ -160,8 +160,6 @@ class EventComponent {
     }
 
     void finishFillingIn(boolean fill) {
-        // TODO warn in jigsaw mode if not filled and painted
-
         fillingComponent.removeFillingAction();
 
         settingsButton.setDisable(false);
@@ -176,7 +174,6 @@ class EventComponent {
             else {
                 paintButton.setDisable(false);
             }
-            filled = true;
         }
         else {
             paintButton.setDisable(true);
@@ -188,18 +185,28 @@ class EventComponent {
             else {
                 fillInButton.setDisable(false);
             }
-            painted = true;
         }
 
         flipFillButton(fill);
         flipClearButton(fill, false);
+
+        if (grid.isValid(fill, !fill)) {
+            if (fill) {
+                filled = true;
+            } else {
+                painted = true;
+            }
+        }
+        else {
+            new Message("The sudoku you entered is invalid!");
+        }
 
         if (filled && painted) {
 
             Mode mode = SettingsHandler.getInstance().getMode();
             // This if is run if the squares still have to be put in their jigsaw sections.
             // Therefore, the if runs only if that is not the case, i.e. the grid is not valid.
-            if (mode == Mode.JIGSAW && !grid.isValid()) {
+            if (mode == Mode.JIGSAW && !grid.isValid(true, true)) {
 
                 for (GridElement gridElement : parent.gridElements) {
                     String color = gridElement.getBackgroundColor();
@@ -211,7 +218,7 @@ class EventComponent {
                 }
             }
 
-            if (grid.isValid()) {
+            if (grid.isValid(true, true)) {
                 solveButton.setDisable(false);
             } else {
                 new Message("The sudoku you entered is invalid!");

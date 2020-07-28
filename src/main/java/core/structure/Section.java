@@ -9,6 +9,10 @@ public class Section extends SquareHolder {
 
     boolean isValid() {
         List<Square> squares = getSquareList();
+        if (squares.isEmpty()) {
+            return false;
+        }
+
         Queue<Square> queue = new LinkedList<>();
         Collection<Square> visited = new LinkedList<>();
 
