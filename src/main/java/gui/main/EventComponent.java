@@ -1,7 +1,6 @@
 package gui.main;
 
 import core.misc.ColorTable;
-import core.misc.OverrideException;
 import core.misc.SettingsHandler;
 import core.misc.options.InputMethod;
 import core.misc.options.Mode;
@@ -16,9 +15,7 @@ import gui.popups.Message;
 import gui.popups.Settings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +26,7 @@ class EventComponent {
 
     private Sudoku parent;
     private Grid grid;
+    private FillingComponent fillingComponent;
 
     private boolean filled;
     boolean painted;
@@ -43,8 +41,6 @@ class EventComponent {
     Button unPaintButton;
     ColorButtons colorButtons;
 
-    EventHandler<KeyEvent> keyEventHandler;
-
     private EventHandler<ActionEvent> paintActionEventHandler;
     private EventHandler<ActionEvent> cancelPaintEventHandler;
 
@@ -56,13 +52,10 @@ class EventComponent {
 
     private EventHandler<ActionEvent> doneActionEventHandler;
 
-    EventComponent(Sudoku parent, Scene scene) {
-        if (parent.observerComponent == null) {
-            throw new IllegalStateException("Parent Sudoku must have an ObserverComponent called 'observerComponent'.");
-        }
-
+    EventComponent(Sudoku parent) {
         this.parent = parent;
         this.grid = parent.grid;
+        this.fillingComponent = parent.fillingComponent;
         this.painted = false;
         this.filled = false;
 
@@ -80,8 +73,8 @@ class EventComponent {
         solveButton.setDisable(true);
         pauseButton.setDisable(true);
 
-        constructEventHandlers(scene, true);
-        constructEventHandlers(scene, false);
+        constructEventHandlers(true);
+        constructEventHandlers(false);
 
         fillInButton.setOnAction(fillInActionEventHandler);
         paintButton.setOnAction(paintActionEventHandler);
@@ -100,7 +93,8 @@ class EventComponent {
             String result = new Confirmation().getResult();
 
             if (result.equals("yes")) {
-                finishFillingIn(scene, true);
+                finishFillingIn(true);
+                removeIndicator();
             }
         };
     }
@@ -168,8 +162,8 @@ class EventComponent {
         });
     }
 
-    void finishFillingIn(Scene scene, boolean fill) {
-        scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
+    void finishFillingIn(boolean fill) {
+        fillingComponent.removeFillingAction();
 
         settingsButton.setDisable(false);
 
@@ -235,11 +229,7 @@ class EventComponent {
     private void clearSquares(boolean fill) {
         for (GridElement gridElement : parent.gridElements) {
             if (fill) {
-                try {
-                    gridElement.getSquare().setValue(null);
-                } catch (OverrideException e) {
-                    System.out.println(e.getMessage());
-                }
+                gridElement.getSquare().setValue(null);
             }
 
             gridElement.setBorderColor("black");
@@ -249,13 +239,13 @@ class EventComponent {
         }
     }
 
-    private void clearIndicator() {
+    private void removeIndicator() {
         for (GridElement gridElement : parent.gridElements) {
             gridElement.setBorderColor("black");
         }
     }
 
-    private void constructEventHandlers(Scene scene, boolean fill) {
+    private void constructEventHandlers(boolean fill) {
         EventHandler<ActionEvent> startEventHandler = event -> {
             solveButton.setDisable(true);
             settingsButton.setDisable(true);
@@ -270,7 +260,7 @@ class EventComponent {
                 colorButtons.enableAll();
             }
 
-            parent.iterationComponent.setKeyAction(scene, fill);
+            fillingComponent.setFillingAction(fill);
             flipFillButton(fill);
         };
 
@@ -288,7 +278,7 @@ class EventComponent {
                     colorButtons.disableAll();
                 }
 
-                scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyEventHandler);
+                fillingComponent.removeFillingAction();
 
                 paintButton.setDisable(false);
                 fillInButton.setDisable(false);

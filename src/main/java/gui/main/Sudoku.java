@@ -9,35 +9,36 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Sudoku {
 
     Grid grid;
     List<GridElement> gridElements;
+    Scene scene;
 
     BuilderComponent builderComponent;
     EventComponent eventComponent;
-    IterationComponent iterationComponent;
+    FillingComponent fillingComponent;
     ObserverComponent observerComponent;
 
     public Sudoku(Stage stage) {
         Mode mode = SettingsHandler.getInstance().getMode();
         this.grid = new Grid(mode);
-        this.gridElements = new LinkedList<>();
+        this.gridElements = new ArrayList<>();
 
-        Scene scene = new Scene(new Region());
+        scene = new Scene(new Region());
 
 
         this.observerComponent = new ObserverComponent(this);
 
-        this.eventComponent = new EventComponent(this, scene);
+        this.fillingComponent = new FillingComponent(this);
+
+        this.eventComponent = new EventComponent(this);
 
         this.builderComponent = new BuilderComponent(this);
         scene.setRoot(builderComponent.getBorderPane());
-
-        this.iterationComponent = new IterationComponent(this);
 
 
         stage.setScene(scene);

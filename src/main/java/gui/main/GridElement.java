@@ -1,5 +1,6 @@
 package gui.main;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javafx.application.Platform;
@@ -10,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import core.structure.Square;
 
+import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 

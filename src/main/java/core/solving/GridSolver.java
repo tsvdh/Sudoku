@@ -1,7 +1,6 @@
 package core.solving;
 
 import core.structure.Grid;
-import core.misc.OverrideException;
 import core.structure.Section;
 import core.structure.Square;
 
@@ -146,12 +145,7 @@ public abstract class GridSolver extends Observable {
         int option1 = pairSquare.getOptions().get(0);
         int option2 = pairSquare.getOptions().get(1);
 
-        try {
-            clone.getEquivalent(pairSquare).setValue(option1);
-
-        } catch (OverrideException e) {
-            System.out.println(e.getMessage());
-        }
+        clone.getEquivalent(pairSquare).setValue(option1);
 
         IndependentGridSolver solver = new IndependentGridSolver(clone);
         solver.solve();
