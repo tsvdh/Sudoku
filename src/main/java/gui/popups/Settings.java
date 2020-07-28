@@ -186,6 +186,9 @@ public class Settings extends Observable {
         for (Node node : modeContainer.getChildren()) {
             node.setOnMousePressed(event -> gridPane.requestFocus());
         }
+        for (Node node : inputMethodContainer.getChildren()) {
+            node.setOnMousePressed(event -> gridPane.requestFocus());
+        }
         for (Node node : gridPane.getChildren()) {
             node.setOnMousePressed(event -> gridPane.requestFocus());
         }

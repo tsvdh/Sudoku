@@ -67,6 +67,10 @@ class EventComponent {
         paintButton = makeButton("Paint");
         unPaintButton = makeButton("Clear");
         colorButtons = new ColorButtons();
+    }
+
+    void delayedConstruction() {
+        // fillingComponent.setEventComponent(this);
 
         clearButton.setDisable(true);
         unPaintButton.setDisable(true);

@@ -16,7 +16,8 @@ import static core.misc.KeyCodeHandler.getCode;
 
 class FillingComponent {
 
-    private Sudoku parent;
+
+    // private Sudoku parent;
     private EventComponent eventComponent;
     private Scene scene;
     private List<GridElement> gridElements;
@@ -29,11 +30,14 @@ class FillingComponent {
     private String lastMove;
 
     FillingComponent(Sudoku parent) {
-        this.parent = parent;
-        this.eventComponent = parent.eventComponent;
+        // this.parent = parent;
         this.scene = parent.scene;
         this.gridElements = parent.gridElements;
         this.lastMove = "none";
+    }
+
+    void setEventComponent(EventComponent eventComponent) {
+        this.eventComponent = eventComponent;
     }
 
     private void goToNextElement() {

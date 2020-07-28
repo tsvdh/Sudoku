@@ -36,6 +36,8 @@ public class Sudoku {
         this.fillingComponent = new FillingComponent(this);
 
         this.eventComponent = new EventComponent(this);
+        fillingComponent.setEventComponent(eventComponent);
+        this.eventComponent.delayedConstruction();
 
         this.builderComponent = new BuilderComponent(this);
         scene.setRoot(builderComponent.getBorderPane());
