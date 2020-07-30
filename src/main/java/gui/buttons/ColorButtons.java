@@ -34,8 +34,8 @@ public class ColorButtons {
         getButton(index).decreaseCount();
     }
 
-    public boolean isFull(int index) {
-        return getButton(index).getCount() >= 9;
+    public boolean isNotFull(int index) {
+        return getButton(index).getCount() < 9;
     }
 
     public String getColor(int index) {
@@ -52,5 +52,14 @@ public class ColorButtons {
         for (Button button : buttons) {
             button.setDisable(true);
         }
+    }
+
+    public boolean allFull() {
+        for (int i = 1; i <= 9; i++) {
+            if (isNotFull(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

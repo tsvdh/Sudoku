@@ -250,7 +250,8 @@ class EventComponent {
 
             fillingComponent.setFillingAction(fill);
             flipFillButton(fill);
-            flipClearButton(fill, false);
+            // If fill is false(painting), disable clear button until all squares are painted.
+            flipClearButton(fill, !fill);
         };
 
         EventHandler<ActionEvent> cancelEventHandler = event -> {

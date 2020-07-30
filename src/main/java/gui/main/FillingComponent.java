@@ -63,6 +63,16 @@ class FillingComponent {
         lastMove = "next";
     }
 
+    private void removeCurrentColor() {
+        String oldColor = currentElement.getBackgroundColor();
+        if (!oldColor.equals("white")) {
+
+            int oldNumber = ColorTable.getInstance().get(oldColor);
+            eventComponent.colorButtons.decreaseCount(oldNumber);
+            currentElement.setBackgroundColor("white");
+        }
+    }
+
     private boolean fillCurrentElement(KeyCode keyCode, boolean fill) {
         int number = new Integer(keyCode.getName());
         if (number != 0) {
@@ -74,14 +84,9 @@ class FillingComponent {
             else {
                 ColorButtons colorButtons = eventComponent.colorButtons;
 
-                if (!colorButtons.isFull(number)) {
+                if (colorButtons.isNotFull(number)) {
 
-                    String oldColor = currentElement.getBackgroundColor();
-                    if (!oldColor.equals("white")) {
-
-                        int oldNumber = ColorTable.getInstance().get(oldColor);
-                        colorButtons.decreaseCount(oldNumber);
-                    }
+                    removeCurrentColor();
 
                     String newColor = colorButtons.getColor(number);
                     colorButtons.incrementCount(number);
@@ -142,31 +147,29 @@ class FillingComponent {
 
     private int getNewIndex(KeyCode keyCode) {
         int index = gridElements.indexOf(currentElement);
-        int oldIndex = index;
 
         switch (keyCode) {
             case UP:
-                index -= 9;
+                if (index >= 9)
+                    index -= 9;
                 break;
             case DOWN:
-                index += 9;
+                if (index <= 71)
+                    index += 9;
                 break;
             case LEFT:
-                index -= 1;
+                if (index % 9 != 0)
+                    index -= 1;
                 break;
             case RIGHT:
-                index += 1;
+                if ((index - 8) % 9 != 0)
+                    index += 1;
                 break;
             default:
                 break;
         }
 
-        if (index >= 0 && index < 81) {
-            return index;
-        }
-        else {
-            return oldIndex;
-        }
+        return index;
     }
 
     private EventHandler<KeyEvent> getLegacyActions(boolean fill) {
@@ -198,6 +201,13 @@ class FillingComponent {
             KeyCode keyCode = getCode(event);
             if (keyCode.isDigitKey()) {
                 fillCurrentElement(keyCode, fill);
+
+                if (eventComponent.colorButtons.allFull()) {
+                    eventComponent.unPaintButton.setDisable(false);
+                }
+            }
+            else if (keyCode == KeyCode.BACK_SPACE || keyCode == KeyCode.DELETE) {
+                removeCurrentColor();
             }
         });
 
