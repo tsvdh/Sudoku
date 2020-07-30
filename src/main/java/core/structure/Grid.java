@@ -11,10 +11,21 @@ public class Grid extends SquareHolder implements Cloneable {
     private List<Section> sectionList;
     private Mode mode;
 
+    private boolean filled;
+    private boolean painted;
+
     public Grid(Mode mode) {
-        super();
+        reset(mode);
+    }
+
+    public void reset(Mode mode) {
+        super.reset();
+
         this.sectionList = new LinkedList<>();
         this.mode = mode;
+
+        this.filled = false;
+        this.painted = (mode != Mode.JIGSAW);
 
         int upper = 27;
         if (mode == Mode.DIAGONAL) {
@@ -23,6 +34,26 @@ public class Grid extends SquareHolder implements Cloneable {
         for (int i = 1; i <= upper; i++) {
             this.sectionList.add(new Section());
         }
+    }
+
+    public boolean isFilled() {
+        return filled;
+    }
+
+    public void setFilled(boolean filled) {
+        this.filled = filled;
+    }
+
+    public boolean isPainted() {
+        return painted;
+    }
+
+    public void setPainted(boolean painted) {
+        this.painted = painted;
+    }
+
+    public boolean isFilledAndPainted() {
+        return filled && painted;
     }
 
     public List<Section> getSectionList() {
@@ -47,7 +78,7 @@ public class Grid extends SquareHolder implements Cloneable {
     }
 
     public void addSquare(Square square, @Nullable Integer blockIndex) {
-        if (isNotJigsaw()) {
+        if (!isJigsaw()) {
             super.addSquare(square);
             this.addToSections(square);
         }
@@ -71,7 +102,7 @@ public class Grid extends SquareHolder implements Cloneable {
     }
 
     private int getBlockSectionIndex(Square square) {
-        if (isNotJigsaw()) {
+        if (!isJigsaw()) {
             int xCoordinate = ((square.getXPosition() - 1) / 3) + 1;
             int yCoordinate = ((square.getYPosition() - 1) / 3);
 
@@ -101,9 +132,7 @@ public class Grid extends SquareHolder implements Cloneable {
         addToSections(square, null);
     }
 
-    /**
-     * Note to self: the combination blockIndex: null and mode: jigsaw will never occur.
-     */
+    // Note to self: the combination blockIndex = null and mode = jigsaw will never occur.
     private void addToSections(Square square, @Nullable Integer blockIndex) {
         int[] indexes = new int[3];
         if (mode == Mode.DIAGONAL) {
@@ -112,7 +141,7 @@ public class Grid extends SquareHolder implements Cloneable {
 
         indexes[0] = getHorizontalSectionIndex(square);
         indexes[1] = getVerticalSectionIndex(square);
-        if (isNotJigsaw()) {
+        if (!isJigsaw()) {
             indexes[2] = getBlockSectionIndex(square);
         } else {
             //noinspection ConstantConditions
@@ -137,7 +166,7 @@ public class Grid extends SquareHolder implements Cloneable {
         for (Square square : this.getSquareList()) {
             Square clone = (Square) square.clone();
 
-            if (isNotJigsaw()) {
+            if (!isJigsaw()) {
                 newGrid.addSquare(clone);
             }
             else {
@@ -184,23 +213,24 @@ public class Grid extends SquareHolder implements Cloneable {
         return diagonal1.contains(square) || diagonal2.contains(square);
     }
 
-    private boolean isNotJigsaw() {
-        return this.mode != Mode.JIGSAW;
+    private boolean isJigsaw() {
+        return this.mode == Mode.JIGSAW;
     }
 
-    public boolean isValid(boolean filled, boolean painted) {
-        if (filled) {
+    public boolean isValid() {
+        /* Two cases when validating fill:
+        1. Not jigsaw, so painted is always true.
+        2. Jigsaw, so painted must be true so squares are in their sections.
+        So painted must be true for the fill to be checked.
+         */
+        if (filled && painted) {
             if (!validFill()) {
                 return false;
             }
         }
 
-        if (isNotJigsaw()) {
-            return true;
-        }
-
         // Jigsaw specific tests
-        if (painted) {
+        if (isJigsaw() && painted) {
             return validPaint();
         }
 
@@ -208,10 +238,8 @@ public class Grid extends SquareHolder implements Cloneable {
     }
 
     private boolean validFill() {
-        for (Section section : sectionList) {
-            if (section.getSquareList().size() != 9) {
-                return false;
-            }
+        if (!sectionsFilled()) {
+            return false;
         }
 
         for (Section section : sectionList) {
@@ -249,6 +277,15 @@ public class Grid extends SquareHolder implements Cloneable {
             }
         }
 
+        return true;
+    }
+
+    public boolean sectionsFilled() {
+        for (Section section : sectionList) {
+            if (section.getSquareList().size() != 9) {
+                return false;
+            }
+        }
         return true;
     }
 }

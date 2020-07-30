@@ -65,6 +65,6 @@ public class Sudoku {
         }
 
         Mode mode = SettingsHandler.getInstance().getMode();
-        eventComponent.painted = (mode != Mode.JIGSAW);
+        grid.setPainted(mode != Mode.JIGSAW);
     }
 }

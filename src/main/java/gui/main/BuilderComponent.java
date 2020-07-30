@@ -21,6 +21,7 @@ import static gui.buttons.ButtonFactory.makeInvisibleButton;
 class BuilderComponent {
 
     private Sudoku parent;
+    private Grid grid;
     private EventComponent eventComponent;
 
     private BorderPane borderPane;
@@ -33,6 +34,7 @@ class BuilderComponent {
         }
 
         this.parent = parent;
+        this.grid = parent.grid;
         this.eventComponent = parent.eventComponent;
 
         this.buildGrid();
@@ -68,7 +70,7 @@ class BuilderComponent {
         for (int y = 1; y <= 17; y += 2) {
             for (int x = 1; x <= 17; x += 2) {
                 Square square = new Square(null, x / 2 + 1, y / 2 + 1);
-                parent.grid.addSquare(square);
+                grid.addSquare(square);
 
                 GridElement gridElement = new GridElement(square);
 
@@ -85,10 +87,10 @@ class BuilderComponent {
         Mode newMode = settingsHandler.getMode();
         if (!newMode.equals(settingsHandler.getOldMode())) {
 
-            parent.grid = new Grid(newMode);
+            grid.reset(newMode);
             for (GridElement gridElement : parent.gridElements) {
                 Square square = gridElement.getSquare();
-                parent.grid.addSquare(square);
+                grid.addSquare(square);
             }
 
             addLines();
@@ -188,7 +190,7 @@ class BuilderComponent {
             colorButtons.disableAll();
             bottomHBox.getChildren().addAll(colorButtons.getButtons());
 
-            if (eventComponent.painted) {
+            if (grid.isPainted()) {
                 paintButton.setDisable(true);
                 unPaintButton.setDisable(false);
             }

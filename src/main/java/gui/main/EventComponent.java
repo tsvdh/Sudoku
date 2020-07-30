@@ -28,9 +28,6 @@ class EventComponent {
     private Grid grid;
     private FillingComponent fillingComponent;
 
-    private boolean filled;
-    boolean painted;
-
     private Button clearButton;
     private Button fillInButton;
     private Button solveButton;
@@ -58,8 +55,6 @@ class EventComponent {
         this.parent = parent;
         this.grid = parent.grid;
         this.fillingComponent = parent.fillingComponent;
-        this.painted = false;
-        this.filled = false;
 
         clearButton = makeButton("Clear");
         fillInButton = makeButton("Fill in");
@@ -168,61 +163,47 @@ class EventComponent {
             fillInButton.setDisable(true);
             clearButton.setDisable(false);
 
-            if (painted) {
+            if (grid.isPainted()) {
                 unPaintButton.setDisable(false);
             }
             else {
                 paintButton.setDisable(false);
             }
+            grid.setFilled(true);
         }
         else {
             paintButton.setDisable(true);
             unPaintButton.setDisable(false);
 
-            if (filled) {
+            if (grid.isFilled()) {
                 clearButton.setDisable(false);
             }
             else {
                 fillInButton.setDisable(false);
             }
+            grid.setPainted(true);
         }
 
         flipFillButton(fill);
         flipClearButton(fill, false);
 
-        if (grid.isValid(fill, !fill)) {
-            if (fill) {
-                filled = true;
-            } else {
-                painted = true;
+        Mode mode = SettingsHandler.getInstance().getMode();
+        if (mode == Mode.JIGSAW && grid.isFilledAndPainted() && !grid.sectionsFilled()) {
+
+            for (GridElement gridElement : parent.gridElements) {
+                String color = gridElement.getBackgroundColor();
+                int index = ColorTable.getInstance().get(color);
+
+                Square square = gridElement.getSquare();
+
+                parent.grid.addSquare(square, index);
             }
         }
-        else {
+
+        if (grid.isValid()) {
+            solveButton.setDisable(false);
+        } else {
             new Message("The sudoku you entered is invalid!");
-        }
-
-        if (filled && painted) {
-
-            Mode mode = SettingsHandler.getInstance().getMode();
-            // This if is run if the squares still have to be put in their jigsaw sections.
-            // Therefore, the if runs only if that is not the case, i.e. the grid is not valid.
-            if (mode == Mode.JIGSAW && !grid.isValid(true, true)) {
-
-                for (GridElement gridElement : parent.gridElements) {
-                    String color = gridElement.getBackgroundColor();
-                    int index = ColorTable.getInstance().get(color);
-
-                    Square square = gridElement.getSquare();
-
-                    parent.grid.addSquare(square, index);
-                }
-            }
-
-            if (grid.isValid(true, true)) {
-                solveButton.setDisable(false);
-            } else {
-                new Message("The sudoku you entered is invalid!");
-            }
         }
     }
 
@@ -304,13 +285,13 @@ class EventComponent {
                 if (fill) {
                     fillInButton.setDisable(false);
                     clearButton.setDisable(true);
-                    filled = false;
+                    grid.setFilled(false);
                     settingsButton.setDisable(false);
                 }
                 else {
                     paintButton.setDisable(false);
                     unPaintButton.setDisable(true);
-                    painted = false;
+                    grid.setPainted(false);
                     colorButtons.resetAll();
                     colorButtons.disableAll();
                 }
@@ -321,8 +302,8 @@ class EventComponent {
             String result = new Confirmation().getResult();
 
             if (result.equals("yes")) {
-                finishFillingIn(fill);
                 removeIndicator();
+                finishFillingIn(fill);
             }
         };
 

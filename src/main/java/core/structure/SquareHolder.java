@@ -8,7 +8,11 @@ class SquareHolder {
     private List<Square> squareList;
 
     SquareHolder() {
-        squareList = new LinkedList<>();
+        reset();
+    }
+
+    void reset() {
+        this.squareList = new LinkedList<>();
     }
 
     void addSquare(Square square) {
