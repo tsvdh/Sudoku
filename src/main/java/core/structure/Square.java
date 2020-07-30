@@ -1,5 +1,6 @@
 package core.structure;
 
+import core.misc.OverrideException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
@@ -74,7 +75,7 @@ public class Square extends Observable implements Cloneable {
                 options = null;
                 this.value = value;
             } else {
-                System.out.println("Trying to override a value which has already been set.");
+                throw new OverrideException();
             }
         }
 
