@@ -188,7 +188,7 @@ class EventComponent {
         flipClearButton(fill, false);
 
         Mode mode = SettingsHandler.getInstance().getMode();
-        if (mode == Mode.JIGSAW && grid.isFilledAndPainted() && !grid.sectionsFilled()) {
+        if (mode == Mode.JIGSAW && grid.isPainted() && grid.notSectionsFilled()) {
 
             for (GridElement gridElement : parent.gridElements) {
                 String color = gridElement.getBackgroundColor();

@@ -52,10 +52,6 @@ public class Grid extends SquareHolder implements Cloneable {
         this.painted = painted;
     }
 
-    public boolean isFilledAndPainted() {
-        return filled && painted;
-    }
-
     public List<Section> getSectionList() {
         return sectionList;
     }
@@ -144,7 +140,7 @@ public class Grid extends SquareHolder implements Cloneable {
         if (!isJigsaw()) {
             indexes[2] = getBlockSectionIndex(square);
         } else {
-            //noinspection ConstantConditions
+            assert blockIndex != null;
             indexes[2] = blockIndex + 18;
         }
         if (mode == Mode.DIAGONAL) {
@@ -238,7 +234,7 @@ public class Grid extends SquareHolder implements Cloneable {
     }
 
     private boolean validFill() {
-        if (!sectionsFilled()) {
+        if (notSectionsFilled()) {
             return false;
         }
 
@@ -280,12 +276,12 @@ public class Grid extends SquareHolder implements Cloneable {
         return true;
     }
 
-    public boolean sectionsFilled() {
+    public boolean notSectionsFilled() {
         for (Section section : sectionList) {
             if (section.getSquareList().size() != 9) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }
