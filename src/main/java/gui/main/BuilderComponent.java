@@ -178,9 +178,6 @@ class BuilderComponent {
         if (speed == Speed.SLOW) {
             topHBox.getChildren().add(eventComponent.pauseButton);
         }
-        else {
-            topHBox.getChildren().add(makeInvisibleButton());
-        }
 
         Button paintButton = eventComponent.paintButton;
         Button unPaintButton = eventComponent.unPaintButton;
@@ -201,6 +198,10 @@ class BuilderComponent {
         }
         else {
             bottomHBox.getChildren().add(makeInvisibleButton());
+        }
+
+        if (speed != Speed.SLOW && mode != Mode.JIGSAW) {
+            topHBox.getChildren().add(makeInvisibleButton());
         }
 
         for (Node node : topHBox.getChildren()) {
