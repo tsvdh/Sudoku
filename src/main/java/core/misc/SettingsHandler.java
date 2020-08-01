@@ -47,13 +47,12 @@ public class SettingsHandler {
 
     private void fileIO(String mode) {
         try {
-            String relativePath = getClass().getResource(filePath).getPath();
+            String relativePath = getClass().getResource(filePath).toURI().getPath();
             File file = new File(relativePath);
 
             if (!file.exists()) {
                 String path = getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-                String root = path.substring(0, path.lastIndexOf("/"));
-                String joinedPath = root + jarFilePath;
+                String joinedPath = new File(path).getParent() + jarFilePath;
                 file = new File(joinedPath);
 
                 if (file.createNewFile()) {
