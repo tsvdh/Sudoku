@@ -1,5 +1,6 @@
 package gui.popups;
 
+import core.misc.SettingsHandler;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,7 +20,12 @@ public class Confirmation {
     private String result;
 
     public Confirmation() {
-        result = "no";
+        result = "yes";
+
+        boolean confirmations = SettingsHandler.getInstance().getConfirmations();
+        if (!confirmations) {
+            return;
+        }
 
         Button yesButton = new Button();
         yesButton.setFont(new Font(20));
@@ -54,12 +60,12 @@ public class Confirmation {
         stage.setTitle("Confirmation");
         stage.getIcons().add(new Image("images/icon.png"));
 
-        yesButton.setOnAction(event -> {
-            result = "yes";
+        yesButton.setOnAction(event -> stage.close());
+
+        noButton.setOnAction(event -> {
+            result = "no";
             stage.close();
         });
-
-        noButton.setOnAction(event -> stage.close());
 
         hBox.requestFocus();
 

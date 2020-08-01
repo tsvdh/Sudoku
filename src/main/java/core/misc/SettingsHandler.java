@@ -1,7 +1,5 @@
 package core.misc;
 
-
-
 import core.misc.options.InputMethod;
 import core.misc.options.Mode;
 import core.misc.options.Speed;
@@ -15,8 +13,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.Properties;
-
-
 
 public class SettingsHandler {
 
@@ -66,7 +62,8 @@ public class SettingsHandler {
                     writer.write("pause=2000\n");
                     writer.write("speed=SLOW\n");
                     writer.write("mode=NORMAL\n");
-                    writer.write("inputMethod=LEGACY");
+                    writer.write("inputMethod=LEGACY\n");
+                    writer.write("confirmations=true");
                     writer.flush();
                     writer.close();
                 }
@@ -115,6 +112,11 @@ public class SettingsHandler {
         return InputMethod.valueOf(inputMethod);
     }
 
+    public boolean getConfirmations() {
+        String confirmations = properties.getProperty("confirmations");
+        return Boolean.parseBoolean(confirmations);
+    }
+
     public Mode getOldMode() {
         return oldMode;
     }
@@ -138,5 +140,9 @@ public class SettingsHandler {
 
     public void setInputMethod(InputMethod inputMethod) {
         properties.setProperty("inputMethod", inputMethod.toString());
+    }
+
+    public void setConfirmations(boolean confirmations) {
+        properties.setProperty("confirmations", String.valueOf(confirmations));
     }
 }

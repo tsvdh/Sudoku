@@ -30,10 +30,10 @@ import java.util.stream.Collectors;
 public class Settings extends Observable {
 
     public void build() {
-        SettingsHandler handler = SettingsHandler.getInstance();
+        SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
         ChoiceBox<String> modeChoiceBox = new ChoiceBox<>();
-        modeChoiceBox.setValue(handler.getMode().toString().toLowerCase());
+        modeChoiceBox.setValue(settingsHandler.getMode().toString().toLowerCase());
         modeChoiceBox.setPrefHeight(40);
         modeChoiceBox.setPrefWidth(100);
         modeChoiceBox.setStyle("-fx-font-size: 15");
@@ -56,7 +56,7 @@ public class Settings extends Observable {
 
 
         ChoiceBox<String> inputMethodChoiceBox = new ChoiceBox<>();
-        inputMethodChoiceBox.setValue(handler.getInputMethod().toString().toLowerCase());
+        inputMethodChoiceBox.setValue(settingsHandler.getInputMethod().toString().toLowerCase());
         inputMethodChoiceBox.setPrefHeight(40);
         inputMethodChoiceBox.setPrefWidth(100);
         inputMethodChoiceBox.setStyle("-fx-font-size: 15");
@@ -95,7 +95,7 @@ public class Settings extends Observable {
         intervalSlider.setMajorTickUnit(20);
         intervalSlider.setMinorTickCount(1);
         intervalSlider.setSnapToTicks(true);
-        intervalSlider.setValue(handler.getInterval());
+        intervalSlider.setValue(settingsHandler.getInterval());
 
         Slider pauseSlider = new Slider();
         pauseSlider.setBlockIncrement(0.5);
@@ -108,14 +108,22 @@ public class Settings extends Observable {
         pauseSlider.setMajorTickUnit(1);
         pauseSlider.setMinorTickCount(1);
         pauseSlider.setSnapToTicks(true);
-        pauseSlider.setValue(handler.getPause() / 1000.0);
+        pauseSlider.setValue(settingsHandler.getPause() / 1000.0);
 
-        CheckBox checkBox = new CheckBox();
-        checkBox.setText("Slow mode");
-        checkBox.setPrefHeight(40);
-        checkBox.setFont(new Font(18));
-        if (handler.getSpeed() == Speed.SLOW) {
-            checkBox.setSelected(true);
+        CheckBox speedCheckBox = new CheckBox();
+        speedCheckBox.setText("Slow mode");
+        speedCheckBox.setPrefHeight(40);
+        speedCheckBox.setFont(new Font(18));
+        if (settingsHandler.getSpeed() == Speed.SLOW) {
+            speedCheckBox.setSelected(true);
+        }
+
+        CheckBox confirmationsCheckBox = new CheckBox();
+        confirmationsCheckBox.setText("Confirmations");
+        confirmationsCheckBox.setPrefHeight(40);
+        confirmationsCheckBox.setFont(new Font(18));
+        if (settingsHandler.getConfirmations()) {
+            confirmationsCheckBox.setSelected(true);
         }
 
         Label description1 = new Label();
@@ -134,7 +142,9 @@ public class Settings extends Observable {
         list.add(inputMethodContainer);
         list.add(createLine());
         list.add(createFiller());
-        list.add(checkBox);
+        list.add(confirmationsCheckBox);
+        list.add(createFiller());
+        list.add(speedCheckBox);
         list.add(createFiller());
         list.add(createLine());
         list.add(description1);
@@ -152,7 +162,7 @@ public class Settings extends Observable {
         gridPane.setPadding(new Insets(20));
         gridPane.setAlignment(Pos.CENTER);
 
-        setCheckboxVisibility(gridPane, checkBox);
+        setCheckboxVisibility(gridPane, speedCheckBox);
 
         Scene scene = new Scene(gridPane);
 
@@ -163,24 +173,25 @@ public class Settings extends Observable {
         stage.getIcons().add(new Image("images/icon.png"));
 
         okButton.setOnAction(event -> {
-            handler.setInterval((int) intervalSlider.getValue());
-            handler.setPause((int) (pauseSlider.getValue() * 1000));
-            if (checkBox.isSelected()) {
-                handler.setSpeed(Speed.SLOW);
+            settingsHandler.setInterval((int) intervalSlider.getValue());
+            settingsHandler.setPause((int) (pauseSlider.getValue() * 1000));
+            settingsHandler.setConfirmations(confirmationsCheckBox.isSelected());
+            if (speedCheckBox.isSelected()) {
+                settingsHandler.setSpeed(Speed.SLOW);
             } else {
-                handler.setSpeed(Speed.QUICK);
+                settingsHandler.setSpeed(Speed.QUICK);
             }
-            handler.setMode(Mode.valueOf(modeChoiceBox.getValue().toUpperCase()));
-            handler.setInputMethod(InputMethod.valueOf(inputMethodChoiceBox.getValue().toUpperCase()));
+            settingsHandler.setMode(Mode.valueOf(modeChoiceBox.getValue().toUpperCase()));
+            settingsHandler.setInputMethod(InputMethod.valueOf(inputMethodChoiceBox.getValue().toUpperCase()));
 
-            handler.updateFile();
+            settingsHandler.updateFile();
             setChanged();
             notifyObservers();
 
             stage.close();
         });
 
-        checkBox.setOnAction(event -> setCheckboxVisibility(gridPane, checkBox));
+        speedCheckBox.setOnAction(event -> setCheckboxVisibility(gridPane, speedCheckBox));
 
         gridPane.requestFocus();
         for (Node node : modeContainer.getChildren()) {
