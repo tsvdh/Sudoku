@@ -1,6 +1,7 @@
 package gui.main;
 
 import core.misc.ColorTable;
+import core.misc.KeyCodeHandler;
 import core.misc.SettingsHandler;
 import gui.buttons.ColorButtons;
 import javafx.event.EventHandler;
@@ -12,10 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import static core.misc.KeyCodeHandler.getCode;
+import static core.misc.KeyCodeHandler.IS_FORWARD;
+import static core.misc.KeyCodeHandler.IS_INPUT;
+import static core.misc.KeyCodeHandler.IS_REMOVE;
+import static core.misc.KeyCodeHandler.convertKeyEvent;
 
 class FillingComponent {
-
 
     // private Sudoku parent;
     private EventComponent eventComponent;
@@ -25,15 +28,21 @@ class FillingComponent {
     private EventHandler<KeyEvent> numberKeyEventHandler;
     private EventHandler<KeyEvent> arrowKeyEventHandler;
 
+    private EventHandler<KeyEvent> keyDownEventHandler;
+    private EventHandler<KeyEvent> keyUpEventHandler;
+
     private ListIterator<GridElement> elementIterator;
     private GridElement currentElement;
     private String lastMove;
+
+    private KeyCodeHandler keyCodeHandler;
 
     FillingComponent(Sudoku parent) {
         // this.parent = parent;
         this.scene = parent.scene;
         this.gridElements = parent.gridElements;
         this.lastMove = "none";
+        this.keyCodeHandler = new KeyCodeHandler();
     }
 
     void setEventComponent(EventComponent eventComponent) {
@@ -63,13 +72,18 @@ class FillingComponent {
         lastMove = "next";
     }
 
-    private void removeCurrentColor() {
-        String oldColor = currentElement.getBackgroundColor();
-        if (!oldColor.equals("white")) {
+    private void clearCurrent(boolean fill) {
+        if (fill) {
+            currentElement.getSquare().setValue(null);
+        }
+        else {
+            String oldColor = currentElement.getBackgroundColor();
+            if (!oldColor.equals("white")) {
 
-            int oldNumber = ColorTable.getInstance().get(oldColor);
-            eventComponent.colorButtons.decreaseCount(oldNumber);
-            currentElement.setBackgroundColor("white");
+                int oldNumber = ColorTable.getInstance().get(oldColor);
+                eventComponent.colorButtons.decreaseCount(oldNumber);
+                currentElement.setBackgroundColor("white");
+            }
         }
     }
 
@@ -86,7 +100,7 @@ class FillingComponent {
 
                 if (colorButtons.isNotFull(number)) {
 
-                    removeCurrentColor();
+                    clearCurrent(false);
 
                     String newColor = colorButtons.getColor(number);
                     colorButtons.incrementCount(number);
@@ -125,18 +139,7 @@ class FillingComponent {
             }
             goToPreviousElement();
 
-            if (fill) {
-                currentElement.getSquare().setValue(null);
-            }
-            else {
-                String color = currentElement.getBackgroundColor();
-                ColorTable table = ColorTable.getInstance();
-
-                Integer number = table.get(color);
-                eventComponent.colorButtons.decreaseCount(number);
-
-                currentElement.setBackgroundColor("white");
-            }
+            clearCurrent(fill);
 
             lastMove = "previous";
 
@@ -172,18 +175,28 @@ class FillingComponent {
         return index;
     }
 
+    private List<EventHandler<KeyEvent>> getKeyRememberingEventHandlers() {
+        ArrayList<EventHandler<KeyEvent>> list = new ArrayList<>();
+
+        list.add(event -> keyCodeHandler.setCode(event, IS_INPUT.or(IS_REMOVE)));
+
+        list.add(event -> keyCodeHandler.removeKeyCode(event));
+
+        return list;
+    }
+
     private EventHandler<KeyEvent> getLegacyActions(boolean fill) {
         return event -> {
 
             currentElement.setBorderColor("black");
 
-            KeyCode keyCode = getCode(event);
+            KeyCode keyCode = convertKeyEvent(event);
 
-            if (keyCode.isDigitKey() || keyCode.isWhitespaceKey()) {
+            if (IS_FORWARD.test(keyCode)) {
                 fillSquare(keyCode, fill);
             }
 
-            else if (keyCode.equals(KeyCode.BACK_SPACE) || keyCode.equals(KeyCode.DELETE)) {
+            else if (IS_REMOVE.test(keyCode)) {
                 goBackward(fill);
             }
 
@@ -196,24 +209,26 @@ class FillingComponent {
     private List<EventHandler<KeyEvent>> getArrowActions(boolean fill) {
         ArrayList<EventHandler<KeyEvent>> list = new ArrayList<>();
 
-        // numbers
+        // input
         list.add(event -> {
-            KeyCode keyCode = getCode(event);
-            if (keyCode.isDigitKey()) {
-                fillCurrentElement(keyCode, fill);
+            if (keyCodeHandler.hasKeyCode()) {
+                KeyCode keyCode = keyCodeHandler.getCode();
 
-                if (eventComponent.colorButtons.allFull()) {
-                    eventComponent.unPaintButton.setDisable(false);
+                if (keyCode.isDigitKey()) {
+                    fillCurrentElement(keyCode, fill);
+
+                    if (eventComponent.colorButtons.allFull()) {
+                        eventComponent.unPaintButton.setDisable(false);
+                    }
+                } else if (keyCode == KeyCode.BACK_SPACE || keyCode == KeyCode.DELETE) {
+                    clearCurrent(fill);
                 }
-            }
-            else if (keyCode == KeyCode.BACK_SPACE || keyCode == KeyCode.DELETE) {
-                removeCurrentColor();
             }
         });
 
         // arrows
         list.add(event -> {
-            KeyCode keyCode = getCode(event);
+            KeyCode keyCode = convertKeyEvent(event);
             if (keyCode.isArrowKey()) {
                 currentElement.setBorderColor("black");
                 int newIndex = getNewIndex(keyCode);
@@ -226,6 +241,8 @@ class FillingComponent {
     }
 
     void setFillingAction(boolean fill) {
+        keyCodeHandler.removeKeyCode();
+
         switch (SettingsHandler.getInstance().getInputMethod()) {
             case LEGACY:
                 elementIterator = gridElements.listIterator();
@@ -239,12 +256,19 @@ class FillingComponent {
                 currentElement = gridElements.get(0);
                 currentElement.setBorderColor("lightgreen");
 
-                List<EventHandler<KeyEvent>> eventHandlers = getArrowActions(fill);
-                numberKeyEventHandler = eventHandlers.get(0);
-                arrowKeyEventHandler = eventHandlers.get(1);
+                List<EventHandler<KeyEvent>> arrowActions = getArrowActions(fill);
+                numberKeyEventHandler = arrowActions.get(0);
+                arrowKeyEventHandler = arrowActions.get(1);
 
-                scene.addEventFilter(KeyEvent.KEY_PRESSED, numberKeyEventHandler);
+                List<EventHandler<KeyEvent>> keyRememberingActions = getKeyRememberingEventHandlers();
+                keyDownEventHandler = keyRememberingActions.get(0);
+                keyUpEventHandler = keyRememberingActions.get(1);
+
+                scene.addEventFilter(KeyEvent.KEY_PRESSED, keyDownEventHandler);
+                scene.addEventFilter(KeyEvent.KEY_RELEASED, keyUpEventHandler);
+
                 scene.addEventFilter(KeyEvent.KEY_PRESSED, arrowKeyEventHandler);
+                scene.addEventFilter(KeyEvent.KEY_PRESSED, numberKeyEventHandler);
                 break;
 
             case MOUSE:
@@ -259,6 +283,9 @@ class FillingComponent {
                 scene.removeEventFilter(KeyEvent.KEY_PRESSED, numberKeyEventHandler);
                 break;
             case ARROWS:
+                scene.removeEventFilter(KeyEvent.KEY_PRESSED, keyUpEventHandler);
+                scene.removeEventFilter(KeyEvent.KEY_RELEASED, keyDownEventHandler);
+
                 scene.removeEventFilter(KeyEvent.KEY_PRESSED, numberKeyEventHandler);
                 scene.removeEventFilter(KeyEvent.KEY_PRESSED, arrowKeyEventHandler);
                 break;
