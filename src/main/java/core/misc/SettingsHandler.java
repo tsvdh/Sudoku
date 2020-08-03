@@ -71,7 +71,7 @@ public class SettingsHandler {
         }
     }
 
-    private Optional<File> createFile(boolean local) throws IOException, URISyntaxException {
+    private Optional<File> getFile(boolean local) throws IOException, URISyntaxException {
         File file;
         boolean canWrite = true;
 
@@ -112,6 +112,25 @@ public class SettingsHandler {
         }
     }
 
+    private void addMissing() throws IOException {
+        InputStream inputStream = getClass().getResourceAsStream(internalFilePath);
+        Properties completeProperties = new Properties();
+        completeProperties.load(inputStream);
+
+        boolean missing = false;
+
+        for (String key : completeProperties.stringPropertyNames()) {
+            if (properties.getProperty(key) == null) {
+                missing = true;
+                properties.setProperty(key, completeProperties.getProperty(key));
+            }
+        }
+
+        if (missing) {
+            fileIO("write");
+        }
+    }
+
     private void fileIO(String mode) {
         try {
             File file = null;
@@ -122,7 +141,7 @@ public class SettingsHandler {
                 file = new File(relativePath);
             }
             else if (protocol.equals("jar")) {
-                Optional<File> optionalFile = createFile(false);
+                Optional<File> optionalFile = getFile(false);
 
                 if (optionalFile.isPresent()) {
                     file = optionalFile.get();
@@ -137,6 +156,8 @@ public class SettingsHandler {
                     FileReader reader = new FileReader(file);
                     properties.load(reader);
                     reader.close();
+
+                    addMissing();
                 }
                 if (mode.equals("write")) {
                     FileWriter writer = new FileWriter(file);
