@@ -31,6 +31,7 @@ public class Message {
                                 button);
         vBox.setSpacing(20);
         vBox.setPadding(new Insets(10));
+        vBox.setMinWidth(300);
 
         Scene scene = new Scene(vBox);
 
