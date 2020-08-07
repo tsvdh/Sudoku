@@ -24,7 +24,7 @@ public class SettingsHandler {
     private boolean canWrite;
 
     private final String fileName = "settings.properties";
-    private final String internalFilePath = "/config/settings.properties";
+    private final String internalFilePath = "/configs/settings.properties";
     private final String externalPath = "Sudoku solver/";
 
     private Mode oldMode;
