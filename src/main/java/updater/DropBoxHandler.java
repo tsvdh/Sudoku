@@ -10,6 +10,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
 import common.FileHandler;
+import common.Security;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,14 +32,15 @@ class DropBoxHandler {
         return instance;
     }
 
-    private static final String ACCESS_KEY = "OjlnHAZZvuAAAAAAAAAAAahEhZ75NXfUw4R7Y3iTqXcammPohSKzwKHbLtNaOvLG";
+    private static final String ENCODED_ACCESS_KEY = "WHg1akZHYi1uOEFBQUFBQUFBQUFBY05IMzJFcWRfVkVoSmlqVnRJVTdsQ09jaEppQ1k3eEhZS0hNalZXMVJzTg==";
     private static final String ADDRESS = "dropbox/Sudoku solver";
 
     private DbxClientV2 client;
 
     private DropBoxHandler() {
         DbxRequestConfig requestConfig = new DbxRequestConfig(ADDRESS);
-        this.client = new DbxClientV2(requestConfig, ACCESS_KEY);
+        String accessKey = Security.decode(ENCODED_ACCESS_KEY);
+        this.client = new DbxClientV2(requestConfig, accessKey);
     }
 
     Optional<DbxClientV2> getClient() {
@@ -61,8 +63,8 @@ class DropBoxHandler {
             return false;
         }
         catch (DbxException e) {
-            System.out.println(e.getClass().getName());
             e.printStackTrace();
+            System.out.println("Error while connecting");
             return false;
         }
 
