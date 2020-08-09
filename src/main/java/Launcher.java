@@ -1,4 +1,4 @@
-import gui.main.Sudoku;
+import sudoku.gui.main.Sudoku;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
