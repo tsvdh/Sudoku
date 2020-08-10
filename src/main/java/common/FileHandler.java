@@ -50,5 +50,8 @@ public class FileHandler {
         while ((amountRead = inputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, amountRead);
         }
+
+        inputStream.close();
+        outputStream.close();
     }
 }

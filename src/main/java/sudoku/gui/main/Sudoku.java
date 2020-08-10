@@ -1,7 +1,7 @@
 package sudoku.gui.main;
 
-import sudoku.core.misc.SettingsHandler;
-import sudoku.core.misc.options.Mode;
+import common.SettingsHandler;
+import common.options.Mode;
 import sudoku.core.structure.Grid;
 import sudoku.core.structure.Square;
 import javafx.scene.Scene;

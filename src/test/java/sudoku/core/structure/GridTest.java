@@ -1,6 +1,6 @@
 package sudoku.core.structure;
 
-import sudoku.core.misc.options.Mode;
+import common.options.Mode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package sudoku.core.misc.options;
+package common.options;
 
 public enum Mode {
     NORMAL,

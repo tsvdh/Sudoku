@@ -1,9 +1,9 @@
 package sudoku.gui.screens;
 
-import sudoku.core.misc.SettingsHandler;
-import sudoku.core.misc.options.InputMethod;
-import sudoku.core.misc.options.Mode;
-import sudoku.core.misc.options.Speed;
+import common.SettingsHandler;
+import common.options.InputMethod;
+import common.options.Mode;
+import common.options.Speed;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

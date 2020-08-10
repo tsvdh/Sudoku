@@ -2,7 +2,7 @@ package sudoku.gui.main;
 
 import sudoku.core.misc.ColorTable;
 import sudoku.core.misc.KeyCodeHandler;
-import sudoku.core.misc.SettingsHandler;
+import common.SettingsHandler;
 import sudoku.gui.buttons.ColorButtons;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;

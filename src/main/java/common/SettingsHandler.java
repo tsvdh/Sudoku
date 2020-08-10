@@ -1,10 +1,9 @@
-package sudoku.core.misc;
+package common;
 
-import common.FileHandler;
 import common.popups.Message;
-import sudoku.core.misc.options.InputMethod;
-import sudoku.core.misc.options.Mode;
-import sudoku.core.misc.options.Speed;
+import common.options.InputMethod;
+import common.options.Mode;
+import common.options.Speed;
 
 import java.io.File;
 import java.io.FileReader;
@@ -31,8 +30,8 @@ public class SettingsHandler {
     private Properties properties;
     private boolean canWrite;
 
-    private final String fileName = "settings.properties";
-    private final String internalFilePath = "/configs/" + fileName;
+    private static final String FILE_NAME = "settings.properties";
+    private static final String INTERNAL_FILE_PATH = "/configs/" + FILE_NAME;
 
     private Mode oldMode;
 
@@ -48,7 +47,7 @@ public class SettingsHandler {
     }
 
     private void addMissing() throws IOException {
-        InputStream inputStream = getClass().getResourceAsStream(internalFilePath);
+        InputStream inputStream = getClass().getResourceAsStream(INTERNAL_FILE_PATH);
         Properties completeProperties = new Properties();
         completeProperties.load(inputStream);
 
@@ -72,14 +71,14 @@ public class SettingsHandler {
             String protocol = getClass().getResource("").getProtocol();
 
             if (protocol.equals("file")) {
-                String relativePath = getClass().getResource(internalFilePath).getPath();
+                String relativePath = getClass().getResource(INTERNAL_FILE_PATH).getPath();
                 file = new File(relativePath);
             }
             else if (protocol.equals("jar")) {
-                File tempFile = FileHandler.getLocalFile(fileName);
+                File tempFile = FileHandler.getLocalFile(FILE_NAME);
 
                 if (!tempFile.exists()) {
-                    InputStream inputStream = getClass().getResourceAsStream(internalFilePath);
+                    InputStream inputStream = getClass().getResourceAsStream(INTERNAL_FILE_PATH);
                     FileHandler.writeToFile(inputStream, tempFile);
                 }
                 if (tempFile.exists()) {
@@ -109,7 +108,7 @@ public class SettingsHandler {
             else {
                 // Ignore 'write' case, as no external file can be created.
                 if (mode.equals("read")) {
-                    InputStream stream = getClass().getResourceAsStream(internalFilePath);
+                    InputStream stream = getClass().getResourceAsStream(INTERNAL_FILE_PATH);
                     properties.load(stream);
                     stream.close();
                 }

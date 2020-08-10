@@ -1,6 +1,6 @@
 package common.popups;
 
-import sudoku.core.misc.SettingsHandler;
+import common.SettingsHandler;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

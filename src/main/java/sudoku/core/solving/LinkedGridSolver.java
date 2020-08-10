@@ -1,6 +1,6 @@
 package sudoku.core.solving;
 
-import sudoku.core.misc.SettingsHandler;
+import common.SettingsHandler;
 import javafx.scene.control.Button;
 import sudoku.core.structure.Grid;
 import sudoku.core.structure.Square;

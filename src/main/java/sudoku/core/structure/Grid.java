@@ -1,6 +1,6 @@
 package sudoku.core.structure;
 
-import sudoku.core.misc.options.Mode;
+import common.options.Mode;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;

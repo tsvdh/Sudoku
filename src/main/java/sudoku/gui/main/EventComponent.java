@@ -1,10 +1,10 @@
 package sudoku.gui.main;
 
 import sudoku.core.misc.ColorTable;
-import sudoku.core.misc.SettingsHandler;
-import sudoku.core.misc.options.InputMethod;
-import sudoku.core.misc.options.Mode;
-import sudoku.core.misc.options.Speed;
+import common.SettingsHandler;
+import common.options.InputMethod;
+import common.options.Mode;
+import common.options.Speed;
 import sudoku.core.solving.IndependentGridSolver;
 import sudoku.core.solving.LinkedGridSolver;
 import sudoku.core.structure.Grid;
