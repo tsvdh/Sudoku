@@ -19,11 +19,11 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
-public class DropBoxHandler {
+class DropBoxHandler {
 
     private static DropBoxHandler instance;
 
-    public static DropBoxHandler getInstance() {
+    static DropBoxHandler getInstance() {
         if (instance == null) {
             synchronized (DropBoxHandler.class) {
                 if (instance == null) {
@@ -137,33 +137,5 @@ public class DropBoxHandler {
         }
 
         return true;
-    }
-
-    public static void main(String[] args) throws DbxException, IOException {
-        DropBoxHandler dropBoxHandler = DropBoxHandler.getInstance();
-
-        Optional<DbxClientV2> optionalClient = dropBoxHandler.getClient();
-        if (!optionalClient.isPresent()) {
-            return;
-        }
-
-        DbxClientV2 client = optionalClient.get();
-
-        DbxUserFilesRequests filesRequests = client.files();
-
-        ListFolderResult result = filesRequests.listFolder("");
-        for (Metadata metadata : result.getEntries()) {
-
-            String path = metadata.getPathDisplay();
-
-            if (path.contains(".")) {
-                System.out.println("Downloading: " + path);
-
-                DbxDownloader<FileMetadata> downloader = filesRequests.download(path);
-                File file = FileHandler.getExternalFileInHome("/Sudoku solver/" + downloader.getResult().getName());
-                InputStream downloadStream = downloader.getInputStream();
-                FileHandler.writeToFile(downloadStream, file);
-            }
-        }
     }
 }
