@@ -41,6 +41,7 @@
             <groupId>com.akathist.maven.plugins.launch4j</groupId>
             <artifactId>launch4j-maven-plugin</artifactId>
             <version>1.7.25</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -54,12 +55,20 @@
             <artifactId>javatuples</artifactId>
             <version>1.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.3.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <GAV>${project.artifactId}-${project.version}</GAV>
     </properties>
 
     <build>
@@ -77,15 +86,43 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                        <configuration>
+                            <finalName>unwanted</finalName>
+                            <classifier>unwanted</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
                 <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <mainClass>Launcher</mainClass>
                         </manifest>
                     </archive>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <attach>false</attach>
                 </configuration>
-                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <id>jar with dependencies</id>
+                        <phase>package</phase>
+                        <goals><goal>single</goal></goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -94,15 +131,15 @@
                 <version>1.7.25</version>
                 <executions>
                     <execution>
-                        <id>Building .exe</id>
+                        <id>exe</id>
                         <phase>package</phase>
                         <goals><goal>launch4j</goal></goals>
                         <configuration>
 
                             <dontWrapJar>false</dontWrapJar>
                             <headerType>gui</headerType>
-                            <jar>C:\Users\tsvdh\repo_clones\Sudoku\target\Sudoku-${project.version}.jar</jar>
-                            <outfile>C:\Users\tsvdh\repo_clones\Sudoku\target\Sudoku-${project.version}.exe</outfile>
+                            <jar>${basedir}\target\${GAV}.jar</jar>
+                            <outfile>${basedir}\target\${GAV}.exe</outfile>
                             <errTitle/>
                             <cmdLine/>
                             <chdir/>
@@ -112,7 +149,7 @@
                             <stayAlive>false</stayAlive>
                             <restartOnCrash>false</restartOnCrash>
                             <manifest/>
-                            <icon>C:\Users\tsvdh\repo_clones\Sudoku\Sudoku solver\icon.ico</icon>
+                            <icon>${basedir}\Sudoku solver\icon.ico</icon>
                             <jre>
                                 <path>C:\Program Files\Java\jdk1.8.0_201\jre\</path>
                                 <bundledJre64Bit>false</bundledJre64Bit>
@@ -123,7 +160,7 @@
                                 <runtimeBits>64/32</runtimeBits>
                             </jre>
                             <splash>
-                                <file>C:\Users\tsvdh\repo_clones\Sudoku\Sudoku solver\splash.bmp</file>
+                                <file>${basedir}\Sudoku solver\splash.bmp</file>
                                 <waitForWindow>true</waitForWindow>
                                 <timeout>60</timeout>
                                 <timeoutErr>true</timeoutErr>
