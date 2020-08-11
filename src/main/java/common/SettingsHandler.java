@@ -1,9 +1,10 @@
 package common;
 
-import common.popups.Message;
+import common.options.BuildVersion;
 import common.options.InputMethod;
 import common.options.Mode;
 import common.options.Speed;
+import common.popups.Message;
 
 import java.io.File;
 import java.io.FileReader;
@@ -150,13 +151,18 @@ public class SettingsHandler {
     }
 
     public InputMethod getInputMethod() {
-        String inputMethod = properties.getProperty("inputMethod");
+        String inputMethod = properties.getProperty("input_method");
         return InputMethod.valueOf(inputMethod);
     }
 
     public boolean getConfirmations() {
         String confirmations = properties.getProperty("confirmations");
         return Boolean.parseBoolean(confirmations);
+    }
+
+    public BuildVersion getBuildVersion() {
+        String buildVersion = properties.getProperty("build_version");
+        return BuildVersion.valueOf(buildVersion);
     }
 
     public Mode getOldMode() {
@@ -181,10 +187,14 @@ public class SettingsHandler {
     }
 
     public void setInputMethod(InputMethod inputMethod) {
-        properties.setProperty("inputMethod", inputMethod.toString());
+        properties.setProperty("input_method", inputMethod.toString());
     }
 
     public void setConfirmations(boolean confirmations) {
         properties.setProperty("confirmations", String.valueOf(confirmations));
+    }
+
+    public void setBuildVersion(BuildVersion buildVersion) {
+        properties.setProperty("build_version", buildVersion.name());
     }
 }

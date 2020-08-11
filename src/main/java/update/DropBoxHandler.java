@@ -11,6 +11,7 @@ import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
 import common.FileHandler;
 import common.Security;
+import common.options.BuildVersion;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +19,11 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
-class DropBoxHandler {
+public class DropBoxHandler {
 
     private static DropBoxHandler instance;
 
-    static DropBoxHandler getInstance() {
+    public static DropBoxHandler getInstance() {
         if (instance == null) {
             synchronized (DropBoxHandler.class) {
                 if (instance == null) {
@@ -80,17 +81,18 @@ class DropBoxHandler {
         return validConnection;
     }
 
-    Optional<String> getFileName(String version) {
+    Optional<String> getFileName(BuildVersion buildVersion) {
         Optional<DbxClientV2> optionalClient = this.getClient();
         if (!optionalClient.isPresent()) {
             return Optional.empty();
         }
 
         DbxUserFilesRequests filesRequests = optionalClient.get().files();
+        String buildFolder = buildVersion.name().toLowerCase();
 
         ListFolderResult result;
         try {
-            result = filesRequests.listFolder(DOWNLOAD_FOLDER + version);
+            result = filesRequests.listFolder(DOWNLOAD_FOLDER + buildFolder);
         } catch (DbxException e) {
             System.out.println("Could not access the folder");
             return Optional.empty();

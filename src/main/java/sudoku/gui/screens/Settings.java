@@ -1,6 +1,7 @@
 package sudoku.gui.screens;
 
 import common.SettingsHandler;
+import common.options.BuildVersion;
 import common.options.InputMethod;
 import common.options.Mode;
 import common.options.Speed;
@@ -20,11 +21,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.javatuples.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Settings extends Observable {
@@ -32,52 +35,17 @@ public class Settings extends Observable {
     public void build() {
         SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
-        ChoiceBox<String> modeChoiceBox = new ChoiceBox<>();
-        modeChoiceBox.setValue(settingsHandler.getMode().toString().toLowerCase());
-        modeChoiceBox.setPrefHeight(40);
-        modeChoiceBox.setPrefWidth(100);
-        modeChoiceBox.setStyle("-fx-font-size: 15");
+        Pair<ChoiceBox<String>, HBox> pair = createChoiceBoxContainer(SettingsHandler::getMode);
+        ChoiceBox<String> modeChoiceBox = pair.getValue0();
+        HBox modeContainer = pair.getValue1();
 
-        List<String> modes = Arrays .stream(Mode.values())
-                                    .map(Enum::name)
-                                    .map(String::toLowerCase)
-                                    .collect(Collectors.toList());
-        modeChoiceBox.getItems().addAll(modes);
+        pair = createChoiceBoxContainer(SettingsHandler::getInputMethod);
+        ChoiceBox<String> inputMethodChoiceBox = pair.getValue0();
+        HBox inputMethodContainer = pair.getValue1();
 
-        Label modeLabel = new Label();
-        modeLabel.setText("Mode:");
-        modeLabel.setStyle("-fx-font-size: 18");
-        modeLabel.setPrefWidth(120);
-
-        HBox modeContainer = new HBox();
-        modeContainer.setAlignment(Pos.CENTER_LEFT);
-        modeContainer.setSpacing(40);
-        modeContainer.getChildren().addAll(modeLabel, modeChoiceBox);
-
-
-        ChoiceBox<String> inputMethodChoiceBox = new ChoiceBox<>();
-        inputMethodChoiceBox.setValue(settingsHandler.getInputMethod().toString().toLowerCase());
-        inputMethodChoiceBox.setPrefHeight(40);
-        inputMethodChoiceBox.setPrefWidth(100);
-        inputMethodChoiceBox.setStyle("-fx-font-size: 15");
-
-        List<String> inputMethods = Arrays  .stream(InputMethod.values())
-                                            .map(Enum::toString)
-                                            .map(String::toLowerCase)
-                                            .collect(Collectors.toList());
-        inputMethodChoiceBox.getItems().addAll(inputMethods);
-
-        Label inputMethodLabel = new Label();
-        inputMethodLabel.setText("Input method:");
-        inputMethodLabel.setStyle("-fx-font-size: 18");
-        inputMethodLabel.setPrefWidth(120);
-
-        HBox inputMethodContainer = new HBox();
-        inputMethodContainer.setAlignment(Pos.CENTER_LEFT);
-        inputMethodContainer.setSpacing(40);
-        inputMethodContainer.setPadding(new Insets(20, 0, 20, 0));
-        inputMethodContainer.getChildren().addAll(inputMethodLabel, inputMethodChoiceBox);
-
+        pair = createChoiceBoxContainer(SettingsHandler::getBuildVersion);
+        ChoiceBox<String> buildVersionChoiceBox = pair.getValue0();
+        HBox buildVersionContainer = pair.getValue1();
 
         Button okButton = new Button();
         okButton.setFont(new Font(15));
@@ -140,6 +108,7 @@ public class Settings extends Observable {
         ArrayList<Node> list = new ArrayList<>();
         list.add(modeContainer);
         list.add(inputMethodContainer);
+        list.add(buildVersionContainer);
         list.add(createLine());
         list.add(createFiller());
         list.add(confirmationsCheckBox);
@@ -183,6 +152,7 @@ public class Settings extends Observable {
             }
             settingsHandler.setMode(Mode.valueOf(modeChoiceBox.getValue().toUpperCase()));
             settingsHandler.setInputMethod(InputMethod.valueOf(inputMethodChoiceBox.getValue().toUpperCase()));
+            settingsHandler.setBuildVersion(BuildVersion.valueOf(buildVersionChoiceBox.getValue().toUpperCase()));
 
             settingsHandler.updateFile();
             setChanged();
@@ -235,5 +205,37 @@ public class Settings extends Observable {
         line.setFont(new Font(0));
 
         return line;
+    }
+
+    private static <T extends Enum<T>> Pair<ChoiceBox<String>, HBox> createChoiceBoxContainer(Function<SettingsHandler, T> getter) {
+        SettingsHandler settingsHandler = SettingsHandler.getInstance();
+
+        String name = getter.apply(settingsHandler).toString().toLowerCase();
+
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.setValue(name);
+        choiceBox.setPrefHeight(40);
+        choiceBox.setPrefWidth(100);
+        choiceBox.setStyle("-fx-font-size: 15");
+
+        T[] values = getter.apply(settingsHandler).getDeclaringClass().getEnumConstants();
+
+        List<String> modes = Arrays.stream(values)
+                .map(Enum::name)
+                .map(String::toLowerCase)
+                .collect(Collectors.toList());
+        choiceBox.getItems().addAll(modes);
+
+        Label modeLabel = new Label();
+        modeLabel.setText(name + ":");
+        modeLabel.setStyle("-fx-font-size: 18");
+        modeLabel.setPrefWidth(120);
+
+        HBox containter = new HBox();
+        containter.setAlignment(Pos.CENTER_LEFT);
+        containter.setSpacing(40);
+        containter.getChildren().addAll(modeLabel, choiceBox);
+
+        return Pair.with(choiceBox, containter);
     }
 }
