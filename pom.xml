@@ -104,9 +104,9 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
+                    <descriptors>
+                        <descriptor>jar-assembly.xml</descriptor>
+                    </descriptors>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
