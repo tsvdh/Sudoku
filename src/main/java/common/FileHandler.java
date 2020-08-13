@@ -9,8 +9,8 @@ import java.util.Observable;
 
 public class FileHandler extends Observable {
 
-    // 10 KB
-    private static final int BUFFER_SIZE = 10 << 10;
+    // 128 KiB
+    private static final int BUFFER_SIZE = 128 << 10;
 
     public static File getExternalFileInHome(String path) throws IOException {
         String userHome = System.getProperty("user.home");
@@ -40,24 +40,7 @@ public class FileHandler extends Observable {
     }
 
     public static void writeToFile(InputStream inputStream, File file) throws IOException {
-        OutputStream outputStream;
-        try {
-             outputStream = new FileOutputStream(file);
-        } catch (IOException e) {
-            inputStream.close();
-            System.out.println(e.getMessage());
-            return;
-        }
-
-        byte[] buffer = new byte[BUFFER_SIZE];
-
-        int amountRead;
-        while ((amountRead = inputStream.read(buffer)) > 0) {
-            outputStream.write(buffer, 0, amountRead);
-        }
-
-        inputStream.close();
-        outputStream.close();
+        new FileHandler(file, inputStream).writeToFile();
     }
 
     private File file;
@@ -87,6 +70,7 @@ public class FileHandler extends Observable {
 
             bytesWritten += amountRead;
 
+            // This code only serves a purpose if this class is being observed
             setChanged();
             notifyObservers(bytesWritten);
         }

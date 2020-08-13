@@ -18,15 +18,14 @@ import java.util.concurrent.Executors;
 
 class ProgressInfo {
 
-    private DownloadTask downloadTask;
-
     ProgressInfo(DownloadTask downloadTask, Updater updater, String newName) {
-        this.downloadTask = downloadTask;
         String oldName = updater.getCurrentName();
+        String oldVersion = Updater.getVersionAsString(oldName);
+        String newVersion = Updater.getVersionAsString(newName);
 
         Label versionLabel = new Label();
         versionLabel.setFont(new Font(20));
-        versionLabel.setText(oldName + " -> " + newName);
+        versionLabel.setText("New version available: " + newVersion + " (current: " + newVersion + ")");
 
         Label progressLabel = new Label();
         progressLabel.setFont(new Font(20));
@@ -39,7 +38,7 @@ class ProgressInfo {
 
         VBox vBox = new VBox();
         vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().addAll(versionLabel, progressLabel, button);
+        vBox.getChildren().addAll(versionLabel, button);
         vBox.setSpacing(20);
         vBox.setPadding(new Insets(10));
         vBox.setMinWidth(400);
@@ -63,6 +62,7 @@ class ProgressInfo {
 
         button.setOnAction(event -> {
             vBox.getChildren().remove(button);
+            vBox.getChildren().add(progressLabel);
             executor.execute(downloadTask);
         });
 

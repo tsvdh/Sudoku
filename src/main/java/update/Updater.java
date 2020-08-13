@@ -39,7 +39,7 @@ public class Updater {
         return currentName;
     }
 
-    private int[] getVersion(String name) {
+    private static int[] getVersionAsArray(String name) {
         if (!name.contains(NAME_START)) {
             throw new IllegalArgumentException("File name must start with '" + NAME_START + "'");
         }
@@ -59,12 +59,14 @@ public class Updater {
         return versionNumber;
     }
 
-    private boolean isNewer(String newName) {
-        String oldPath = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
-        String oldName = new File(oldPath).getName();
+    static String getVersionAsString(String name) {
+        int[] versionArray = getVersionAsArray(name);
+        return versionArray[0] + "." + versionArray[1] + "." + versionArray[2];
+    }
 
-        int[] oldVersion = getVersion(oldName);
-        int[] newVersion = getVersion(newName);
+    private boolean isNewer(String newName) {
+        int[] oldVersion = getVersionAsArray(currentName);
+        int[] newVersion = getVersionAsArray(newName);
 
         for (int i = 0; i < 3; i++) {
             int oldPart = oldVersion[i];
