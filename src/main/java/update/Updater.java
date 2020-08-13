@@ -123,7 +123,7 @@ public class Updater {
         if (success) {
             new Message("Download succeeded", false);
         } else {
-            new Message("Download failed", false);
+            new Message("Download failed", true);
         }
     }
 }

@@ -7,6 +7,7 @@ import javafx.concurrent.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -27,8 +28,18 @@ class DownloadTask extends Task<Void> implements Observer {
         return null;
     }
 
+    private static float toMB(long bytes) {
+        long MB = 1 << 10 << 10;
+
+        DecimalFormat decimalFormat = new DecimalFormat("#.#");
+        long megaBytes = bytes / MB;
+
+        return Float.parseFloat(decimalFormat.format(megaBytes));
+    }
+
     private void updateProgress(long bytesWritten) {
-        super.updateMessage("Downloading: " + bytesWritten + " / " + totalBytes + " bytes");
+        updateProgress(bytesWritten, totalBytes);
+        updateMessage(toMB(bytesWritten) + " / " + toMB(totalBytes) + " MB");
     }
 
     @Override

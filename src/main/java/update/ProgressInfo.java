@@ -7,7 +7,9 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
@@ -25,11 +27,21 @@ class ProgressInfo {
 
         Label versionLabel = new Label();
         versionLabel.setFont(new Font(20));
-        versionLabel.setText("New version available: " + newVersion + " (current: " + newVersion + ")");
+        versionLabel.setText("New version available: " + newVersion + " (current: " + oldVersion + ")");
 
         Label progressLabel = new Label();
-        progressLabel.setFont(new Font(20));
+        progressLabel.setFont(new Font(15));
         progressLabel.textProperty().bind(downloadTask.messageProperty());
+
+        ProgressBar progressBar = new ProgressBar(0);
+        progressBar.setPrefSize(150, 25);
+        progressBar.progressProperty().bind(downloadTask.progressProperty());
+
+        HBox progressContainer = new HBox();
+        progressContainer.getChildren().addAll(progressBar, progressLabel);
+        progressContainer.setAlignment(Pos.CENTER);
+        progressContainer.setSpacing(15);
+        progressContainer.setPadding(new Insets(0, 0, 20, 0));
 
         Button button = new Button();
         button.setFont(new Font(20));
@@ -62,7 +74,7 @@ class ProgressInfo {
 
         button.setOnAction(event -> {
             vBox.getChildren().remove(button);
-            vBox.getChildren().add(progressLabel);
+            vBox.getChildren().add(progressContainer);
             executor.execute(downloadTask);
         });
 
