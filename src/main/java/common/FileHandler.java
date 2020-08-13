@@ -5,8 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Observable;
 
-public class FileHandler {
+public class FileHandler extends Observable {
+
+    // 10 KB
+    private static final int BUFFER_SIZE = 10 << 10;
 
     public static File getExternalFileInHome(String path) throws IOException {
         String userHome = System.getProperty("user.home");
@@ -40,15 +44,51 @@ public class FileHandler {
         try {
              outputStream = new FileOutputStream(file);
         } catch (IOException e) {
+            inputStream.close();
             System.out.println(e.getMessage());
             return;
         }
 
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[BUFFER_SIZE];
 
         int amountRead;
         while ((amountRead = inputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, amountRead);
+        }
+
+        inputStream.close();
+        outputStream.close();
+    }
+
+    private File file;
+    private InputStream inputStream;
+
+    public FileHandler(File file, InputStream inputStream) {
+        this.file = file;
+        this.inputStream = inputStream;
+    }
+
+    public void writeToFile() throws IOException {
+        OutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream(file);
+        } catch (IOException e) {
+            inputStream.close();
+            System.out.println(e.getMessage());
+            return;
+        }
+
+        byte[] buffer = new byte[BUFFER_SIZE];
+
+        long bytesWritten = 0;
+        int amountRead;
+        while ((amountRead = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, amountRead);
+
+            bytesWritten += amountRead;
+
+            setChanged();
+            notifyObservers(bytesWritten);
         }
 
         inputStream.close();

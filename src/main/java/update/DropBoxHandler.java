@@ -9,13 +9,10 @@ import com.dropbox.core.v2.files.DbxUserFilesRequests;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
-import common.FileHandler;
 import common.Security;
 import common.options.BuildVersion;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,14 +105,15 @@ class DropBoxHandler {
         return Optional.of(currentMetadata.getName());
     }
 
-    boolean downloadToFile(File file) {
+    void downloadToFile(File file, Updater updater) {
         if (currentMetadata == null) {
             throw new IllegalStateException("Metadata is null, pleas call 'getFileName' first.");
         }
 
         Optional<DbxClientV2> optionalClient = this.getClient();
         if (!optionalClient.isPresent()) {
-            return false;
+            updater.setSuccess(false);
+            return;
         }
 
         DbxUserFilesRequests filesRequests = optionalClient.get().files();
@@ -124,18 +122,12 @@ class DropBoxHandler {
         try {
             downloader = filesRequests.download(currentMetadata.getPathDisplay());
         } catch (DbxException e) {
-            System.out.println("Could not download the file");
-            return false;
+            updater.setSuccess(false);
+            return;
         }
 
-        InputStream inputStream = downloader.getInputStream();
+        DownloadTask downloadTask = new DownloadTask(downloader, file);
 
-        try {
-            FileHandler.writeToFile(inputStream, file);
-        } catch (IOException e) {
-            return false;
-        }
-
-        return true;
+        new ProgressInfo(downloadTask, updater, currentMetadata.getName());
     }
 }

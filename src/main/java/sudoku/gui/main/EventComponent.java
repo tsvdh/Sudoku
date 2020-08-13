@@ -203,7 +203,7 @@ class EventComponent {
         if (grid.isValid()) {
             solveButton.setDisable(false);
         } else {
-            new Message("The sudoku you entered is invalid!");
+            new Message("The sudoku you entered is invalid!", true);
         }
     }
 

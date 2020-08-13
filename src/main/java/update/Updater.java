@@ -3,6 +3,7 @@ package update;
 import common.FileHandler;
 import common.SettingsHandler;
 import common.options.BuildVersion;
+import common.popups.Message;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,12 +12,31 @@ import java.util.Optional;
 public class Updater {
 
     private static final String NAME_START = "Sudoku-";
+    private boolean success;
+    private String currentName;
 
     public Updater() {
         String protocol = getClass().getResource("").getProtocol();
         if (!protocol.equals("jar")) {
             throw new IllegalStateException("Can only update when running in jar");
         }
+
+        this.success = false;
+
+        String oldPath = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
+        currentName = new File(oldPath).getName();
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getCurrentName() {
+        return currentName;
     }
 
     private int[] getVersion(String name) {
@@ -61,7 +81,7 @@ public class Updater {
         return false;
     }
 
-    public boolean downloadNew() {
+    public void downloadNew() {
         DropBoxHandler dropBoxHandler = DropBoxHandler.getInstance();
         SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
@@ -71,38 +91,37 @@ public class Updater {
 
         if (!optionalFileName.isPresent()) {
             System.out.println("No file available for download");
-            return false;
+            success = false;
+            return;
         }
 
         String fileName = optionalFileName.get();
 
         if (isNewer(fileName)) {
-            System.out.println("Starting download");
-
             File file;
             try {
                 file = FileHandler.getExternalFileInHome("/Sudoku solver/" + fileName);
             } catch (IOException e) {
-                System.out.println(e.getMessage());
-                return false;
+                success = false;
+                return;
             }
 
-            System.out.println("Downloading");
+            // sets 'this.success'
+            dropBoxHandler.downloadToFile(file, this);
 
-            boolean succeeded = dropBoxHandler.downloadToFile(file);
-
-            System.out.print("Download ");
-            if (succeeded) {
-                System.out.println("succeeded");
-                return true;
-            } else {
-                System.out.println("failed");
-                return false;
-            }
+            afterDownload();
         }
         else {
             System.out.println("No update available");
-            return false;
+            success = false;
+        }
+    }
+
+    void afterDownload() {
+        if (success) {
+            new Message("Download succeeded", false);
+        } else {
+            new Message("Download failed", false);
         }
     }
 }

@@ -1,15 +1,22 @@
-import sudoku.gui.main.Sudoku;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import update.Updater;
 
 public class Launcher extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        new Sudoku(primaryStage);
+        // new Sudoku(primaryStage);
+
+        Updater updater = new Updater();
+        updater.downloadNew();
+
+        System.exit(0);
     }
 
-    // public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) {
+        launch(args);
+
     //     // ---old.exe---
     //     String callPath = Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
     //     String joinedPath = new File(callPath).getParent() + "/new.exe";
@@ -39,5 +46,5 @@ public class Launcher extends Application {
     //     // File file = new File(joinedPath);
     //     //
     //     // file.delete();
-    // }
+    }
 }

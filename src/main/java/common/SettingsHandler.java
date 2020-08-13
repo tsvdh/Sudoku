@@ -47,15 +47,22 @@ public class SettingsHandler {
         fileIO("write");
     }
 
-    private void addMissingToProperties() throws IOException {
+    private void addMissing() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream(INTERNAL_FILE_PATH);
         Properties completeProperties = new Properties();
         completeProperties.load(inputStream);
 
+        boolean missing = false;
+
         for (String key : completeProperties.stringPropertyNames()) {
             if (properties.getProperty(key) == null) {
+                missing = true;
                 properties.setProperty(key, completeProperties.getProperty(key));
             }
+        }
+
+        if (missing) {
+            fileIO("write");
         }
     }
 
@@ -89,7 +96,7 @@ public class SettingsHandler {
                     properties.load(reader);
                     reader.close();
 
-                    addMissingToProperties();
+                    addMissing();
                 }
                 if (mode.equals("write")) {
                     FileWriter writer = new FileWriter(file);
@@ -118,7 +125,7 @@ public class SettingsHandler {
     private void setCanWrite(boolean canWrite) {
         if (this.canWrite && !canWrite) {
             new Message("Could not create settings file, make sure the program has correct access rights.\n"
-                    + "All changes in settings will not be saved when the application is closed.");
+                    + "All changes in settings will not be saved when the application is closed.", true);
         }
         this.canWrite = canWrite;
     }

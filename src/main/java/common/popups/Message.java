@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 public class Message {
 
-    public Message(String text) {
+    public Message(String text, boolean warning) {
         Button button = new Button();
         button.setText("OK");
         button.setFont(new Font(20));
@@ -23,12 +23,13 @@ public class Message {
         Label label = new Label();
         label.setFont(new Font(20));
         label.setText(text);
-        label.setStyle("-fx-text-fill: red");
+        if (warning) {
+            label.setStyle("-fx-text-fill: red");
+        }
 
         VBox vBox = new VBox();
         vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().addAll(label,
-                                button);
+        vBox.getChildren().addAll(label, button);
         vBox.setSpacing(20);
         vBox.setPadding(new Insets(10));
         vBox.setMinWidth(300);
