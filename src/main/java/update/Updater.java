@@ -11,9 +11,18 @@ import java.util.Optional;
 
 public class Updater {
 
+    enum Mode {
+        INSTALLING,
+        UPDATING
+    }
+
     private static final String NAME_START = "Sudoku-";
+    private static final String NAME_INSTALLER = "Installer";
+    private boolean downloadAttempt;
     private boolean success;
     private String currentName;
+    private File newFile;
+    private Mode mode;
 
     public Updater() {
         String protocol = getClass().getResource("").getProtocol();
@@ -22,9 +31,16 @@ public class Updater {
         }
 
         this.success = false;
+        this.downloadAttempt = false;
 
         String oldPath = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
         currentName = new File(oldPath).getName();
+
+        if (currentName.contains(NAME_INSTALLER)) {
+            this.mode = Mode.INSTALLING;
+        } else {
+            this.mode = Mode.UPDATING;
+        }
     }
 
     public boolean isSuccess() {
@@ -35,8 +51,20 @@ public class Updater {
         this.success = success;
     }
 
+    public boolean isDownloadAttempt() {
+        return downloadAttempt;
+    }
+
     public String getCurrentName() {
         return currentName;
+    }
+
+    public File getNewFile() {
+        return newFile;
+    }
+
+    public Mode getMode() {
+        return mode;
     }
 
     private static int[] getVersionAsArray(String name) {
@@ -65,6 +93,10 @@ public class Updater {
     }
 
     private boolean isNewer(String newName) {
+        if (mode == Mode.INSTALLING) {
+            return true;
+        }
+
         int[] oldVersion = getVersionAsArray(currentName);
         int[] newVersion = getVersionAsArray(newName);
 
@@ -93,37 +125,33 @@ public class Updater {
 
         if (!optionalFileName.isPresent()) {
             System.out.println("No file available for download");
-            success = false;
             return;
         }
 
         String fileName = optionalFileName.get();
 
         if (isNewer(fileName)) {
-            File file;
+            downloadAttempt = true;
+
             try {
-                file = FileHandler.getExternalFileInHome("/Sudoku solver/" + fileName);
+                newFile = FileHandler.getExternalFileInProgramFolder(fileName);
             } catch (IOException e) {
                 success = false;
                 return;
             }
 
             // sets 'this.success'
-            dropBoxHandler.downloadToFile(file, this);
-
-            afterDownload();
+            dropBoxHandler.downloadToFile(newFile, this);
         }
         else {
             System.out.println("No update available");
-            success = false;
         }
     }
 
-    void afterDownload() {
-        if (success) {
-            new Message("Download succeeded", false);
-        } else {
-            new Message("Download failed", true);
+    public void delete(String path) {
+        File file = new File(path);
+        if (!file.delete()) {
+            new Message("Could not delete file at: " + file.getPath(), true);
         }
     }
 }

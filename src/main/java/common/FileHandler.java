@@ -1,10 +1,13 @@
 package common;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Observable;
 
 public class FileHandler extends Observable {
@@ -12,10 +15,12 @@ public class FileHandler extends Observable {
     // 128 KiB
     private static final int BUFFER_SIZE = 128 << 10;
 
-    public static File getExternalFileInHome(String path) throws IOException {
+    private static final String PROGRAM_FOLDER = "/Sudoku solver/";
+
+    public static File getExternalFileInProgramFolder(String fileName) throws IOException {
         String userHome = System.getProperty("user.home");
         File userHomeFile = new File(userHome);
-        String externalPath = userHomeFile.toURI().getPath() + path;
+        String externalPath = userHomeFile.getPath() + PROGRAM_FOLDER + fileName;
 
         File file = new File(externalPath);
         File parent = file.getParentFile();
@@ -33,9 +38,41 @@ public class FileHandler extends Observable {
         }
     }
 
+    public static boolean installed() {
+        String userHome = System.getProperty("user.home");
+        File userHomeFile = new File(userHome);
+
+        String programPath = userHomeFile.getPath() + PROGRAM_FOLDER;
+        File programFolder = new File(programPath);
+
+        if (!programFolder.exists() || !programFolder.isDirectory()) {
+            return false;
+        }
+
+        FileFilter fileFilter = file -> file.getPath().contains("Sudoku") && file.canExecute();
+
+        File[] files = programFolder.listFiles(fileFilter);
+
+        return files.length > 0;
+    }
+
+    public static File getCurrentFile() {
+        URL url = FileHandler.class.getProtectionDomain().getCodeSource().getLocation();
+        String path = null;
+        try {
+            path = url.toURI().getPath();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        assert path != null;
+
+        return new File(path);
+    }
+
     public static File getLocalFile(String fileName) {
-        String path = FileHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        String joinedPath = new File(path).getParent() + "/" + fileName;
+        File file = getCurrentFile();
+
+        String joinedPath = file.getParent() + "/" + fileName;
         return new File(joinedPath);
     }
 
