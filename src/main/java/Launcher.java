@@ -25,7 +25,7 @@ public class Launcher extends Application {
 
             if (updater.isDownloadAttempt()) {
                 if (updater.isSuccess()) {
-                    String deleteArg = "--delete=\"" + FileHandler.getCurrentFile().getPath() + "\"";
+                    String deleteArg = "--delete=" + FileHandler.getCurrentFile().getPath();
                     try {
                         new ProcessBuilder(updater.getNewFile().getPath(), deleteArg).start();
                     } catch (IOException e) {
