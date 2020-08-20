@@ -1,5 +1,10 @@
 package common;
 
+import com.sun.jna.Native;
+import com.sun.jna.platform.win32.Shell32;
+import com.sun.jna.platform.win32.ShlObj;
+import com.sun.jna.platform.win32.WinDef;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
@@ -78,6 +83,13 @@ public class FileHandler extends Observable {
 
     public static void writeToFile(InputStream inputStream, File file) throws IOException {
         new FileHandler(file, inputStream).writeToFile();
+    }
+
+    public static File getDesktop() {
+        char[] pszPath = new char[WinDef.MAX_PATH];
+        Shell32.INSTANCE.SHGetFolderPath(null, ShlObj.CSIDL_DESKTOPDIRECTORY, null, ShlObj.SHGFP_TYPE_CURRENT, pszPath);
+
+        return new File(Native.toString(pszPath));
     }
 
     private File file;

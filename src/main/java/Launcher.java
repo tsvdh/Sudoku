@@ -25,9 +25,15 @@ public class Launcher extends Application {
 
             if (updater.isDownloadAttempt()) {
                 if (updater.isSuccess()) {
-                    String deleteArg = "--delete=" + FileHandler.getCurrentFile().getPath();
+
+                    updater.updateShortcut();
+
+                    String oldPath = FileHandler.getCurrentFile().getPath();
+                    String newPath = updater.getNewFile().getPath();
+
+                    String deleteArg = "--delete=" + oldPath;
                     try {
-                        new ProcessBuilder(updater.getNewFile().getPath(), deleteArg).start();
+                        new ProcessBuilder(newPath, deleteArg).start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -37,7 +43,6 @@ public class Launcher extends Application {
                     new Message("Download failed", true);
                 }
             }
-
         }
 
         new Sudoku(primaryStage);

@@ -62,6 +62,25 @@
             <version>3.3.0</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>net.jsign</groupId>
+            <artifactId>jsign-maven-plugin</artifactId>
+            <version>3.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.vatbub</groupId>
+            <artifactId>mslinks</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>4.3.0</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -165,6 +184,17 @@
                                 <timeout>60</timeout>
                                 <timeoutErr>true</timeoutErr>
                             </splash>
+                            <versionInfo>
+                                <fileVersion>${project.version}.0</fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>Program for solving any sudoku</fileDescription>
+                                <copyright>None</copyright>
+                                <productVersion>${project.version}.0</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>Sudoku solver</productName>
+                                <internalName>Sudoku solver</internalName>
+                                <originalFilename>${GAV}.exe</originalFilename>
+                            </versionInfo>
 
                         </configuration>
                     </execution>

@@ -4,6 +4,7 @@ import common.FileHandler;
 import common.SettingsHandler;
 import common.options.BuildVersion;
 import common.popups.Message;
+import mslinks.ShellLink;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,8 @@ public class Updater {
 
     private static final String NAME_START = "Sudoku-";
     private static final String NAME_INSTALLER = "Installer";
+    private static final String SHORTCUT_NAME = "Sudoku solver.lnk";
+
     private boolean downloadAttempt;
     private boolean success;
     private String currentName;
@@ -148,10 +151,35 @@ public class Updater {
         }
     }
 
+    private File getShortcut() {
+        File desktop = FileHandler.getDesktop();
+        String shortcutPath = desktop.getPath() + "/" + SHORTCUT_NAME;
+        return new File(shortcutPath);
+    }
+
     public void delete(String path) {
         File file = new File(path);
         if (!file.delete()) {
-            new Message("Could not delete file at: " + file.getPath(), true);
+            new Message("Could not delete old file at: " + file.getPath(), true);
+        }
+    }
+
+    public void updateShortcut() {
+        File shortcut = getShortcut();
+        String shortcutPath = shortcut.getPath();
+        String newPath = newFile.getPath();
+
+        if (mode == Mode.UPDATING) {
+            if (!shortcut.delete()) {
+                new Message("Could not delete old shortcut", true);
+                return;
+            }
+        }
+
+        try {
+            ShellLink.createLink(newPath, shortcutPath);
+        } catch (IOException e) {
+            new Message("Could not create shortcut", true);
         }
     }
 }
