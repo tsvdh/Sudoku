@@ -92,6 +92,21 @@ public class FileHandler extends Observable {
         return new File(Native.toString(pszPath));
     }
 
+    private enum Protocol {
+        FILE,
+        JAR
+    }
+
+    private static final Protocol protocol = getProtocol();
+
+    private static Protocol getProtocol() {
+        return Protocol.valueOf(FileHandler.class.getResource("").getProtocol().toUpperCase());
+    }
+
+    public static boolean inJar() {
+        return protocol == Protocol.JAR;
+    }
+
     private File file;
     private InputStream inputStream;
 

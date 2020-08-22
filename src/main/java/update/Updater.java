@@ -28,8 +28,7 @@ public class Updater {
     private Mode mode;
 
     public Updater() {
-        String protocol = getClass().getResource("").getProtocol();
-        if (!protocol.equals("jar")) {
+        if (!FileHandler.inJar()) {
             throw new IllegalStateException("Can only update when running in jar");
         }
 

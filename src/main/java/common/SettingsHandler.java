@@ -69,13 +69,8 @@ public class SettingsHandler {
     private void fileIO(String mode) {
         try {
             File file = null;
-            String protocol = getClass().getResource("").getProtocol();
 
-            if (protocol.equals("file")) {
-                String relativePath = getClass().getResource(INTERNAL_FILE_PATH).getPath();
-                file = new File(relativePath);
-            }
-            else if (protocol.equals("jar")) {
+            if (FileHandler.inJar()) {
                 File tempFile = FileHandler.getLocalFile(FILE_NAME);
 
                 if (!tempFile.exists()) {
@@ -87,7 +82,8 @@ public class SettingsHandler {
                 }
             }
             else {
-                throw new UnsupportedOperationException("Unknown protocol for getting files.");
+                String relativePath = getClass().getResource(INTERNAL_FILE_PATH).getPath();
+                file = new File(relativePath);
             }
 
             if (file != null) {

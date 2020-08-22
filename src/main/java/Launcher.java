@@ -12,35 +12,35 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Updater updater = new Updater();
+        if (FileHandler.inJar()) {
+            Updater updater = new Updater();
 
-        Map<String, String> args = getParameters().getNamed();
-        String wantedKey = "delete";
+            Map<String, String> args = getParameters().getNamed();
+            String wantedKey = "delete";
 
-        if (args.containsKey(wantedKey)) {
-            updater.delete(args.get(wantedKey));
-        }
-        else {
-            updater.downloadNew();
+            if (args.containsKey(wantedKey)) {
+                updater.delete(args.get(wantedKey));
+            } else {
+                updater.downloadNew();
 
-            if (updater.isDownloadAttempt()) {
-                if (updater.isSuccess()) {
+                if (updater.isDownloadAttempt()) {
+                    if (updater.isSuccess()) {
 
-                    updater.updateShortcut();
+                        updater.updateShortcut();
 
-                    String oldPath = FileHandler.getCurrentFile().getPath();
-                    String newPath = updater.getNewFile().getPath();
+                        String oldPath = FileHandler.getCurrentFile().getPath();
+                        String newPath = updater.getNewFile().getPath();
 
-                    String deleteArg = "--delete=" + oldPath;
-                    try {
-                        new ProcessBuilder(newPath, deleteArg).start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        String deleteArg = "--delete=" + oldPath;
+                        try {
+                            new ProcessBuilder(newPath, deleteArg).start();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        System.exit(0);
+                    } else {
+                        new Message("Download failed", true);
                     }
-                    System.exit(0);
-                }
-                else {
-                    new Message("Download failed", true);
                 }
             }
         }

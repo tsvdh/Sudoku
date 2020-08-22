@@ -2,12 +2,12 @@ package sudoku.gui.main;
 
 import common.SettingsHandler;
 import common.options.Mode;
-import sudoku.core.structure.Grid;
-import sudoku.core.structure.Square;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import sudoku.core.structure.Grid;
+import sudoku.core.structure.Square;
 
 import java.util.ArrayList;
 import java.util.List;
