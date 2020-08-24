@@ -56,7 +56,7 @@ public class Settings extends Observable {
         intervalSlider.setBlockIncrement(10);
         intervalSlider.setMin(40);
         intervalSlider.setMax(200);
-        intervalSlider.setPadding(new Insets(20));
+        intervalSlider.setPadding(new Insets(0, 0, 0, 20));
         intervalSlider.setShowTickLabels(true);
         intervalSlider.setShowTickMarks(true);
         intervalSlider.setPrefSize(500, 40);
@@ -69,7 +69,7 @@ public class Settings extends Observable {
         pauseSlider.setBlockIncrement(0.5);
         pauseSlider.setMin(0);
         pauseSlider.setMax(5);
-        pauseSlider.setPadding(new Insets(20));
+        pauseSlider.setPadding(new Insets(0, 0, 0, 20));
         pauseSlider.setShowTickMarks(true);
         pauseSlider.setShowTickLabels(true);
         pauseSlider.setPrefSize(500, 40);
@@ -97,18 +97,21 @@ public class Settings extends Observable {
         Label description1 = new Label();
         description1.setText("The amount of milliseconds between each step");
         description1.setFont(new Font(18));
-        description1.setPadding(new Insets(20, 0, 0, 0));
+        // description1.setPadding(new Insets(20, 0, 0, 0));
 
         Label description2 = new Label();
         description2.setText("The amount of seconds to pause after solving a red square");
         description2.setFont(new Font(18));
-        description2.setPadding(new Insets(20, 0, 0, 0));
+        // description2.setPadding(new Insets(20, 0, 0, 0));
 
 
         ArrayList<Node> list = new ArrayList<>();
         list.add(modeContainer);
+        list.add(createFiller());
         list.add(inputMethodContainer);
+        list.add(createFiller());
         list.add(buildVersionContainer);
+        list.add(createFiller());
         list.add(createLine());
         list.add(createFiller());
         list.add(confirmationsCheckBox);
@@ -116,11 +119,17 @@ public class Settings extends Observable {
         list.add(speedCheckBox);
         list.add(createFiller());
         list.add(createLine());
+        list.add(createFiller());
         list.add(description1);
+        list.add(createFiller());
         list.add(intervalSlider);
+        list.add(createFiller());
         list.add(createLine());
+        list.add(createFiller());
         list.add(description2);
+        list.add(createFiller());
         list.add(pauseSlider);
+        list.add(createFiller());
 
         GridPane gridPane = new GridPane();
         for (int i = 0; i < list.size(); i++) {
@@ -168,6 +177,9 @@ public class Settings extends Observable {
             node.setOnMousePressed(event -> gridPane.requestFocus());
         }
         for (Node node : inputMethodContainer.getChildren()) {
+            node.setOnMousePressed(event -> gridPane.requestFocus());
+        }
+        for (Node node : buildVersionContainer.getChildren()) {
             node.setOnMousePressed(event -> gridPane.requestFocus());
         }
         for (Node node : gridPane.getChildren()) {
