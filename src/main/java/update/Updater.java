@@ -119,9 +119,13 @@ public class Updater {
 
     public void downloadNew() {
         DropBoxHandler dropBoxHandler = DropBoxHandler.getInstance();
-        SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
-        BuildVersion version = settingsHandler.getBuildVersion();
+        BuildVersion version;
+        if (mode == Mode.UPDATING) {
+            version = SettingsHandler.getInstance().getBuildVersion();
+        } else {
+            version = BuildVersion.STABLE;
+        }
 
         Optional<String> optionalFileName = dropBoxHandler.getFileName(version);
 
