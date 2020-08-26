@@ -234,32 +234,53 @@ public class Settings extends Observable {
     private static <T extends Enum<T>> Pair<ChoiceBox<String>, HBox> createChoiceBoxContainer(Function<SettingsHandler, T> getter) {
         SettingsHandler settingsHandler = SettingsHandler.getInstance();
 
-        String name = getter.apply(settingsHandler).toString().toLowerCase();
+        T enumInstance = getter.apply(settingsHandler);
+
+        String instanceName = enumInstance.name().toLowerCase();
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.setValue(name);
+        choiceBox.setValue(instanceName);
         choiceBox.setPrefHeight(40);
         choiceBox.setPrefWidth(100);
         choiceBox.setStyle("-fx-font-size: 15");
 
-        T[] values = getter.apply(settingsHandler).getDeclaringClass().getEnumConstants();
+        Class<T> enumClass = enumInstance.getDeclaringClass();
 
-        List<String> modes = Arrays.stream(values)
+        T[] enumValues = enumClass.getEnumConstants();
+
+        List<String> modes = Arrays.stream(enumValues)
                 .map(Enum::name)
                 .map(String::toLowerCase)
                 .collect(Collectors.toList());
         choiceBox.getItems().addAll(modes);
 
+        char[] chars = enumClass.getSimpleName().toCharArray();
+        List<Character> characters = new LinkedList<>();
+        characters.add(chars[0]);
+
+        for (int i = 1; i < chars.length; i++) {
+            if (Character.isUpperCase(chars[i])) {
+                characters.add(' ');
+                characters.add(Character.toLowerCase(chars[i]));
+            }
+            else {
+                characters.add(chars[i]);
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        characters.forEach(stringBuilder::append);
+
         Label modeLabel = new Label();
-        modeLabel.setText(name + ":");
+        modeLabel.setText(stringBuilder.toString() + ":");
         modeLabel.setStyle("-fx-font-size: 18");
         modeLabel.setPrefWidth(120);
 
-        HBox containter = new HBox();
-        containter.setAlignment(Pos.CENTER_LEFT);
-        containter.setSpacing(40);
-        containter.getChildren().addAll(modeLabel, choiceBox);
+        HBox container = new HBox();
+        container.setAlignment(Pos.CENTER_LEFT);
+        container.setSpacing(40);
+        container.getChildren().addAll(modeLabel, choiceBox);
 
-        return Pair.with(choiceBox, containter);
+        return Pair.with(choiceBox, container);
     }
 }
