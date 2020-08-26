@@ -5,6 +5,7 @@ import common.options.BuildVersion;
 import common.options.InputMethod;
 import common.options.Mode;
 import common.options.Speed;
+import common.popups.Message;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,9 +23,11 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.javatuples.Pair;
+import update.Launcher;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.function.Function;
@@ -161,13 +164,22 @@ public class Settings extends Observable {
             }
             settingsHandler.setMode(Mode.valueOf(modeChoiceBox.getValue().toUpperCase()));
             settingsHandler.setInputMethod(InputMethod.valueOf(inputMethodChoiceBox.getValue().toUpperCase()));
-            settingsHandler.setBuildVersion(BuildVersion.valueOf(buildVersionChoiceBox.getValue().toUpperCase()));
+
+            BuildVersion oldBuildVersion = settingsHandler.getBuildVersion();
+            BuildVersion newBuildVersion = BuildVersion.valueOf(buildVersionChoiceBox.getValue().toUpperCase());
+
+            settingsHandler.setBuildVersion(newBuildVersion);
 
             settingsHandler.updateFile();
             setChanged();
             notifyObservers();
 
             stage.close();
+
+            if (oldBuildVersion != newBuildVersion) {
+                new Message("Restarting to switch build version", false);
+                Launcher.reboot("-switch");
+            }
         });
 
         speedCheckBox.setOnAction(event -> setCheckboxVisibility(gridPane, speedCheckBox));

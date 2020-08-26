@@ -10,15 +10,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-public class Updater {
+class Updater {
 
     enum Mode {
         INSTALLING,
-        UPDATING
+        UPDATING,
+        SWITCHING
     }
 
     private static final String NAME_START = "Sudoku-";
-    private static final String NAME_INSTALLER = "Installer";
+    private static final String NAME_INSTALLER = "installer";
     private static final String SHORTCUT_NAME = "Sudoku solver.lnk";
 
     private boolean downloadAttempt;
@@ -27,7 +28,7 @@ public class Updater {
     private File newFile;
     private Mode mode;
 
-    public Updater() {
+    Updater(boolean switching) {
         if (!FileHandler.inJar()) {
             throw new IllegalStateException("Can only update when running in jar");
         }
@@ -38,34 +39,36 @@ public class Updater {
         String oldPath = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
         currentName = new File(oldPath).getName();
 
-        if (currentName.contains(NAME_INSTALLER)) {
+        if (switching) {
+            this.mode = Mode.SWITCHING;
+        } else if (currentName.contains(NAME_INSTALLER)) {
             this.mode = Mode.INSTALLING;
         } else {
             this.mode = Mode.UPDATING;
         }
     }
 
-    public boolean isSuccess() {
+    boolean isSuccess() {
         return success;
     }
 
-    public void setSuccess(boolean success) {
+    void setSuccess(boolean success) {
         this.success = success;
     }
 
-    public boolean isDownloadAttempt() {
+    boolean isDownloadAttempt() {
         return downloadAttempt;
     }
 
-    public String getCurrentName() {
+    String getCurrentName() {
         return currentName;
     }
 
-    public File getNewFile() {
+    File getNewFile() {
         return newFile;
     }
 
-    public Mode getMode() {
+    Mode getMode() {
         return mode;
     }
 
@@ -94,7 +97,7 @@ public class Updater {
         return versionArray[0] + "." + versionArray[1] + "." + versionArray[2];
     }
 
-    private boolean isNewer(String newName) {
+    private boolean shouldUpdate(String newName) {
         if (mode == Mode.INSTALLING) {
             return true;
         }
@@ -106,18 +109,26 @@ public class Updater {
             int oldPart = oldVersion[i];
             int newPart = newVersion[i];
 
-            if (newPart > oldPart) {
-                return true;
+            if (mode == Mode.UPDATING) {
+                if (newPart > oldPart) {
+                    return true;
+                }
+                if (newPart < oldPart) {
+                    return false;
+                }
             }
-            if (newPart < oldPart) {
-                return false;
+            if (mode == Mode.SWITCHING) {
+                if (newPart != oldPart) {
+                    return true;
+                }
             }
         }
 
+        // versions are equal
         return false;
     }
 
-    public void downloadNew() {
+    void downloadNew() {
         DropBoxHandler dropBoxHandler = DropBoxHandler.getInstance();
 
         BuildVersion version;
@@ -136,7 +147,7 @@ public class Updater {
 
         String fileName = optionalFileName.get();
 
-        if (isNewer(fileName)) {
+        if (shouldUpdate(fileName)) {
             downloadAttempt = true;
 
             try {
@@ -160,14 +171,14 @@ public class Updater {
         return new File(shortcutPath);
     }
 
-    public void delete(String path) {
+    void delete(String path) {
         File file = new File(path);
         if (!file.delete()) {
             new Message("Could not delete old file at: " + file.getPath(), true);
         }
     }
 
-    public void updateShortcut() {
+    void updateShortcut() {
         File shortcut = getShortcut();
         String shortcutPath = shortcut.getPath();
         String newPath = newFile.getPath();

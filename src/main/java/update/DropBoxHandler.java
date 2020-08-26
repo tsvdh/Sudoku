@@ -107,7 +107,7 @@ class DropBoxHandler {
 
     void downloadToFile(File file, Updater updater) {
         if (currentMetadata == null) {
-            throw new IllegalStateException("Metadata is null, pleas call 'getFileName' first.");
+            throw new IllegalStateException("Metadata is null, 'getFileName' should be called first.");
         }
 
         Optional<DbxClientV2> optionalClient = this.getClient();

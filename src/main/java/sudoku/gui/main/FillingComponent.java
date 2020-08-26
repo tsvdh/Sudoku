@@ -271,9 +271,9 @@ class FillingComponent {
                 scene.addEventFilter(KeyEvent.KEY_PRESSED, numberKeyEventHandler);
                 break;
 
-            case MOUSE:
-
-                break;
+            // case MOUSE:
+            //
+            //     break;
         }
     }
 
@@ -289,9 +289,10 @@ class FillingComponent {
                 scene.removeEventFilter(KeyEvent.KEY_PRESSED, numberKeyEventHandler);
                 scene.removeEventFilter(KeyEvent.KEY_PRESSED, arrowKeyEventHandler);
                 break;
-            case MOUSE:
 
-                break;
+            // case MOUSE:
+            //
+            //     break;
         }
     }
 }
