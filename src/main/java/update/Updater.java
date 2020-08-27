@@ -132,10 +132,10 @@ class Updater {
         DropBoxHandler dropBoxHandler = DropBoxHandler.getInstance();
 
         BuildVersion version;
-        if (mode == Mode.UPDATING) {
-            version = SettingsHandler.getInstance().getBuildVersion();
-        } else {
+        if (mode == Mode.INSTALLING) {
             version = BuildVersion.STABLE;
+        } else {
+            version = SettingsHandler.getInstance().getBuildVersion();
         }
 
         Optional<String> optionalFileName = dropBoxHandler.getFileName(version);
@@ -183,7 +183,7 @@ class Updater {
         String shortcutPath = shortcut.getPath();
         String newPath = newFile.getPath();
 
-        if (mode == Mode.UPDATING) {
+        if (mode != Mode.INSTALLING) {
             if (!shortcut.delete()) {
                 new Message("Could not delete old shortcut", true);
                 return;

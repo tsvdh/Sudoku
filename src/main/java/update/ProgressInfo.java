@@ -22,20 +22,15 @@ class ProgressInfo {
 
     ProgressInfo(DownloadTask downloadTask, Updater updater, String newName) {
         String oldName = updater.getCurrentName();
-        String oldVersion;
-        if (updater.getMode() == Updater.Mode.UPDATING) {
-            oldVersion = Updater.getVersionAsString(oldName);
-        } else {
-            oldVersion = null;
-        }
         String newVersion = Updater.getVersionAsString(newName);
 
         Label versionLabel = new Label();
         versionLabel.setFont(new Font(20));
-        if (updater.getMode() == Updater.Mode.UPDATING) {
-            versionLabel.setText("New version available: " + newVersion + " (current: " + oldVersion + ")");
-        } else {
+        if (updater.getMode() == Updater.Mode.INSTALLING) {
             versionLabel.setText("Installing version: " + newVersion);
+        } else {
+            String oldVersion = Updater.getVersionAsString(oldName);
+            versionLabel.setText("New version available: " + newVersion + " (current: " + oldVersion + ")");
         }
 
         Label progressLabel = new Label();

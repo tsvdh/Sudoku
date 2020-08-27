@@ -6,7 +6,7 @@
 
     <groupId>com.heroku.sudoku19</groupId>
     <artifactId>Sudoku</artifactId>
-    <version>3.1.1</version>
+    <version>3.1.2</version>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -163,13 +163,8 @@
                             <manifest/>
                             <icon>${basedir}\Sudoku solver\icon.ico</icon>
                             <jre>
-                                <path>C:\Program Files\Java\jdk1.8.0_201\jre\</path>
-                                <bundledJre64Bit>false</bundledJre64Bit>
-                                <bundledJreAsFallback>false</bundledJreAsFallback>
-                                <minVersion/>
-                                <maxVersion/>
-                                <jdkPreference>jreOnly</jdkPreference>
-                                <runtimeBits>64/32</runtimeBits>
+                                <minVersion>1.8.0_0</minVersion>
+                                <maxVersion>1.8.0_999</maxVersion>
                             </jre>
                             <splash>
                                 <file>${basedir}\Sudoku solver\splash.bmp</file>
