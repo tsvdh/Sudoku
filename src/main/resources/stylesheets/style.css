@@ -1,0 +1,23 @@
+#background {
+    -fx-background-color: white;
+}
+
+Button {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-radius: 3px;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+Button:hover {
+    -fx-background-color: dimgrey;
+    -fx-border-color: dimgrey;
+    -fx-text-fill: white;
+}
+
+Button:pressed {
+    -fx-background-color: black;
+    -fx-border-color: black;
+    -fx-text-fill: white;
+}

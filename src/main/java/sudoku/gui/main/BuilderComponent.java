@@ -3,9 +3,6 @@ package sudoku.gui.main;
 import common.SettingsHandler;
 import common.options.Mode;
 import common.options.Speed;
-import sudoku.core.structure.Grid;
-import sudoku.core.structure.Square;
-import sudoku.gui.buttons.ColorButtons;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,8 +10,11 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
+import sudoku.core.structure.Grid;
+import sudoku.core.structure.Square;
+import sudoku.gui.buttons.ColorButtons;
 
 import static sudoku.gui.buttons.ButtonFactory.makeInvisibleButton;
 
@@ -40,7 +40,7 @@ class BuilderComponent {
         this.buildGrid();
 
         HBox hBoxTop = new HBox();
-        hBoxTop.setPadding(new Insets(10, 10, 50 ,10));
+        hBoxTop.setPadding(new Insets(20, 0, 50 ,0));
         hBoxTop.getChildren().addAll(eventComponent.getTopButtons());
         hBoxTop.setAlignment(Pos.CENTER);
         hBoxTop.setSpacing(40);
@@ -60,7 +60,6 @@ class BuilderComponent {
     private void buildGrid() {
         borderPane = new BorderPane();
         borderPane.setPadding(new Insets(10, 50, 10 ,50));
-        borderPane.setStyle("-fx-background-color: white");
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
@@ -111,12 +110,12 @@ class BuilderComponent {
 
         for (int y = 1; y <= 17; y += 2) {
             for (int x = 0; x <= 18; x += 6) {
-                Button verticalLine = (Button) getFromGridPane(gridPane, x, y);
+                Region verticalLine = (Region) getFromGridPane(gridPane, x, y);
 
                 if (verticalLine == null) {
-                    verticalLine = new Button();
+                    verticalLine = new Region();
                     verticalLine.setPrefSize(0, GridElement.size);
-                    verticalLine.setFont(new Font(0));
+                    // verticalLine.setFont(new Font(0));
 
                     gridPane.add(verticalLine, x, y);
                 }
@@ -126,12 +125,12 @@ class BuilderComponent {
         }
         for (int x = 1; x <= 17; x += 2) {
             for (int y = 0; y <= 18; y += 6) {
-                Button horizontalLine = (Button) getFromGridPane(gridPane, x, y);
+                Region horizontalLine = (Region) getFromGridPane(gridPane, x, y);
 
                 if (horizontalLine == null) {
-                    horizontalLine = new Button();
+                    horizontalLine = new Region();
                     horizontalLine.setPrefSize(GridElement.size, 0);
-                    horizontalLine.setFont(new Font(0));
+                    // horizontalLine.setFont(new Font(0));
 
                     gridPane.add(horizontalLine, x, y);
                 }

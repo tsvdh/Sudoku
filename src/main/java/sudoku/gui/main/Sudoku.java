@@ -12,6 +12,8 @@ import sudoku.core.structure.Square;
 import java.util.ArrayList;
 import java.util.List;
 
+import static common.FileHandler.getStylesheet;
+
 public class Sudoku {
 
     Grid grid;
@@ -47,7 +49,8 @@ public class Sudoku {
         stage.setTitle("Sudoku solver");
         stage.getIcons().add(new Image("/images/icon.png"));
 
-        scene.getRoot().requestFocus();
+        scene.getRoot().setId("background");
+        scene.getRoot().getStylesheets().add(getStylesheet());
 
         stage.show();
     }

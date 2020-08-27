@@ -2,7 +2,6 @@ package common.popups;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import static common.FileHandler.getStylesheet;
 
 public class Message {
 
@@ -44,10 +45,9 @@ public class Message {
 
         button.setOnAction(event -> stage.close());
 
-        vBox.requestFocus();
-        for (Node node : vBox.getChildren()) {
-            node.setOnMousePressed(event -> vBox.requestFocus());
-        }
+        scene.getRoot().setId("background");
+        scene.getRoot().getStylesheets().add(getStylesheet());
+
         stage.showAndWait();
     }
 }

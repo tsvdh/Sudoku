@@ -12,7 +12,7 @@ public class ButtonFactory {
     public static Button makeButton(String text) {
         Button button = new Button();
         button.setFont(new Font(20));
-        button.setPrefSize(100, 30);
+        button.setPrefSize(105, 30);
         button.setText(text);
         return button;
     }

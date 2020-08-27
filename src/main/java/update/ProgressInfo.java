@@ -3,7 +3,6 @@ package update;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,6 +16,8 @@ import javafx.stage.Stage;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import static common.FileHandler.getStylesheet;
 
 class ProgressInfo {
 
@@ -68,11 +69,6 @@ class ProgressInfo {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.getIcons().add(new Image("images/icon.png"));
 
-        vBox.requestFocus();
-        for (Node node : vBox.getChildren()) {
-            node.setOnMousePressed(event -> vBox.requestFocus());
-        }
-
 
         Executor executor = Executors.newSingleThreadExecutor();
 
@@ -92,6 +88,8 @@ class ProgressInfo {
             stage.close();
         });
 
+        scene.getRoot().setId("background");
+        scene.getRoot().getStylesheets().add(getStylesheet());
 
         stage.setOnCloseRequest(Event::consume);
         stage.showAndWait();

@@ -19,6 +19,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,6 +33,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static common.FileHandler.getStylesheet;
 
 public class Settings extends Observable {
 
@@ -184,19 +187,8 @@ public class Settings extends Observable {
 
         speedCheckBox.setOnAction(event -> setCheckboxVisibility(gridPane, speedCheckBox));
 
-        gridPane.requestFocus();
-        for (Node node : modeContainer.getChildren()) {
-            node.setOnMousePressed(event -> gridPane.requestFocus());
-        }
-        for (Node node : inputMethodContainer.getChildren()) {
-            node.setOnMousePressed(event -> gridPane.requestFocus());
-        }
-        for (Node node : buildVersionContainer.getChildren()) {
-            node.setOnMousePressed(event -> gridPane.requestFocus());
-        }
-        for (Node node : gridPane.getChildren()) {
-            node.setOnMousePressed(event -> gridPane.requestFocus());
-        }
+        scene.getRoot().setId("background");
+        scene.getRoot().getStylesheets().add(getStylesheet());
 
         stage.showAndWait();
     }
@@ -213,20 +205,20 @@ public class Settings extends Observable {
         }
     }
 
-    private static Button createFiller() {
-        Button filler = new Button();
+    private static Region createFiller() {
+        Region filler = new Region();
         filler.setVisible(false);
         filler.setPrefSize(0, 0);
-        filler.setFont(new Font(0));
         filler.setPadding(new Insets(20, 0, 0, 0));
 
         return filler;
     }
 
-    private static Button createLine() {
-        Button line = new Button();
+    private static Region createLine() {
+        Region line = new Region();
         line.setPrefSize(300, 1);
-        line.setFont(new Font(0));
+        line.setStyle("-fx-border-width: 0.5px;"
+                + "-fx-border-color: black");
 
         return line;
     }
