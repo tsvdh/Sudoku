@@ -1,3 +1,15 @@
+@font-face {
+    src: url(Nunito-Light.ttf);
+}
+
+@font-face {
+    src: url(Nunito-Regular.ttf);
+}
+
+.root * {
+    -fx-font-family: "Nunito Light";
+}
+
 #background {
     -fx-background-color: white;
 }
@@ -7,6 +19,7 @@
     -fx-border-color: lightgrey;
     -fx-border-radius: 3px;
     -fx-cursor: hand;
+    -fx-font-size: 20px;
 }
 
 .button:hover {
@@ -58,6 +71,7 @@
 
 .check-box {
     -fx-cursor: hand;
+    -fx-font-size: 18px;
 }
 
 .check-box .box {

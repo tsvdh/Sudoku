@@ -18,6 +18,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static common.FileHandler.getStylesheet;
+import static sudoku.gui.buttons.ButtonFactory.makeSmallButton;
 
 class ProgressInfo {
 
@@ -56,10 +57,7 @@ class ProgressInfo {
         progressContainer.setSpacing(15);
         progressContainer.setPadding(new Insets(0, 0, 20, 0));
 
-        Button button = new Button();
-        button.setFont(new Font(20));
-        button.setText("Start");
-        button.setPrefSize(75, 25);
+        Button button = makeSmallButton("Start");
 
         VBox vBox = new VBox();
         vBox.setAlignment(Pos.CENTER);

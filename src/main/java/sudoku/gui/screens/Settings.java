@@ -35,6 +35,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static common.FileHandler.getStylesheet;
+import static sudoku.gui.buttons.ButtonFactory.makeSmallButton;
 
 public class Settings extends Observable {
 
@@ -53,10 +54,7 @@ public class Settings extends Observable {
         ChoiceBox<String> buildVersionChoiceBox = pair.getValue0();
         HBox buildVersionContainer = pair.getValue1();
 
-        Button okButton = new Button();
-        okButton.setFont(new Font(15));
-        okButton.setText("OK");
-        okButton.setPrefSize(100, 40);
+        Button okButton = makeSmallButton("OK");
 
         Slider intervalSlider = new Slider();
         intervalSlider.setBlockIncrement(10);
@@ -87,7 +85,7 @@ public class Settings extends Observable {
         CheckBox speedCheckBox = new CheckBox();
         speedCheckBox.setText("Slow mode");
         speedCheckBox.setPrefHeight(40);
-        speedCheckBox.setFont(new Font(18));
+        // speedCheckBox.setFont(new Font(18));
         if (settingsHandler.getSpeed() == Speed.SLOW) {
             speedCheckBox.setSelected(true);
         }

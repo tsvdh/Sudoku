@@ -50,7 +50,7 @@ public class Sudoku {
         stage.getIcons().add(new Image("/images/icon.png"));
 
         scene.getRoot().setId("background");
-        scene.getRoot().getStylesheets().add(getStylesheet());
+        scene.getStylesheets().add(getStylesheet());
 
         stage.show();
     }

@@ -15,6 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import static common.FileHandler.getStylesheet;
+import static sudoku.gui.buttons.ButtonFactory.makeSmallButton;
 
 public class Confirmation {
 
@@ -28,18 +29,14 @@ public class Confirmation {
             return;
         }
 
-        Button yesButton = new Button();
-        yesButton.setFont(new Font(20));
-        yesButton.setText("Yes");
+        Button yesButton = makeSmallButton("Yes");
 
-        Button noButton = new Button();
-        noButton.setFont(new Font(20));
-        noButton.setText("No");
+        Button noButton = makeSmallButton("No");
 
         HBox hBox = new HBox();
         hBox.getChildren().addAll(yesButton,
                                 noButton);
-        hBox.setSpacing(30);
+        hBox.setSpacing(50);
         hBox.setAlignment(Pos.CENTER);
 
         Label label = new Label();

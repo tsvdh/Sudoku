@@ -12,14 +12,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import static common.FileHandler.getStylesheet;
+import static sudoku.gui.buttons.ButtonFactory.makeSmallButton;
 
 public class Message {
 
     public Message(String text, boolean warning) {
-        Button button = new Button();
-        button.setText("OK");
-        button.setFont(new Font(20));
-        button.setPrefSize(70, 25);
+        Button button = makeSmallButton("OK");
 
         Label label = new Label();
         label.setFont(new Font(20));

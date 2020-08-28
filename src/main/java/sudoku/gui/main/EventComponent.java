@@ -20,7 +20,7 @@ import javafx.scene.control.Button;
 import java.util.LinkedList;
 import java.util.List;
 
-import static sudoku.gui.buttons.ButtonFactory.makeButton;
+import static sudoku.gui.buttons.ButtonFactory.makeBigButton;
 
 class EventComponent {
 
@@ -56,13 +56,13 @@ class EventComponent {
         this.grid = parent.grid;
         this.fillingComponent = parent.fillingComponent;
 
-        clearButton = makeButton("Clear");
-        fillInButton = makeButton("Fill in");
-        solveButton = makeButton("Solve");
-        settingsButton = makeButton("Settings");
-        pauseButton = makeButton("Pause");
-        paintButton = makeButton("Paint");
-        unPaintButton = makeButton("Clear");
+        clearButton = makeBigButton("Clear");
+        fillInButton = makeBigButton("Fill in");
+        solveButton = makeBigButton("Solve");
+        settingsButton = makeBigButton("Settings");
+        pauseButton = makeBigButton("Pause");
+        paintButton = makeBigButton("Paint");
+        unPaintButton = makeBigButton("Clear");
         colorButtons = new ColorButtons();
     }
 

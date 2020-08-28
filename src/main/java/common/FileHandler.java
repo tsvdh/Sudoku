@@ -22,7 +22,7 @@ public class FileHandler extends Observable {
 
     private static final String PROGRAM_FOLDER = "/Sudoku solver/";
 
-    private static final String STYLESHEET_LOCATION =  "/stylesheets/style.css";
+    private static final String STYLESHEET_LOCATION = "/style/stylesheet.css";
 
     public static File getExternalFileInProgramFolder(String fileName) throws IOException {
         String userHome = System.getProperty("user.home");

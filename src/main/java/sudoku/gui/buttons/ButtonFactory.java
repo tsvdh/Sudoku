@@ -1,7 +1,6 @@
 package sudoku.gui.buttons;
 
 import javafx.scene.control.Button;
-import javafx.scene.text.Font;
 import sudoku.core.misc.ColorTable;
 
 import java.util.ArrayList;
@@ -9,10 +8,16 @@ import java.util.List;
 
 public class ButtonFactory {
 
-    public static Button makeButton(String text) {
+    public static Button makeBigButton(String text) {
         Button button = new Button();
-        button.setFont(new Font(20));
         button.setPrefSize(105, 30);
+        button.setText(text);
+        return button;
+    }
+
+    public static Button makeSmallButton(String text) {
+        Button button = new Button();
+        button.setPrefSize(75, 30);
         button.setText(text);
         return button;
     }
@@ -29,7 +34,7 @@ public class ButtonFactory {
     }
 
     public static Button makeInvisibleButton() {
-        Button filler = makeButton("Invisible");
+        Button filler = makeBigButton("Invisible");
         filler.setVisible(false);
 
         return filler;
