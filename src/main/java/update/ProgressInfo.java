@@ -24,14 +24,22 @@ class ProgressInfo {
     ProgressInfo(DownloadTask downloadTask, Updater updater, String newName) {
         String oldName = updater.getCurrentName();
         String newVersion = Updater.getVersionAsString(newName);
+        Updater.Mode mode = updater.getMode();
 
         Label versionLabel = new Label();
         versionLabel.setFont(new Font(20));
-        if (updater.getMode() == Updater.Mode.INSTALLING) {
+        if (mode == Updater.Mode.INSTALLING) {
             versionLabel.setText("Installing version: " + newVersion);
         } else {
             String oldVersion = Updater.getVersionAsString(oldName);
-            versionLabel.setText("New version available: " + newVersion + " (current: " + oldVersion + ")");
+            String begin;
+            if (mode == Updater.Mode.UPDATING) {
+                begin = "New version available: ";
+            }
+            else {
+                begin = "Switching to: ";
+            }
+            versionLabel.setText(begin + newVersion + " (current: " + oldVersion + ")");
         }
 
         Label progressLabel = new Label();
@@ -39,7 +47,7 @@ class ProgressInfo {
         progressLabel.textProperty().bind(downloadTask.messageProperty());
 
         ProgressBar progressBar = new ProgressBar(0);
-        progressBar.setPrefSize(150, 25);
+        progressBar.setPrefWidth(150);
         progressBar.progressProperty().bind(downloadTask.progressProperty());
 
         HBox progressContainer = new HBox();
