@@ -29,10 +29,10 @@ class DownloadTask extends Task<Void> implements Observer {
     }
 
     private static float toMB(long bytes) {
-        long MB = 1 << 10 << 10;
+        double MB = 1 << 10 << 10;
 
         DecimalFormat decimalFormat = new DecimalFormat("#.#");
-        long megaBytes = bytes / MB;
+        double megaBytes = bytes / MB;
 
         return Float.parseFloat(decimalFormat.format(megaBytes));
     }

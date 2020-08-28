@@ -1,5 +1,6 @@
 package update;
 
+import javafx.animation.PauseTransition;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,11 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -44,17 +45,18 @@ class ProgressInfo {
         }
 
         Label progressLabel = new Label();
-        progressLabel.setFont(new Font(15));
+        progressLabel.setFont(new Font(14));
+        progressLabel.setVisible(false);
         progressLabel.textProperty().bind(downloadTask.messageProperty());
 
         ProgressBar progressBar = new ProgressBar(0);
-        progressBar.setPrefWidth(150);
+        progressBar.setPrefWidth(200);
         progressBar.progressProperty().bind(downloadTask.progressProperty());
 
-        HBox progressContainer = new HBox();
+        VBox progressContainer = new VBox();
         progressContainer.getChildren().addAll(progressBar, progressLabel);
         progressContainer.setAlignment(Pos.CENTER);
-        progressContainer.setSpacing(15);
+        progressContainer.setSpacing(20);
         progressContainer.setPadding(new Insets(0, 0, 20, 0));
 
         Button button = makeSmallButton("Start");
@@ -78,10 +80,17 @@ class ProgressInfo {
 
         Executor executor = Executors.newSingleThreadExecutor();
 
+        PauseTransition pauseTransition = new PauseTransition();
+        pauseTransition.setDuration(Duration.seconds(5));
+        pauseTransition.setOnFinished(event -> progressLabel.setVisible(true));
+
         button.setOnAction(event -> {
             vBox.getChildren().remove(button);
             vBox.getChildren().add(progressContainer);
+
             executor.execute(downloadTask);
+
+            pauseTransition.play();
         });
 
         downloadTask.setOnSucceeded(event -> {
