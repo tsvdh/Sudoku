@@ -3,6 +3,7 @@ package common;
 import common.options.BuildVersion;
 import common.options.InputMethod;
 import common.options.Mode;
+import common.options.UISkin;
 import common.options.Speed;
 import common.popups.Message;
 
@@ -161,6 +162,11 @@ public class SettingsHandler {
         return BuildVersion.valueOf(buildVersion);
     }
 
+    public UISkin getUISkin() {
+        String uiSkin = properties.getProperty("ui_skin");
+        return UISkin.valueOf(uiSkin);
+    }
+
     public Mode getOldMode() {
         return oldMode;
     }
@@ -192,5 +198,9 @@ public class SettingsHandler {
 
     public void setBuildVersion(BuildVersion buildVersion) {
         properties.setProperty("build_version", buildVersion.name());
+    }
+
+    public void setUISkin(UISkin uiSkin) {
+        properties.setProperty("ui_skin", uiSkin.name());
     }
 }

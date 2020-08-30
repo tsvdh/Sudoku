@@ -1,5 +1,6 @@
 package common.popups;
 
+import common.StyleHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,7 +12,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import static common.FileHandler.getStylesheet;
 import static sudoku.gui.buttons.ButtonFactory.makeSmallButton;
 
 public class Message {
@@ -43,8 +43,7 @@ public class Message {
 
         button.setOnAction(event -> stage.close());
 
-        scene.getRoot().setId("background");
-        scene.getRoot().getStylesheets().add(getStylesheet());
+        StyleHandler.applyStyle(scene);
 
         stage.showAndWait();
     }

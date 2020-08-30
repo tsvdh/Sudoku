@@ -1,6 +1,7 @@
 package sudoku.gui.main;
 
 import common.SettingsHandler;
+import common.StyleHandler;
 import common.options.Mode;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -11,8 +12,6 @@ import sudoku.core.structure.Square;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static common.FileHandler.getStylesheet;
 
 public class Sudoku {
 
@@ -49,8 +48,7 @@ public class Sudoku {
         stage.setTitle("Sudoku solver");
         stage.getIcons().add(new Image("/images/icon.png"));
 
-        scene.getRoot().setId("background");
-        scene.getStylesheets().add(getStylesheet());
+        StyleHandler.applyStyle(scene);
 
         stage.show();
     }

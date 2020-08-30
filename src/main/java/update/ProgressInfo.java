@@ -1,5 +1,6 @@
 package update;
 
+import common.StyleHandler;
 import javafx.animation.PauseTransition;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -18,7 +19,6 @@ import javafx.util.Duration;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import static common.FileHandler.getStylesheet;
 import static sudoku.gui.buttons.ButtonFactory.makeSmallButton;
 
 class ProgressInfo {
@@ -103,8 +103,7 @@ class ProgressInfo {
             stage.close();
         });
 
-        scene.getRoot().setId("background");
-        scene.getRoot().getStylesheets().add(getStylesheet());
+        StyleHandler.applyStyle(scene);
 
         stage.setOnCloseRequest(Event::consume);
         stage.showAndWait();

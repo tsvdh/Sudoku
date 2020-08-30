@@ -1,10 +1,12 @@
 package sudoku.gui.screens;
 
 import common.SettingsHandler;
+import common.StyleHandler;
 import common.options.BuildVersion;
 import common.options.InputMethod;
 import common.options.Mode;
 import common.options.Speed;
+import common.options.UISkin;
 import common.popups.Message;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -34,7 +36,6 @@ import java.util.Observable;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static common.FileHandler.getStylesheet;
 import static sudoku.gui.buttons.ButtonFactory.makeSmallButton;
 
 public class Settings extends Observable {
@@ -85,7 +86,7 @@ public class Settings extends Observable {
         CheckBox speedCheckBox = new CheckBox();
         speedCheckBox.setText("Slow mode");
         speedCheckBox.setPrefHeight(40);
-        // speedCheckBox.setFont(new Font(18));
+        speedCheckBox.setFont(new Font(18));
         if (settingsHandler.getSpeed() == Speed.SLOW) {
             speedCheckBox.setSelected(true);
         }
@@ -96,6 +97,14 @@ public class Settings extends Observable {
         confirmationsCheckBox.setFont(new Font(18));
         if (settingsHandler.getConfirmations()) {
             confirmationsCheckBox.setSelected(true);
+        }
+
+        CheckBox uiSkinCheckBox = new CheckBox();
+        uiSkinCheckBox.setText("Classic skin");
+        uiSkinCheckBox.setPrefHeight(40);
+        uiSkinCheckBox.setFont(new Font(18));
+        if (settingsHandler.getUISkin() == UISkin.CLASSIC) {
+            uiSkinCheckBox.setSelected(true);
         }
 
         Label description1 = new Label();
@@ -121,6 +130,8 @@ public class Settings extends Observable {
         list.add(confirmationsCheckBox);
         list.add(createFiller());
         list.add(speedCheckBox);
+        list.add(createFiller());
+        list.add(uiSkinCheckBox);
         list.add(createFiller());
         list.add(createLine());
         list.add(createFiller());
@@ -163,6 +174,14 @@ public class Settings extends Observable {
             } else {
                 settingsHandler.setSpeed(Speed.QUICK);
             }
+
+            UISkin oldSkin = settingsHandler.getUISkin();
+            if (uiSkinCheckBox.isSelected()) {
+                settingsHandler.setUISkin(UISkin.CLASSIC);
+            } else {
+                settingsHandler.setUISkin(UISkin.CLEAN);
+            }
+
             settingsHandler.setMode(Mode.valueOf(modeChoiceBox.getValue().toUpperCase()));
             settingsHandler.setInputMethod(InputMethod.valueOf(inputMethodChoiceBox.getValue().toUpperCase()));
 
@@ -172,21 +191,41 @@ public class Settings extends Observable {
             settingsHandler.setBuildVersion(newBuildVersion);
 
             settingsHandler.updateFile();
-            setChanged();
-            notifyObservers();
 
-            stage.close();
+            boolean versionSwitch = oldBuildVersion != newBuildVersion;
+            boolean skinSwitch = oldSkin != settingsHandler.getUISkin();
 
-            if (oldBuildVersion != newBuildVersion) {
-                new Message("Restarting to switch build version", false);
-                Launcher.reboot("-switch");
+            String begin = "Restarting to switch ";
+
+            String skin = skinSwitch ? "UI skin" : "";
+            String version = versionSwitch ? "build version" : "";
+            String middle = (skinSwitch && versionSwitch) ? " and " : "";
+
+            String text = begin + skin + middle + version;
+            if (versionSwitch || skinSwitch) {
+                UISkin newSkin = settingsHandler.getUISkin();
+
+                settingsHandler.setUISkin(oldSkin);
+                new Message(text, false);
+                settingsHandler.setUISkin(newSkin);
+
+                if (versionSwitch) {
+                    Launcher.reboot("-switch");
+                }
+                else {
+                    Launcher.reboot();
+                }
+            }
+            else {
+                setChanged();
+                notifyObservers();
+                stage.close();
             }
         });
 
         speedCheckBox.setOnAction(event -> setCheckboxVisibility(gridPane, speedCheckBox));
 
-        scene.getRoot().setId("background");
-        scene.getRoot().getStylesheets().add(getStylesheet());
+        StyleHandler.applyStyle(scene);
 
         stage.showAndWait();
     }

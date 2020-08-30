@@ -22,8 +22,6 @@ public class FileHandler extends Observable {
 
     private static final String PROGRAM_FOLDER = "/Sudoku solver/";
 
-    private static final String STYLESHEET_LOCATION = "/style/stylesheet.css";
-
     public static File getExternalFileInProgramFolder(String fileName) throws IOException {
         String userHome = System.getProperty("user.home");
         File userHomeFile = new File(userHome);
@@ -92,10 +90,6 @@ public class FileHandler extends Observable {
         Shell32.INSTANCE.SHGetFolderPath(null, ShlObj.CSIDL_DESKTOPDIRECTORY, null, ShlObj.SHGFP_TYPE_CURRENT, pszPath);
 
         return new File(Native.toString(pszPath));
-    }
-
-    public static String getStylesheet() {
-        return FileHandler.class.getResource(STYLESHEET_LOCATION).toExternalForm();
     }
 
     private enum Protocol {
