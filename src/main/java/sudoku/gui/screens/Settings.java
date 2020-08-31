@@ -1,5 +1,6 @@
 package sudoku.gui.screens;
 
+import common.FileHandler;
 import common.SettingsHandler;
 import common.StyleHandler;
 import common.options.BuildVersion;
@@ -150,6 +151,12 @@ public class Settings extends Observable {
         for (int i = 0; i < list.size(); i++) {
             gridPane.add(list.get(i), 0, i);
         }
+
+        String versionLabelText = "Version: " + FileHandler.getVersion();
+        Label versionLabel = new Label(versionLabelText);
+        versionLabel.setFont(new Font(12));
+        versionLabel.setId("version-label");
+        gridPane.add(versionLabel, 0, list.size());
 
         gridPane.add(okButton, 1, list.size());
         gridPane.setPadding(new Insets(20));

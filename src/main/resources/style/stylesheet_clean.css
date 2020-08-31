@@ -138,3 +138,7 @@ ColorButton {
     -fx-background-insets: 0px;
     -fx-padding: 2px;
 }
+
+#version-label {
+    -fx-text-fill: grey;
+}

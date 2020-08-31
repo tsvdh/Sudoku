@@ -4,6 +4,7 @@ import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Shell32;
 import com.sun.jna.platform.win32.ShlObj;
 import com.sun.jna.platform.win32.WinDef;
+import update.Updater;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -90,6 +91,14 @@ public class FileHandler extends Observable {
         Shell32.INSTANCE.SHGetFolderPath(null, ShlObj.CSIDL_DESKTOPDIRECTORY, null, ShlObj.SHGFP_TYPE_CURRENT, pszPath);
 
         return new File(Native.toString(pszPath));
+    }
+
+    public static String getVersion() {
+        if (inJar()) {
+            return Updater.getVersionAsString(getCurrentFile().getName());
+        } else {
+            return "?";
+        }
     }
 
     private enum Protocol {

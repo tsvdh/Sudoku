@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-class Updater {
+public class Updater {
 
     enum Mode {
         INSTALLING,
@@ -36,8 +36,7 @@ class Updater {
         this.success = false;
         this.downloadAttempt = false;
 
-        String oldPath = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
-        currentName = new File(oldPath).getName();
+        currentName = FileHandler.getCurrentFile().getName();
 
         if (switching) {
             this.mode = Mode.SWITCHING;
@@ -92,7 +91,7 @@ class Updater {
         return versionNumber;
     }
 
-    static String getVersionAsString(String name) {
+    public static String getVersionAsString(String name) {
         int[] versionArray = getVersionAsArray(name);
         return versionArray[0] + "." + versionArray[1] + "." + versionArray[2];
     }
