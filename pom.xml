@@ -6,7 +6,7 @@
 
     <groupId>com.heroku.sudoku19</groupId>
     <artifactId>Sudoku</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <packaging>jar</packaging>
 
     <dependencies>

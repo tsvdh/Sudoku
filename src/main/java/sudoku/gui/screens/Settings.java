@@ -7,7 +7,7 @@ import common.options.InputMethod;
 import common.options.Mode;
 import common.options.Speed;
 import common.options.UISkin;
-import common.popups.Message;
+import common.popups.Confirmation;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -181,13 +181,13 @@ public class Settings extends Observable {
             } else {
                 settingsHandler.setUISkin(UISkin.CLEAN);
             }
+            UISkin newSkin = settingsHandler.getUISkin();
 
             settingsHandler.setMode(Mode.valueOf(modeChoiceBox.getValue().toUpperCase()));
             settingsHandler.setInputMethod(InputMethod.valueOf(inputMethodChoiceBox.getValue().toUpperCase()));
 
             BuildVersion oldBuildVersion = settingsHandler.getBuildVersion();
             BuildVersion newBuildVersion = BuildVersion.valueOf(buildVersionChoiceBox.getValue().toUpperCase());
-
             settingsHandler.setBuildVersion(newBuildVersion);
 
             settingsHandler.updateFile();
@@ -195,32 +195,38 @@ public class Settings extends Observable {
             boolean versionSwitch = oldBuildVersion != newBuildVersion;
             boolean skinSwitch = oldSkin != settingsHandler.getUISkin();
 
-            String begin = "Restarting to switch ";
+            String begin = "Do you want to restart to switch ";
 
             String skin = skinSwitch ? "UI skin" : "";
             String version = versionSwitch ? "build version" : "";
             String middle = (skinSwitch && versionSwitch) ? " and " : "";
 
-            String text = begin + skin + middle + version;
-            if (versionSwitch || skinSwitch) {
-                UISkin newSkin = settingsHandler.getUISkin();
+            String text = begin + skin + middle + version + "?";
 
+            if (versionSwitch || skinSwitch) {
                 settingsHandler.setUISkin(oldSkin);
-                new Message(text, false);
+                String result = new Confirmation(text).getResult();
                 settingsHandler.setUISkin(newSkin);
 
-                if (versionSwitch) {
-                    Launcher.reboot("-switch");
+                if (result.equals("yes")) {
+                    if (versionSwitch) {
+                        Launcher.reboot("-switch");
+                    }
+                    else {
+                        Launcher.reboot();
+                    }
                 }
                 else {
-                    Launcher.reboot();
+                    settingsHandler.setBuildVersion(oldBuildVersion);
+                    settingsHandler.setUISkin(oldSkin);
+
+                    settingsHandler.updateFile();
                 }
             }
-            else {
-                setChanged();
-                notifyObservers();
-                stage.close();
-            }
+
+            setChanged();
+            notifyObservers();
+            stage.close();
         });
 
         speedCheckBox.setOnAction(event -> setCheckboxVisibility(gridPane, speedCheckBox));

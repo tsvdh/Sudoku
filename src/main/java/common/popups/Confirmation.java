@@ -22,6 +22,10 @@ public class Confirmation {
     private String result;
 
     public Confirmation() {
+        this("Do you want to perform the action?");
+    }
+
+    public Confirmation(String question) {
         result = "yes";
 
         boolean confirmations = SettingsHandler.getInstance().getConfirmations();
@@ -40,7 +44,7 @@ public class Confirmation {
         hBox.setAlignment(Pos.CENTER);
 
         Label label = new Label();
-        label.setText("Do you want to perform the action?");
+        label.setText(question);
         label.setFont(new Font(20));
 
         VBox vBox = new VBox();
