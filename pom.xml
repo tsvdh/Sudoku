@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.heroku.sudoku19</groupId>
-    <artifactId>Sudoku</artifactId>
+    <artifactId>sudoku</artifactId>
     <version>3.3.2</version>
     <packaging>jar</packaging>
 
@@ -14,7 +14,7 @@
         <maven.compiler.target>15</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <GAV>${project.artifactId}-${project.version}</GAV>
-        <javafx.version>15</javafx.version>
+        <javafx.version>15.0.1</javafx.version>
     </properties>
 
     <dependencies>
@@ -42,20 +42,13 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>19.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.akathist.maven.plugins.launch4j</groupId>
-            <artifactId>launch4j-maven-plugin</artifactId>
-            <version>1.7.25</version>
-            <scope>provided</scope>
+            <version>20.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.dropbox.core</groupId>
             <artifactId>dropbox-core-sdk</artifactId>
-            <version>3.1.4</version>
+            <version>3.1.5</version>
         </dependency>
 
         <dependency>
@@ -65,22 +58,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>3.3.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.github.vatbub</groupId>
             <artifactId>mslinks</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
         </dependency>
 
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
-            <version>4.3.0</version>
+            <version>5.6.0</version>
         </dependency>
 
         <dependency>
@@ -88,26 +74,69 @@
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.5</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
                 <configuration>
-                    <mainClass>Main</mainClass>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
 
 <!--            <plugin>-->
 <!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <version>3.8.0</version>-->
+<!--                <artifactId>maven-jar-plugin</artifactId>-->
+<!--                <version>3.2.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>default-jar</id>-->
+<!--                        <phase>none</phase>-->
+<!--                        <configuration>-->
+<!--                            <finalName>unwanted</finalName>-->
+<!--                            <classifier>unwanted</classifier>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!---->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-assembly-plugin</artifactId>-->
+<!--                <version>3.3.0</version>-->
 <!--                <configuration>-->
-<!--                    <source>${maven.compiler.source}</source>-->
-<!--                    <target>${maven.compiler.target}</target>-->
+<!--                    <descriptorRefs>-->
+<!--                        <descriptorRef>jar-with-dependencies</descriptorRef>-->
+<!--                    </descriptorRefs>-->
+<!--                    <archive>-->
+<!--                        <manifest>-->
+<!--                            <addClasspath>true</addClasspath>-->
+<!--                            <mainClass>update.Main</mainClass>-->
+<!--                        </manifest>-->
+<!--                    </archive>-->
+<!--                    <appendAssemblyId>false</appendAssemblyId>-->
+<!--                    <attach>false</attach>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>jar with dependencies</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals><goal>single</goal></goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+
+<!--            <plugin>-->
+<!--                <groupId>org.openjfx</groupId>-->
+<!--                <artifactId>javafx-maven-plugin</artifactId>-->
+<!--                <version>0.0.5</version>-->
+<!--                <configuration>-->
+<!--                    <mainClass>update.Main</mainClass>-->
 <!--                </configuration>-->
 <!--            </plugin>-->
 
@@ -117,89 +146,169 @@
                 <version>3.2.0</version>
                 <executions>
                     <execution>
-                        <id>default-jar</id>
-                        <phase>none</phase>
+                        <id>skinny-jar</id>
+                        <phase>package</phase>
+<!--                        <goals>-->
+<!--                            <goal>jar</goal>-->
+<!--                        </goals>-->
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputDirectory>${project.build.directory}\modules</outputDirectory>
+                    <archive>
+                        <manifest>
+                            <mainClass>update.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
                         <configuration>
-                            <finalName>unwanted</finalName>
-                            <classifier>unwanted</classifier>
+                            <artifactItems>
+                                <artifactItem>
+                                <groupId>com.github.vatbub</groupId>
+                                <artifactId>mslinks</artifactId>
+                                <overWrite>true</overWrite>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}\modules</outputDirectory>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>copy-javafx</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}\modules\javafx</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <includeArtifactIds>javafx-base, javafx-graphics, javafx-controls</includeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.3.0</version>
+                <groupId>org.moditect</groupId>
+                <artifactId>moditect-maven-plugin</artifactId>
+                <version>1.0.0.RC1</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>Main</mainClass>
-                        </manifest>
-                    </archive>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <attach>false</attach>
+                    <overwriteExistingFiles>true</overwriteExistingFiles>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>jar with dependencies</id>
+                        <id>add-module-info-to-dependencies</id>
                         <phase>package</phase>
-                        <goals><goal>single</goal></goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>1.7.25</version>
-                <executions>
-                    <execution>
-                        <id>exe</id>
-                        <phase>package</phase>
-                        <goals><goal>launch4j</goal></goals>
+                        <goals>
+                            <goal>add-module-info</goal>
+                        </goals>
                         <configuration>
+                            <modules>
+                                <module>
+                                    <artifact>
+                                        <groupId>org.jetbrains</groupId>
+                                        <artifactId>annotations</artifactId>
+                                    </artifact>
+                                    <moduleInfo>
+                                        <name>org.jetbrains.annotations</name>
+                                        <exports>org.jetbrains.annotations</exports>
+                                    </moduleInfo>
+                                </module>
 
-                            <dontWrapJar>false</dontWrapJar>
-                            <headerType>gui</headerType>
-                            <jar>${basedir}\target\${GAV}.jar</jar>
-                            <outfile>${basedir}\target\${GAV}.exe</outfile>
-                            <errTitle/>
-                            <cmdLine/>
-                            <chdir/>
-                            <priority>normal</priority>
-                            <downloadUrl>http://java.com/download</downloadUrl>
-                            <supportUrl/>
-                            <stayAlive>false</stayAlive>
-                            <restartOnCrash>false</restartOnCrash>
-                            <manifest/>
-                            <icon>${basedir}\Sudoku solver\icon.ico</icon>
-                            <jre>
-                                <minVersion>1.8.0_0</minVersion>
-                                <maxVersion>1.8.0_999</maxVersion>
-                            </jre>
-                            <splash>
-                                <file>${basedir}\Sudoku solver\splash.bmp</file>
-                                <waitForWindow>true</waitForWindow>
-                                <timeout>60</timeout>
-                                <timeoutErr>true</timeoutErr>
-                            </splash>
-                            <versionInfo>
-                                <fileVersion>${project.version}.0</fileVersion>
-                                <txtFileVersion>${project.version}</txtFileVersion>
-                                <fileDescription>Program for solving any sudoku</fileDescription>
-                                <copyright>None</copyright>
-                                <productVersion>${project.version}.0</productVersion>
-                                <txtProductVersion>${project.version}</txtProductVersion>
-                                <productName>Sudoku solver</productName>
-                                <internalName>Sudoku solver</internalName>
-                                <originalFilename>${GAV}.exe</originalFilename>
-                            </versionInfo>
+                                <module>
+                                    <artifact>
+                                        <groupId>com.dropbox.core</groupId>
+                                        <artifactId>dropbox-core-sdk</artifactId>
+                                    </artifact>
+                                    <moduleInfoSource>
+                                        module dropbox.core.sdk {
+                                        requires jackson.core;
+                                        exports com.dropbox.core;
+                                        }
+                                    </moduleInfoSource>
+                                </module>
 
+                                <module>
+                                    <artifact>
+                                        <groupId>com.fasterxml.jackson.core</groupId>
+                                        <artifactId>jackson-core</artifactId>
+                                    </artifact>
+                                    <moduleInfo>
+                                        <name>jackson.core</name>
+                                        <exports>jackson.core</exports>
+                                    </moduleInfo>
+                                </module>
+
+                                <module>
+                                    <artifact>
+                                        <groupId>org.javatuples</groupId>
+                                        <artifactId>javatuples</artifactId>
+                                    </artifact>
+                                    <moduleInfo>
+                                        <name>javatuples</name>
+                                        <exports>org.javatuples</exports>
+                                    </moduleInfo>
+                                </module>
+
+                                <module>
+                                    <artifact>
+                                        <groupId>net.java.dev.jna</groupId>
+                                        <artifactId>jna</artifactId>
+                                    </artifact>
+                                    <moduleInfo>
+                                        <name>com.sun.jna</name>
+                                        <exports>com.sun.jna</exports>
+                                    </moduleInfo>
+                                </module>
+
+                                <module>
+                                    <artifact>
+                                        <groupId>net.java.dev.jna</groupId>
+                                        <artifactId>jna-platform</artifactId>
+                                    </artifact>
+                                    <moduleInfo>
+                                        <name>com.sun.jna.platform</name>
+                                        <exports>com.sun.jna.platform</exports>
+                                    </moduleInfo>
+                                </module>
+                            </modules>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>create-runtime-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>create-runtime-image</goal>
+                        </goals>
+                        <configuration>
+                            <modulePath>
+                                <path>${project.build.directory}\modules</path>
+                                <path>${project.build.directory}\modules\javafx</path>
+                            </modulePath>
+                            <modules>
+                                <module>${project.artifactId}</module>
+                            </modules>
+                            <outputDirectory>${project.build.directory}\image</outputDirectory>
+                            <launcher>
+                                <name>Sudoku</name>
+                                <module>${project.artifactId}</module>
+                            </launcher>
                         </configuration>
                     </execution>
                 </executions>
