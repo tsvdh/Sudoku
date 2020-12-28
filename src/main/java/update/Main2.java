@@ -1,13 +1,14 @@
+package update;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import sudoku.gui.main.Sudoku;
-import update.Launcher;
 
-public class Main extends Application {
+public class Main2 extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Launcher.boot(getParameters());
+        // Launcher.boot(getParameters());
 
         new Sudoku(primaryStage);
     }

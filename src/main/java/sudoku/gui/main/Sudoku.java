@@ -46,7 +46,8 @@ public class Sudoku {
 
         stage.setScene(scene);
         stage.setTitle("Sudoku solver");
-        stage.getIcons().add(new Image("/images/icon.png"));
+        // stage.getIcons().add(new Image("/images/icon.png"));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
 
         StyleHandler.applyStyle(scene);
 
