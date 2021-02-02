@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.heroku.sudoku19</groupId>
+    <groupId>com.github.tsvdh</groupId>
     <artifactId>sudoku</artifactId>
     <version>3.3.2</version>
     <packaging>jar</packaging>
@@ -177,9 +177,9 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                <groupId>com.github.vatbub</groupId>
-                                <artifactId>mslinks</artifactId>
-                                <overWrite>true</overWrite>
+                                    <groupId>com.github.vatbub</groupId>
+                                    <artifactId>mslinks</artifactId>
+                                    <overWrite>true</overWrite>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}\modules</outputDirectory>
@@ -304,7 +304,7 @@
                             <modules>
                                 <module>${project.artifactId}</module>
                             </modules>
-                            <outputDirectory>${project.build.directory}\image</outputDirectory>
+                            <outputDirectory>${project.build.directory}\runtime-image</outputDirectory>
                             <launcher>
                                 <name>Sudoku</name>
                                 <module>${project.artifactId}</module>

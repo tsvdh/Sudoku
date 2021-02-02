@@ -39,9 +39,24 @@ public class SettingsHandler {
 
     private SettingsHandler() {
         properties = new Properties();
-        canWrite = true;
-        fileIO("read");
-        oldMode = getMode();
+        try {
+            properties.load(getClass().getResourceAsStream(INTERNAL_FILE_PATH));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // properties.setProperty("interval", "100");
+        // properties.setProperty("mode", "NORMAL");
+        // properties.setProperty("pause", "2000");
+        // properties.setProperty("speed", "QUICK");
+        // properties.setProperty("input_method", "ARROWS");
+        // properties.setProperty("confirmations", "true");
+        // properties.setProperty("build_version", "STABLE");
+        // properties.setProperty("ui_skin", "CLEAN");
+
+        // canWrite = true;
+        // fileIO("read");
+        // oldMode = getMode();
     }
 
     public void updateFile() {

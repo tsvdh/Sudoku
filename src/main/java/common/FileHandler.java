@@ -106,7 +106,7 @@ public class FileHandler extends Observable {
         JAR
     }
 
-    private static final Protocol protocol = getProtocol();
+    private static final Protocol protocol = Protocol.JAR;
 
     private static Protocol getProtocol() {
         return Protocol.valueOf(FileHandler.class.getResource("").getProtocol().toUpperCase());
